@@ -1,0 +1,4 @@
+Copyright (c) 2026 KotBayn (https://github.com/KotBayn). All Rights Reserved.
+
+This software is provided for personal, non-commercial use only. 
+For commercial use, integration, modification, or distribution, please contact the author.
