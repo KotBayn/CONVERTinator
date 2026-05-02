@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services
+namespace CONVERTinator.Services.RegionProvider
 {
     public class EcbXmlProvider : IExchangeRateProvider
     {

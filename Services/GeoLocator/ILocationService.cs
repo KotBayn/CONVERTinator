@@ -87,12 +87,65 @@ namespace CONVERTinator.Services.GeoLocator
     // GPS Provider
     public class GpsLocationProvider : ILocationProvider
     {
+        private readonly HttpClient _httpClient = new HttpClient();
+
+        public async Task<string> TryGetIsoCodeAsync()
+        {
+            try
+            {
+                // In a MAUI/Mobile app, retrieve real device coordinates:
+                // var location = await Geolocation.GetLastKnownLocationAsync();
+                // double latitude = location.Latitude;
+                // double longitude = location.Longitude;
+
+                // Using hardware mock coordinates for console testing
+                double latitude = 52.16;
+                double longitude = 20.80;
+
+                // OpenStreetMap (Nominatim API) requires a User-Agent header
+                _httpClient.DefaultRequestHeaders.Add("User-Agent", "CONVERTinator");
+                _httpClient.Timeout = TimeSpan.FromSeconds(3);
+
+                // Reverse geocoding request
+                string url = $"https://nominatim.openstreetmap.org/reverse?format=json&lat={latitude}&lon={longitude}";
+                var response = await _httpClient.GetStringAsync(url);
+
+                using JsonDocument doc = JsonDocument.Parse(response);
+
+                if (doc.RootElement.TryGetProperty("address", out JsonElement addressElement) &&
+                    addressElement.TryGetProperty("country_code", out JsonElement countryCodeElement))
+                {
+                    return countryCodeElement.GetString().ToUpper();
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
+
+    // Culture Fallback Provider
+    public class CultureLocationProvider : ILocationProvider
+    {
         public Task<string> TryGetIsoCodeAsync()
         {
             try
             {
-                // GPS requires hardware access and location permissions.
-                // Returning null to complete the chain demonstration.
+                // Extracts country code from regional formatting (e.g., "en-US" -> "US")
+                var culture = CultureInfo.CurrentCulture;
+
+                if (culture.Name.Length >= 2)
+                {
+                    var parts = culture.Name.Split('-');
+                    if (parts.Length == 2)
+                    {
+                        return Task.FromResult(parts[1].ToUpper());
+                    }
+                }
+
                 return Task.FromResult<string>(null);
             }
             catch
@@ -109,12 +162,14 @@ namespace CONVERTinator.Services.GeoLocator
 
         public LocationService()
         {
+            // The exact order of execution (Chain of Responsibility)
             _providers = new List<ILocationProvider>
             {
-                new IpLocationProvider(),
-                new MobileOperatorLocationProvider(),
-                new SystemLocaleLocationProvider(),
-                new GpsLocationProvider()
+                new IpLocationProvider(),              // 1. Network IP Check
+                new MobileOperatorLocationProvider(),  // 2. Cellular Tower MCC
+                new GpsLocationProvider(),             // 3. GPS + Reverse Geocoding
+                new SystemLocaleLocationProvider(),    // 4. OS Geo Region
+                new CultureLocationProvider()          // 5. OS Formatting Culture
             };
         }
 
