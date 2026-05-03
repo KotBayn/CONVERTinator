@@ -1,0 +1,9 @@
+{
+  "Global": ["USD", "EUR", "GBP", "JPY", "CHF", "CNY"],
+  "Europe": ["ALL", "BAM", "BGN", "CHF", "CZK", "DKK", "EUR", "GBP", "GGP", "GIP", "HUF", "IMP", "ISK", "JEP", "MDL", "MKD", "NOK", "PLN", "RON", "RSD", "SEK", "UAH"],
+  "CIS": ["AMD", "AZN", "BYN", "GEL", "KGS", "KZT", "RUB", "TJS", "TMT", "UZS"],
+  "Asia": ["AFN", "BDT", "BHD", "BND", "BTN", "CNY", "HKD", "IDR", "ILS", "INR", "IQD", "IRR", "JOD", "JPY", "KHR", "KPW", "KRW", "KWD", "LAK", "LBP", "LKR", "MMK", "MNT", "MOP", "MVR", "MYR", "NPR", "OMR", "PHP", "PKR", "QAR", "SAR", "SGD", "SYP", "THB", "TRY", "TWD", "VND", "YER"],
+  "Americas": ["ANG", "ARS", "AWG", "BBD", "BMD", "BOB", "BRL", "BSD", "BZD", "CAD", "CLP", "COP", "CRC", "CUC", "CUP", "DOP", "FKP", "GTQ", "GYD", "HNL", "HTG", "JMD", "KYD", "MXN", "NIO", "PAB", "PEN", "PYG", "SRD", "SVC", "TTD", "USD", "UYU", "VES"],
+  "Africa": ["AOA", "BIF", "BWP", "CDF", "CVE", "DJF", "DZD", "EGP", "ERN", "ETB", "GHS", "GMD", "GNF", "KES", "KMF", "LRD", "LSL", "LYD", "MAD", "MGA", "MRU", "MUR", "MWK", "MZN", "NAD", "NGN", "RWF", "SCR", "SDG", "SHP", "SLL", "SOS", "SSP", "STN", "SZL", "TND", "TZS", "UGX", "XAF", "XOF", "ZAR", "ZMW", "ZWL"],
+  "Oceania": ["AUD", "FJD", "NZD", "PGK", "SBD", "TOP", "TVD", "VUV", "WST", "XPF"]
+}

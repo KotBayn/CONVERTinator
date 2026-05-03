@@ -5,13 +5,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services
+namespace CONVERTinator.Services.RegionProvider
 {
-    public class ChinaProvider : IExchangeRateProvider
+    public class EcbProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        // Using a backup API with base in Chinese Yuan (CNY)
-        private const string Url = "https://api.exchangerate-api.com/v4/latest/CNY";
+        // Free API, getting rates with base USD
+        private const string Url = "https://api.frankfurter.app/latest?from=USD";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -27,13 +27,16 @@ namespace CONVERTinator.Services
                     result.Add(new Currency
                     {
                         Code = property.Name,
-                        Name = property.Name,
+                        Name = property.Name, // This API does not provide full names, only codes
                         Value = property.Value.GetDecimal(),
-                        Source = "China Exchange"
+                        Source = "Frankfurter (Europe)"
                     });
                 }
             }
-            catch (Exception ex) { Console.WriteLine($"Error in China Provider: {ex.Message}"); }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in European provider: {ex.Message}");
+            }
             return result;
         }
     }

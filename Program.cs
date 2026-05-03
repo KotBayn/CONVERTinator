@@ -1,9 +1,11 @@
-﻿using CONVERTinator.Helpers;
+﻿using CONVERTinator.Domain;
+using CONVERTinator.Domain.GEO;
+using CONVERTinator.Helpers;
 using CONVERTinator.Services;
-using CONVERTinator.Domain;
+using CONVERTinator.Services.GeoLocator;
+using CONVERTinator.Services.RegionProvider;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CONVERTinator
@@ -13,147 +15,191 @@ namespace CONVERTinator
         static async Task Main(string[] args)
         {
             Console.Title = "CONVERTinator";
-            Console.WriteLine("=== Starting CONVERTinator ===");
 
-            // Журналисты - наши источники данных
-            var journalists = new List<IExchangeRateProvider>
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            string asciiArt = @"
+╔═══════════════════════════════════════════════════════════════════════════════════════════════╗
+║██████ ██████ ██   ██ ██   ██ ██████ █████  ██████ ██████ ██   ██   ███   ██████ ██████ █████  ║
+║██     ██  ██ ███  ██ ██   ██ ██     ██  ██   ██     ██   ███  ██  ██ ██    ██   ██  ██ ██  ██ ║
+║██     ██  ██ ██ █ ██ ██   ██ ██     █████    ██     ██   ██ █ ██ ███████   ██   ██  ██ █████  ║
+║██     ██  ██ ██ █ ██  ██ ██  █████  ██  ██   ██     ██   ██ █ ██ ███████   ██   ██  ██ ██  ██ ║
+║██     ██  ██ ██  ███  ██ ██  ██     ██  ██   ██     ██   ██  ███ ██   ██   ██   ██  ██ ██  ██ ║
+║██████ ██████ ██   ██    █    ██████ ██  ██   ██   ██████ ██   ██ ██   ██   ██   ██████ ██  ██ ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════════╝
+";
+            Console.WriteLine(asciiArt);
+            Console.ResetColor();
+
+            Console.WriteLine("Select operation mode:");
+            Console.WriteLine("[1] TRAVEL (Auto-location & Bordering countries)");
+            Console.WriteLine("[2] BUSINESS (Global analytics & Regional rates)");
+            Console.WriteLine("[0] Exit");
+            Console.Write("\nYour choice > ");
+
+            string modeInput = Console.ReadLine()?.Trim();
+            Console.Clear();
+
+            string baseCurrency = "USD";
+            var activeCurrencies = new List<string>();
+            ILocationService locationService = new LocationService();
+
+            // Configuration based on selected mode
+            switch (modeInput)
             {
-                new CbrProvider(),
-                new UsProvider(),
-                new ChinaProvider(),
-                new EcbXmlProvider()
-            };
+                case "1":
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("=== Mode: TRAVEL ===");
+                    Console.ResetColor();
 
-            var allRates = new List<Currency>();
+                    string travelIso = await locationService.GetCurrentCountryIsoCodeAsync();
+                    Country travelCountry = CountryRepository.GetCountryByIso(travelIso);
 
-            Console.WriteLine("Getting data from all sources. Please wait...\n");
-            foreach (var journalist in journalists)
-            {
-                var rates = await journalist.GetRatesAsync();
-                allRates.AddRange(rates);
-                Console.WriteLine($"[+] {journalist.GetType().Name} brought {rates.Count} currencies.");
+                    baseCurrency = travelCountry.CurrencyCode;
+                    activeCurrencies = CountryRepository.GetTravelCurrencies(travelIso);
+
+                    Console.WriteLine($"[Auto-Location]: {travelIso}");
+                    Console.WriteLine($"[Zone Loaded]: {activeCurrencies.Count} local & bordering currencies.\n");
+                    break;
+
+                case "2":
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("=== Mode: BUSINESS ===");
+                    Console.ResetColor();
+
+                    string bizIso = await locationService.GetCurrentCountryIsoCodeAsync();
+                    Country bizCountry = CountryRepository.GetCountryByIso(bizIso);
+
+                    baseCurrency = "USD";
+                    activeCurrencies = RegionRepository.GetCurrenciesByRegion(bizCountry.CountryRegion);
+
+                    if (!activeCurrencies.Contains(baseCurrency))
+                    {
+                        activeCurrencies.Add(baseCurrency);
+                    }
+
+                    Console.WriteLine($"[Region Detected]: {bizCountry.CountryRegion}");
+                    Console.WriteLine($"[Currencies Loaded]: {activeCurrencies.Count} mapped via JSON.\n");
+                    break;
+
+                case "0":
+                    return;
+
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Error: Invalid mode selected.");
+                    Console.ResetColor();
+                    return;
             }
 
-            Console.WriteLine("\nData collection complete!");
+            // Setting up Composite Pattern for Data Providers
+            Console.WriteLine("Fetching provider data asynchronously...\n");
+
+            var globalComposite = new RegionProviderComposite("Global");
+
+            var cisComposite = new RegionProviderComposite("CIS");
+            cisComposite.Add(new CbrProvider());
+
+            var americasComposite = new RegionProviderComposite("Americas");
+            americasComposite.Add(new UsProvider());
+
+            var asiaComposite = new RegionProviderComposite("Asia");
+            asiaComposite.Add(new ChinaProvider());
+
+            var europeComposite = new RegionProviderComposite("Europe");
+            europeComposite.Add(new EcbXmlProvider());
+
+            globalComposite.Add(cisComposite);
+            globalComposite.Add(americasComposite);
+            globalComposite.Add(asiaComposite);
+            globalComposite.Add(europeComposite);
+
+            // Fetch all rates in one line! The composite handles Task.WhenAll internally.
+            List<Currency> allRates = await globalComposite.GetRatesAsync();
+
+            Console.WriteLine($"Initialization complete. {allRates.Count} pairs aggregated.");
             Console.WriteLine("-----------------------------------------------------");
+            Console.WriteLine("Commands: add [code], rem [code], ch [code], ex [amount], clear, exit");
 
-            // Defoult
-            string baseCurrency = "USD";
-            var activeCurrencies = new List<string> { "EUR", "USD" };
-
-            // Instructions
-            Console.WriteLine("Available commands:");
-            Console.WriteLine("  add [code]  - add a currency to the list (e.g., add BYN)");
-            Console.WriteLine("  rem [code]  - remove a currency from the list (e.g., rem EUR)");
-            Console.WriteLine("  ch [code]   - change the base currency (e.g., ch RUB)");
-            Console.WriteLine("  ex [amount] - convert the base currency amount to all in the list (e.g., ex 100)");
-            Console.WriteLine("  exit        - exit the program");
-
+            // Main Interaction Loop
             while (true)
             {
-                // Display the current state
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"\n[Base: {baseCurrency}] | [In list: {string.Join(", ", activeCurrencies)}]");
+                Console.WriteLine($"\n[Base: {baseCurrency}] | [Active pairs: {activeCurrencies.Count}]");
                 Console.ResetColor();
                 Console.Write("> ");
-                string input = Console.ReadLine()?.Trim();
 
+                string input = Console.ReadLine()?.Trim();
                 if (string.IsNullOrWhiteSpace(input)) continue;
 
-                // Split the input into parts by space.
                 string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 string command = parts[0].ToLower();
-
-                // If there is no argument, leave it as an empty string.
                 string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
 
                 if (command == "exit") break;
 
-                // Command handling
                 switch (command)
                 {
+                    case "clear":
+                        Console.Clear();
+                        break;
+
                     case "add":
-                        if (string.IsNullOrEmpty(arg))
-                        {
-                            Console.WriteLine("Error: Specify a currency code. Example: add BYN");
-                            break;
-                        }
+                        if (string.IsNullOrEmpty(arg)) break;
+
                         if (!activeCurrencies.Contains(arg))
                         {
                             activeCurrencies.Add(arg);
-                            Console.WriteLine($"Currency {arg} added to the list.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Currency {arg} is already in the list.");
+                            Console.WriteLine($"[+] {arg} added.");
                         }
                         break;
 
                     case "rem":
-                        if (activeCurrencies.Contains(arg))
+                        if (activeCurrencies.Remove(arg))
                         {
-                            activeCurrencies.Remove(arg);
-                            Console.WriteLine($"Currency {arg} removed from the list.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error: Currency {arg} is not in the list.");
+                            Console.WriteLine($"[-] {arg} removed.");
                         }
                         break;
 
                     case "ch":
-                        if (string.IsNullOrEmpty(arg))
+                        if (!string.IsNullOrEmpty(arg))
                         {
-                            Console.WriteLine("Error: Specify a currency code. Example: ch BYN");
-                            break;
+                            baseCurrency = arg;
+                            Console.WriteLine($"Base currency updated -> {baseCurrency}");
                         }
-                        baseCurrency = arg;
-                        Console.WriteLine($"Base currency changed to {baseCurrency}.");
                         break;
 
                     case "ex":
-                        // Try to convert the argument to a number (decimal)
                         if (!decimal.TryParse(arg, out decimal amount))
                         {
-                            Console.WriteLine("Error: Enter a valid amount. Example: ex 150.50");
+                            Console.WriteLine("Error: Invalid numeric format.");
                             break;
                         }
 
-                        Console.WriteLine($"\n--- Conversion {amount} {baseCurrency} ---");
-                        // Iterate through all currencies in our active list
+                        Console.WriteLine($"\n--- Conversion: {amount} {baseCurrency} ---");
+
                         foreach (var targetCurrency in activeCurrencies)
                         {
-                            // If the target currency matches the base currency, no conversion is needed
-                            if (targetCurrency == baseCurrency)
-                            {
-                                Console.WriteLine($"{targetCurrency}: {amount}");
-                                continue;
-                            }
+                            // Utilizing MedianCalculator to handle all cross-rate math
+                            decimal? convertedAmount = MedianCalculator.Convert(amount, baseCurrency, targetCurrency, allRates);
 
-                            // Search for rates for the target currency in our large list   
-                            var foundRates = allRates.Where(c => c.Code == targetCurrency).Select(c => c.Value).ToList();
-
-                            if (foundRates.Count == 0)
+                            if (convertedAmount == null)
                             {
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine($"{targetCurrency}: Rate not found in any source.");
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
+                                Console.WriteLine($"{targetCurrency}: N/A (Rate missing)");
                                 Console.ResetColor();
-                                continue;
                             }
-
-                            // Calculate the median
-                            decimal medianRate = MedianCalculator.Calculate(foundRates);
-                            decimal convertedAmount = amount * medianRate;
-
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"{targetCurrency}: {Math.Round(convertedAmount, 3)}");
-                            Console.ResetColor();
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine($"{targetCurrency}: {Math.Round(convertedAmount.Value, 3)}");
+                                Console.ResetColor();
+                            }
                         }
                         break;
 
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Unknown command. Available commands: add, rem, ch, ex, exit.");
+                        Console.WriteLine("Unknown command.");
                         Console.ResetColor();
                         break;
                 }

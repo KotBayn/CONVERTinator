@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services
+namespace CONVERTinator.Services.RegionProvider
 {
     public class CbrProvider : IExchangeRateProvider
     {
