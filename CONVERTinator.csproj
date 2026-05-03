@@ -11,4 +11,10 @@
     <ProjectReference Include="..\CONVERTinator.Domain\CONVERTinator.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="RegionsCurrencies.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

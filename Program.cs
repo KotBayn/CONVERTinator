@@ -6,7 +6,6 @@ using CONVERTinator.Services.GeoLocator;
 using CONVERTinator.Services.RegionProvider;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CONVERTinator
@@ -40,11 +39,11 @@ namespace CONVERTinator
             string modeInput = Console.ReadLine()?.Trim();
             Console.Clear();
 
-            var journalists = new List<IExchangeRateProvider>();
             string baseCurrency = "USD";
             var activeCurrencies = new List<string>();
             ILocationService locationService = new LocationService();
 
+            // Configuration based on selected mode
             switch (modeInput)
             {
                 case "1":
@@ -60,11 +59,6 @@ namespace CONVERTinator
 
                     Console.WriteLine($"[Auto-Location]: {travelIso}");
                     Console.WriteLine($"[Zone Loaded]: {activeCurrencies.Count} local & bordering currencies.\n");
-
-                    journalists.Add(new CbrProvider());
-                    journalists.Add(new UsProvider());
-                    journalists.Add(new ChinaProvider());
-                    journalists.Add(new EcbXmlProvider());
                     break;
 
                 case "2":
@@ -76,8 +70,6 @@ namespace CONVERTinator
                     Country bizCountry = CountryRepository.GetCountryByIso(bizIso);
 
                     baseCurrency = "USD";
-
-                    // JSON integration: Fetching target currencies based on the resolved region
                     activeCurrencies = RegionRepository.GetCurrenciesByRegion(bizCountry.CountryRegion);
 
                     if (!activeCurrencies.Contains(baseCurrency))
@@ -86,12 +78,7 @@ namespace CONVERTinator
                     }
 
                     Console.WriteLine($"[Region Detected]: {bizCountry.CountryRegion}");
-                    Console.WriteLine($"[Currencies Loaded]: {activeCurrencies.Count} mapped via JSON configuration.\n");
-
-                    journalists.Add(new CbrProvider());
-                    journalists.Add(new UsProvider());
-                    journalists.Add(new ChinaProvider());
-                    journalists.Add(new EcbXmlProvider());
+                    Console.WriteLine($"[Currencies Loaded]: {activeCurrencies.Count} mapped via JSON.\n");
                     break;
 
                 case "0":
@@ -104,24 +91,36 @@ namespace CONVERTinator
                     return;
             }
 
-            // Concurrent API fetching
+            // Setting up Composite Pattern for Data Providers
             Console.WriteLine("Fetching provider data asynchronously...\n");
 
-            var allRates = new List<Currency>();
-            var fetchTasks = journalists.Select(j => j.GetRatesAsync());
-            var results = await Task.WhenAll(fetchTasks);
+            var globalComposite = new RegionProviderComposite("Global");
 
-            foreach (var rates in results)
-            {
-                allRates.AddRange(rates);
-            }
+            var cisComposite = new RegionProviderComposite("CIS");
+            cisComposite.Add(new CbrProvider());
+
+            var americasComposite = new RegionProviderComposite("Americas");
+            americasComposite.Add(new UsProvider());
+
+            var asiaComposite = new RegionProviderComposite("Asia");
+            asiaComposite.Add(new ChinaProvider());
+
+            var europeComposite = new RegionProviderComposite("Europe");
+            europeComposite.Add(new EcbXmlProvider());
+
+            globalComposite.Add(cisComposite);
+            globalComposite.Add(americasComposite);
+            globalComposite.Add(asiaComposite);
+            globalComposite.Add(europeComposite);
+
+            // Fetch all rates in one line! The composite handles Task.WhenAll internally.
+            List<Currency> allRates = await globalComposite.GetRatesAsync();
 
             Console.WriteLine($"Initialization complete. {allRates.Count} pairs aggregated.");
             Console.WriteLine("-----------------------------------------------------");
-
             Console.WriteLine("Commands: add [code], rem [code], ch [code], ex [amount], clear, exit");
 
-            // Main interaction loop
+            // Main Interaction Loop
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -180,32 +179,21 @@ namespace CONVERTinator
 
                         foreach (var targetCurrency in activeCurrencies)
                         {
-                            if (targetCurrency == baseCurrency)
-                            {
-                                Console.WriteLine($"{targetCurrency}: {amount}");
-                                continue;
-                            }
+                            // Utilizing MedianCalculator to handle all cross-rate math
+                            decimal? convertedAmount = MedianCalculator.Convert(amount, baseCurrency, targetCurrency, allRates);
 
-                            var foundRates = allRates
-                                .Where(c => c.Code == targetCurrency)
-                                .Select(c => c.Value)
-                                .ToList();
-
-                            if (foundRates.Count == 0)
+                            if (convertedAmount == null)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                                Console.WriteLine($"{targetCurrency}: N/A");
+                                Console.WriteLine($"{targetCurrency}: N/A (Rate missing)");
                                 Console.ResetColor();
-                                continue;
                             }
-
-                            // Requires cross-rate logic update for non-USD bases in the future
-                            decimal medianRate = MedianCalculator.Calculate(foundRates);
-                            decimal convertedAmount = amount * medianRate;
-
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"{targetCurrency}: {Math.Round(convertedAmount, 3)}");
-                            Console.ResetColor();
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine($"{targetCurrency}: {Math.Round(convertedAmount.Value, 3)}");
+                                Console.ResetColor();
+                            }
                         }
                         break;
 
