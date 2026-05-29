@@ -3,7 +3,8 @@ using CONVERTinator.Domain.GEO;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services;
 using CONVERTinator.Services.GeoLocator;
-using CONVERTinator.Services.RegionProvider;
+using CONVERTinator.Services.RegionProviders;
+using CONVERTinator.Services.Region;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -96,22 +97,28 @@ namespace CONVERTinator
 
             var globalComposite = new RegionProviderComposite("Global");
 
-            var cisComposite = new RegionProviderComposite("CIS");
-            cisComposite.Add(new CbrProvider());
+            // --- СНГ (CIS) ---
+            //var cisComposite = new RegionProviderComposite("CIS");
+            // Now Russian Central Bank is just only provider in the CIS region.
+            //cisComposite.Add(new CbrProvider());
 
+            // --- North America ---
             var americasComposite = new RegionProviderComposite("Americas");
             americasComposite.Add(new UsProvider());
 
+            // --- Asia ---
             var asiaComposite = new RegionProviderComposite("Asia");
             asiaComposite.Add(new ChinaProvider());
 
-            var europeComposite = new RegionProviderComposite("Europe");
-            europeComposite.Add(new EcbXmlProvider());
+            // --- Europe (Architectural Delight) ---
+            //var europeComposite = new RegionProviderComposite("Europe");
+            //europeComposite.Add(new GermanyBanksFacade());
+            //europeComposite.Add(new PolandBanksFacade());
 
-            globalComposite.Add(cisComposite);
+            //globalComposite.Add(cisComposite);
             globalComposite.Add(americasComposite);
             globalComposite.Add(asiaComposite);
-            globalComposite.Add(europeComposite);
+            //globalComposite.Add(europeComposite);
 
             // Fetch all rates in one line! The composite handles Task.WhenAll internally.
             List<Currency> allRates = await globalComposite.GetRatesAsync();

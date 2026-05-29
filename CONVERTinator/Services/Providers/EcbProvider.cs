@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProvider
+namespace CONVERTinator.Services.RegionProviders
 {
     public class EcbProvider : IExchangeRateProvider
     {
@@ -35,7 +35,7 @@ namespace CONVERTinator.Services.RegionProvider
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in European provider: {ex.Message}");
+                Console.WriteLine($"Error in ECB provider: {ex.Message}");
             }
             return result;
         }
