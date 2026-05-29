@@ -1,0 +1,25 @@
+name: C# CI
+
+# Запускать сборку при каждом пуше в ветку main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Поднимаем бесплатный линукс-сервер от GitHub
+
+    steps:
+    - name: Копируем код
+      uses: actions/checkout@v4
+      
+    - name: Устанавливаем .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x' # Укажи свою версию, если у тебя 7.0 или 6.0
+        
+    - name: Подтягиваем пакеты (Restore)
+      run: dotnet restore
+      
+    - name: Собираем проект (Build)
+      run: dotnet build --no-restore --configuration Release
