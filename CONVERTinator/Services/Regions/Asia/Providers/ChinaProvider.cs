@@ -5,13 +5,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.Asia.Providers
 {
-    public class FloatRatesProvider : IExchangeRateProvider
+    public class ChinaProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        // Free API, getting rates with base USD
-        private const string Url = "https://www.floatrates.com/daily/usd.json";
+        // Using a backup API with base in Chinese Yuan (CNY)
+        private const string Url = "https://api.exchangerate-api.com/v4/latest/CNY";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -27,16 +27,13 @@ namespace CONVERTinator.Services.RegionProviders
                     result.Add(new Currency
                     {
                         Code = property.Name,
-                        Name = property.Name, // This API does not provide full names, only codes
+                        Name = property.Name,
                         Value = property.Value.GetDecimal(),
-                        Source = "FloatRates (JSON)"
+                        Source = "China Exchange"
                     });
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in FloatRates provider: {ex.Message}");
-            }
+            catch (Exception ex) { Console.WriteLine($"Error in China Provider: {ex.Message}"); }
             return result;
         }
     }

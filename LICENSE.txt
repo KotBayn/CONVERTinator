@@ -1,4 +1,27 @@
-Copyright (c) 2026 KotBayn (https://github.com/KotBayn). All Rights Reserved.
+# CONVERTinator License
 
-This software is provided for personal, non-commercial use only. 
-For commercial use, integration, modification, or distribution, please contact the author.
+**Copyright (c) 2026 KotBayn (https://github.com/KotBayn). All Rights Reserved.**
+
+## Grant of Rights
+
+Subject to the terms and conditions of this License, the author hereby grants you a limited, non-exclusive, royalty-free license to use, copy, modify, and distribute the Software for **personal, educational, or non-commercial purposes**.
+
+## Commercial Use
+
+**Commercial use is not permitted under this license.** This includes, but is not limited to:
+- Integration into commercial products or services
+- Use in business operations or revenue-generating activities
+- Redistribution as part of a commercial offering
+- Modification for commercial deployment
+
+For commercial licensing, integration partnerships, or enterprise use, please contact the author at: **[твой email или Telegram]**
+
+## Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY.
+
+## Summary
+
+**Allowed:** Personal projects, learning, open-source contributions (with attribution)  
+**Not Allowed:** Commercial use without explicit permission  
+**Commercial inquiries:** Contact the author

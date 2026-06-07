@@ -3,8 +3,10 @@ using CONVERTinator.Domain.GEO;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services;
 using CONVERTinator.Services.GeoLocator;
-using CONVERTinator.Services.RegionProviders;
-using CONVERTinator.Services.Region;
+using CONVERTinator.Services.Regions.AmericasN.Providers;
+using CONVERTinator.Services.Regions.CIS.Providers;
+using CONVERTinator.Services.Regions.Facades;
+using CONVERTinator.Services.Regions.Asia.Providers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -37,7 +39,7 @@ namespace CONVERTinator
             Console.WriteLine("[0] Exit");
             Console.Write("\nYour choice > ");
 
-            string modeInput = Console.ReadLine()?.Trim();
+            string? modeInput = Console.ReadLine()?.Trim();
             Console.Clear();
 
             string baseCurrency = "USD";
@@ -98,9 +100,9 @@ namespace CONVERTinator
             var globalComposite = new RegionProviderComposite("Global");
 
             // --- СНГ (CIS) ---
-            //var cisComposite = new RegionProviderComposite("CIS");
+            var cisComposite = new RegionProviderComposite("CIS");
             // Now Russian Central Bank is just only provider in the CIS region.
-            //cisComposite.Add(new CbrProvider());
+            cisComposite.Add(new CbrProvider());
 
             // --- North America ---
             var americasComposite = new RegionProviderComposite("Americas");
@@ -111,14 +113,15 @@ namespace CONVERTinator
             asiaComposite.Add(new ChinaProvider());
 
             // --- Europe (Architectural Delight) ---
-            //var europeComposite = new RegionProviderComposite("Europe");
-            //europeComposite.Add(new GermanyBanksFacade());
-            //europeComposite.Add(new PolandBanksFacade());
+            var europeComposite = new RegionProviderComposite("Europe");
+            europeComposite.Add(new GermanyBanksFacade());
+            europeComposite.Add(new PolandBanksFacade());
+            europeComposite.Add(new UkraineBanksFacade());
 
             //globalComposite.Add(cisComposite);
-            globalComposite.Add(americasComposite);
-            globalComposite.Add(asiaComposite);
-            //globalComposite.Add(europeComposite);
+            //globalComposite.Add(americasComposite);
+            //globalComposite.Add(asiaComposite);
+            globalComposite.Add(europeComposite);
 
             // Fetch all rates in one line! The composite handles Task.WhenAll internally.
             List<Currency> allRates = await globalComposite.GetRatesAsync();

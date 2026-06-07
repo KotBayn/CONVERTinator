@@ -5,32 +5,44 @@ namespace CONVERTinator.Helpers
 {
     /// <summary>
     /// N.O.R.M.A. (Normalized Objective Rate Math Aggregator)
-    /// Rate data and normalize it to a standard (1 USD = X) 
-    /// with 3 decimal places.
+    /// Rate data and normalize it to a standard with 3 decimal places.
     /// </summary>
     public static class RateNormalizer
     {
-        public static Currency NormalizeToUsd(Currency rawCurrency, decimal usdCrossRate = 1m)
+        /// <summary>
+        /// Using for ECB (Germany) and other banks where the base currency is foreign (e.g., EUR).
+        /// </summary>
+        public static Currency? NormalizeForeignBase(Currency rawCurrency, decimal usdCrossRate)
         {
-            // ASSESSMENT (Data validation)
-            // If the bank sent a negative rate or zero — discard it
-            if (rawCurrency.Value <= 0 || usdCrossRate <= 0)
-            {
-                Console.WriteLine($"[N.O.R.M.A. Drop]: Invalid data for {rawCurrency.Code}");
-                return null;
-            }
+            if (rawCurrency.Value <= 0 || usdCrossRate <= 0) return null;
 
-            // CONVERSION (To the base currency USD)
-            // If the data came, for example, in Euro (where 1 EUR = 1.08 USD), we divide the rate by 1.08.
-            // If the data is already in USD, usdCrossRate is simply 1m.
             decimal exactValueInUsd = rawCurrency.Value / usdCrossRate;
 
+            return CreateCurrency(rawCurrency, exactValueInUsd);
+        }
+
+        /// <summary>
+        /// Using for countries where the API provides prices in LOCAL currency (PLN, UAH, CZK).
+        /// </summary>
+        public static Currency? NormalizeLocalBase(Currency rawCurrency, decimal usdRateInLocalCurrency)
+        {
+            if (rawCurrency.Value <= 0 || usdRateInLocalCurrency <= 0) return null;
+
+            // INVERTED MATH (Dollar rate divided by currency rate)
+            decimal exactValueInUsd = usdRateInLocalCurrency / rawCurrency.Value;
+
+            return CreateCurrency(rawCurrency, exactValueInUsd);
+        }
+
+        // Helper method to avoid duplicating object creation code
+        private static Currency CreateCurrency(Currency raw, decimal exactValue)
+        {
             return new Currency
             {
-                Code = rawCurrency.Code.ToUpper(),
-                Name = rawCurrency.Name,
-                Value = finalValue,
-                Source = rawCurrency.Source
+                Code = raw.Code.ToUpper(),
+                Name = raw.Name,
+                Value = exactValue,
+                Source = raw.Source
             };
         }
     }

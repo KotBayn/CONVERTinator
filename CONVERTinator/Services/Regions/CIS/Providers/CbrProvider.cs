@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.CIS.Providers
 {
     public class CbrProvider : IExchangeRateProvider
     {
@@ -30,14 +30,17 @@ namespace CONVERTinator.Services.RegionProviders
                 foreach (JsonProperty property in valuteElement.EnumerateObject())
                 {
                     JsonElement currencyData = property.Value;
+                    decimal nominal = currencyData.GetProperty("Nominal").GetDecimal();
+                    decimal rawValue = currencyData.GetProperty("Value").GetDecimal();
 
                     // 4. filling in clean template
                     var currency = new Currency
                     {
                         Code = currencyData.GetProperty("CharCode").GetString(),
                         Name = currencyData.GetProperty("Name").GetString(),
-                        Value = currencyData.GetProperty("Value").GetDecimal(),
-                        Source = "CBR" // Putting a signature, who brought this
+
+                        Value = rawValue / nominal,
+                        Source = "CBR"
                     };
 
                     result.Add(currency);

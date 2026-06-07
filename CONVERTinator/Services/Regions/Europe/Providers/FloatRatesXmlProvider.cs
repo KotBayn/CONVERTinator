@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.Europe.Providers
 {
-    public class BundesbankXmlProvider : IExchangeRateProvider
+    public class FloatRatesXmlProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private const string Url = "https://api.statdata.bundesbank.de/Rest/data/BBEX3/D.USD.EUR.SP00.A";
+        private const string Url = "https://www.floatrates.com/daily/usd.xml";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -32,12 +32,12 @@ namespace CONVERTinator.Services.RegionProviders
                             Code = element.Attribute("currency").Value,
                             Name = element.Attribute("currency").Value,
                             Value = Convert.ToDecimal(element.Attribute("rate").Value, System.Globalization.CultureInfo.InvariantCulture),
-                            Source = "Bundesbank (XML)"
+                            Source = "FloatRates (XML)"
                         });
                     }
                 }
             }
-            catch (Exception ex) { Console.WriteLine($"Error in Bundesbank XML Parser: {ex.Message}"); }
+            catch (Exception ex) { Console.WriteLine($"Error in FloatRates XML Parser: {ex.Message}"); }
             return result;
         }
     }
