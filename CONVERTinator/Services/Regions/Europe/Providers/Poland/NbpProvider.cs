@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.Providers
+namespace CONVERTinator.Services.Regions.Europe.Providers.Poland
 {
     public class NbpProvider : IExchangeRateProvider
     {

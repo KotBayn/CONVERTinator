@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.Europe.Providers
 {
-    public class FloatRatesXmlProvider : IExchangeRateProvider
+    public class EcbXmlProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private const string Url = "https://www.floatrates.com/daily/usd.xml";
+        private const string Url = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -32,12 +32,12 @@ namespace CONVERTinator.Services.RegionProviders
                             Code = element.Attribute("currency").Value,
                             Name = element.Attribute("currency").Value,
                             Value = Convert.ToDecimal(element.Attribute("rate").Value, System.Globalization.CultureInfo.InvariantCulture),
-                            Source = "FloatRates (XML)"
+                            Source = "ECB (XML)"
                         });
                     }
                 }
             }
-            catch (Exception ex) { Console.WriteLine($"Error in FloatRates XML Parser: {ex.Message}"); }
+            catch (Exception ex) { Console.WriteLine($"Error in ECB XML Parser: {ex.Message}"); }
             return result;
         }
     }

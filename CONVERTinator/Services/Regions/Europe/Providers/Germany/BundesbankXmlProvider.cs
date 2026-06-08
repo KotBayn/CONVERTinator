@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.Europe.Providers.Germany
 {
     public class BundesbankXmlProvider : IExchangeRateProvider
     {

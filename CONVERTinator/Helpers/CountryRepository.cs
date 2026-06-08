@@ -101,6 +101,10 @@ namespace CONVERTinator.Helpers
             if (currencies.Count < 3) currencies.Add("EUR");
             if (currencies.Count < 3) currencies.Add("GBP");
 
+            // Always enforce global anchor currencies availability
+            currencies.Add("USD");
+            currencies.Add("EUR");
+
             return currencies.ToList();
         }
     }

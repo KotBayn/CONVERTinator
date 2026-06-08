@@ -5,13 +5,15 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.AmericasN.Providers
 {
-    public class EcbProvider : IExchangeRateProvider
+    public class UsProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        // Free API, getting rates with base USD
-        private const string Url = "https://api.frankfurter.app/latest?from=USD";
+
+        // Highly stable free tier API. Crucially, its base is strictly USD.
+        // This acts as our absolute mathematical anchor for the American region.
+        private const string Url = "https://open.er-api.com/v6/latest/USD";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -27,15 +29,15 @@ namespace CONVERTinator.Services.RegionProviders
                     result.Add(new Currency
                     {
                         Code = property.Name,
-                        Name = property.Name, // This API does not provide full names, only codes
+                        Name = property.Name,
                         Value = property.Value.GetDecimal(),
-                        Source = "Frankfurter (Europe)"
+                        Source = "US Global API"
                     });
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in ECB provider: {ex.Message}");
+                Console.WriteLine($"[US Provider Error]: {ex.Message}");
             }
             return result;
         }

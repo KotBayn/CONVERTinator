@@ -5,13 +5,13 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.Europe.Providers
 {
-    public class BundesbankProvider : IExchangeRateProvider
+    public class EcbProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
         // Free API, getting rates with base USD
-        private const string Url = "https://api.statdata.bundesbank.de/Rest/data/BBEX3/D.USD";
+        private const string Url = "https://api.frankfurter.app/latest?from=USD";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -29,13 +29,13 @@ namespace CONVERTinator.Services.RegionProviders
                         Code = property.Name,
                         Name = property.Name, // This API does not provide full names, only codes
                         Value = property.Value.GetDecimal(),
-                        Source = "Bundesbank (Germany)"
+                        Source = "Frankfurter (Europe)"
                     });
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in Bundesbank provider: {ex.Message}");
+                Console.WriteLine($"Error in ECB provider: {ex.Message}");
             }
             return result;
         }

@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.RegionProviders
+namespace CONVERTinator.Services.Regions.Asia.Providers
 {
     public class ChinaProvider : IExchangeRateProvider
     {
