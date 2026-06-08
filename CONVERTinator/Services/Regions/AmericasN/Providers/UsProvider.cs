@@ -10,7 +10,10 @@ namespace CONVERTinator.Services.Regions.AmericasN.Providers
     public class UsProvider : IExchangeRateProvider
     {
         private readonly HttpClient _httpClient = new HttpClient();
-        private const string Url = "https://open.er-api.com/v6/latest/USD"; // free API
+
+        // Highly stable free tier API. Crucially, its base is strictly USD.
+        // This acts as our absolute mathematical anchor for the American region.
+        private const string Url = "https://open.er-api.com/v6/latest/USD";
 
         public async Task<List<Currency>> GetRatesAsync()
         {
@@ -32,7 +35,10 @@ namespace CONVERTinator.Services.Regions.AmericasN.Providers
                     });
                 }
             }
-            catch (Exception ex) { Console.WriteLine($"Error in US Provider: {ex.Message}"); }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[US Provider Error]: {ex.Message}");
+            }
             return result;
         }
     }

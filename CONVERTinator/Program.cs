@@ -4,9 +4,11 @@ using CONVERTinator.Helpers;
 using CONVERTinator.Services;
 using CONVERTinator.Services.GeoLocator;
 using CONVERTinator.Services.Regions.AmericasN.Providers;
-using CONVERTinator.Services.Regions.CIS.Providers;
-using CONVERTinator.Services.Regions.Facades;
+using CONVERTinator.Services.Regions.Asia.Facades;
 using CONVERTinator.Services.Regions.Asia.Providers;
+using CONVERTinator.Services.Regions.CIS.Providers;
+using CONVERTinator.Services.Regions.Europe.Facades;
+using CONVERTinator.Services.Regions.Facades;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -99,28 +101,42 @@ namespace CONVERTinator
 
             var globalComposite = new RegionProviderComposite("Global");
 
-            // --- СНГ (CIS) ---
+            // --- CIS ---
             var cisComposite = new RegionProviderComposite("CIS");
-            // Now Russian Central Bank is just only provider in the CIS region.
-            cisComposite.Add(new CbrProvider());
+            cisComposite.Add(new RussiaBanksFacade());
+            cisComposite.Add(new MoldovaBanksFacade());
 
             // --- North America ---
-            var americasComposite = new RegionProviderComposite("Americas");
-            americasComposite.Add(new UsProvider());
+            var americasComposite = new RegionProviderComposite("AmericasN");
+            americasComposite.Add(new NorthAmericaBanksFacade());
 
             // --- Asia ---
             var asiaComposite = new RegionProviderComposite("Asia");
             asiaComposite.Add(new ChinaProvider());
+            asiaComposite.Add(new JapanBanksFacade());
+            asiaComposite.Add(new IndiaBanksFacade());
+            asiaComposite.Add(new SouthKoreaBanksFacade());
+            asiaComposite.Add(new SingaporeBanksFacade());
+
+
+            // --- Oceania ---
+            var oceaniaComposite = new RegionProviderComposite("Oceania");
+            oceaniaComposite.Add(new AustraliaBanksFacade());
+            oceaniaComposite.Add(new NewZealandBanksFacade());
 
             // --- Europe (Architectural Delight) ---
             var europeComposite = new RegionProviderComposite("Europe");
             europeComposite.Add(new GermanyBanksFacade());
             europeComposite.Add(new PolandBanksFacade());
             europeComposite.Add(new UkraineBanksFacade());
+            europeComposite.Add(new BulgariaBanksFacade());
+            europeComposite.Add(new ItalyBanksFacade());
+            europeComposite.Add(new CzechBanksFacade());
 
-            //globalComposite.Add(cisComposite);
-            //globalComposite.Add(americasComposite);
-            //globalComposite.Add(asiaComposite);
+            globalComposite.Add(cisComposite);
+            globalComposite.Add(americasComposite);
+            globalComposite.Add(asiaComposite);
+            globalComposite.Add(oceaniaComposite);
             globalComposite.Add(europeComposite);
 
             // Fetch all rates in one line! The composite handles Task.WhenAll internally.

@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CONVERTinator.Domain;
 
-namespace CONVERTinator.Services.Regions.Europe.Providers
+namespace CONVERTinator.Services.Regions.Europe.Providers.Germany
 {
     public class FloatRatesProvider : IExchangeRateProvider
     {
@@ -25,12 +25,25 @@ namespace CONVERTinator.Services.Regions.Europe.Providers
                 {
                     JsonElement currencyData = property.Value;
 
+                    // Locate the "rate" property
+                    JsonElement rateElement = currencyData.GetProperty("rate");
+                    decimal finalRate = 0m;
+
+                    if (rateElement.ValueKind == JsonValueKind.Number)
+                    {
+                        finalRate = rateElement.GetDecimal();
+                    }
+                    else if (rateElement.ValueKind == JsonValueKind.String)
+                    {
+                        string textValue = rateElement.GetString();
+                        finalRate = Convert.ToDecimal(textValue, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+
                     result.Add(new Currency
                     {
                         Code = currencyData.GetProperty("code").GetString().ToUpper(),
                         Name = currencyData.GetProperty("name").GetString(),
-                        // FloatRates returns "rate" as: How many units of X for 1 USD. 
-                        Value = currencyData.GetProperty("rate").GetDecimal(),
+                        Value = finalRate,
                         Source = "FloatRates Aggregator"
                     });
                 }

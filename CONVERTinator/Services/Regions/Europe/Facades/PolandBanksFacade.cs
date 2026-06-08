@@ -1,12 +1,12 @@
 ﻿using CONVERTinator.Domain;
 using CONVERTinator.Helpers;
-using CONVERTinator.Services.Regions.Europe.Providers;
+using CONVERTinator.Services.Regions.Europe.Providers.Poland;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CONVERTinator.Services.Regions.Facades
+namespace CONVERTinator.Services.Regions.Europe.Facades
 {
     internal class PolandBanksFacade : IExchangeRateProvider
     {

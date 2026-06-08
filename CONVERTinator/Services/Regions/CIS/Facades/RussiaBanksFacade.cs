@@ -40,12 +40,12 @@ namespace CONVERTinator.Services.Regions.Facades
 
             var normalizedRates = new List<Currency>();
 
-            // 1. Search USD in USD (base for conversion)
+            // Search USD in USD 
             var usdRateObj = validRates.FirstOrDefault(c => c.Code == "USD");
             if (usdRateObj == null) return new List<Currency>();    // If, the bank did not provide the dollar rate - the facade returns empty to avoid poisoning the median
             decimal rubToUsdCrossRate = usdRateObj.Value; 
 
-            // 2. Run all currencies through N.O.R.M.A.
+            //  N.O.R.M.A.
             foreach (var rate in validRates)
             {
                 if (rate.Code == "USD") continue;
@@ -56,16 +56,16 @@ namespace CONVERTinator.Services.Regions.Facades
                 }
             }
 
-            // 3. Manually add the Russian Ruble to Dollar
+            // Manually add the Russian Ruble to Dollar
             normalizedRates.Add(new Currency
             {
                 Code = "RUB",
                 Name = "Russian Ruble",
-                Value = 1m / rubToUsdCrossRate,
+                Value = rubToUsdCrossRate,
                 Source = "Russia Facade"
             });
 
-            // 4. If there will be 2-3 banks, we will call grouping and Average() as in Germany.
+            // If there will be 2-3 banks, we will call grouping and Average() as in Germany.
             // But for now, with only one bank, we simply return the result.
             return normalizedRates;
         }

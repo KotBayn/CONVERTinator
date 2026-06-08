@@ -18,10 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Regions\AmericasN\Facades\" />
     <Folder Include="Services\Regions\AmericasS\Providers\" />
     <Folder Include="Services\Regions\AmericasS\Facades\" />
-    <Folder Include="Services\Regions\Asia\Facades\" />
+    <Folder Include="Services\Regions\Oceania\Providers\" />
   </ItemGroup>
 
 </Project>
