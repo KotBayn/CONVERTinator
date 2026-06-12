@@ -6,7 +6,7 @@ namespace CONVERTinator.Helpers
 {
     public static class CountryRepository
     {
-        // Our local country database (Graph). 
+        // Local country database (Graph). 
         // Connections are built by ISO codes (including maritime borders for islands).
         private static readonly Dictionary<string, Country> Countries = new Dictionary<string, Country>
         {
@@ -107,5 +107,29 @@ namespace CONVERTinator.Helpers
 
             return currencies.ToList();
         }
+    
+        /// <summary>
+        /// Dynamic Zone Resolver: Calculates which financial clusters (Regions) 
+        /// must be loaded based on the host country and its immediate geopolitical neighbors.
+        /// </summary>
+        public static HashSet<Region> GetRequiredRegions(string currentIsoCode)
+        {
+            var activeRegions = new HashSet<Region>();
+
+            // Identify the host country and load its primary region
+            var hostCountry = GetCountryByIso(currentIsoCode);
+            activeRegions.Add(hostCountry.CountryRegion);
+
+            // Scan all bordering countries to dynamically expand the data cluster
+            {
+                var neighbor = GetCountryByIso(neighborIso);
+                activeRegions.Add(neighbor.CountryRegion);
+            }
+
+            // Always ensure the Americas are loaded if you want the global USD anchor to be rock-solid.
+            // If the user travels to a deep isolated region without USD, the facades still calculate it.
+
+            return activeRegions;
+        } 
     }
 }

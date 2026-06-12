@@ -6,7 +6,7 @@ using CONVERTinator.Services.GeoLocator;
 using CONVERTinator.Services.Regions.AmericasN.Providers;
 using CONVERTinator.Services.Regions.Asia.Facades;
 using CONVERTinator.Services.Regions.Asia.Providers;
-using CONVERTinator.Services.Regions.CIS.Providers;
+using CONVERTinator.Services.Regions.CIS.Facades;
 using CONVERTinator.Services.Regions.Europe.Facades;
 using CONVERTinator.Services.Regions.Facades;
 using System;
@@ -35,6 +35,17 @@ namespace CONVERTinator
             Console.WriteLine(asciiArt);
             Console.ResetColor();
 
+            // location detection
+            Console.WriteLine("Initializing geo-location services...");
+            ILocationService locationService = new LocationService();
+            string currentIso = await locationService.GetCurrentCountryIsoCodeAsync();
+            Country currentCountry = CountryRepository.GetCountryByIso(currentIso);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"[Location Locked]: {currentCountry.IsoCode} (Base Region: {currentCountry.CountryRegion})\n");
+            Console.ResetColor();
+
+            // Menu
             Console.WriteLine("Select operation mode:");
             Console.WriteLine("[1] TRAVEL (Auto-location & Bordering countries)");
             Console.WriteLine("[2] BUSINESS (Global analytics & Regional rates)");
@@ -46,23 +57,15 @@ namespace CONVERTinator
 
             string baseCurrency = "USD";
             var activeCurrencies = new List<string>();
-            ILocationService locationService = new LocationService();
 
-            // Configuration based on selected mode
             switch (modeInput)
             {
                 case "1":
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("=== Mode: TRAVEL ===");
                     Console.ResetColor();
-
-                    string travelIso = await locationService.GetCurrentCountryIsoCodeAsync();
-                    Country travelCountry = CountryRepository.GetCountryByIso(travelIso);
-
-                    baseCurrency = travelCountry.CurrencyCode;
-                    activeCurrencies = CountryRepository.GetTravelCurrencies(travelIso);
-
-                    Console.WriteLine($"[Auto-Location]: {travelIso}");
+                    baseCurrency = currentCountry.CurrencyCode;
+                    activeCurrencies = CountryRepository.GetTravelCurrencies(currentIso);
                     Console.WriteLine($"[Zone Loaded]: {activeCurrencies.Count} local & bordering currencies.\n");
                     break;
 
@@ -70,19 +73,9 @@ namespace CONVERTinator
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("=== Mode: BUSINESS ===");
                     Console.ResetColor();
-
-                    string bizIso = await locationService.GetCurrentCountryIsoCodeAsync();
-                    Country bizCountry = CountryRepository.GetCountryByIso(bizIso);
-
                     baseCurrency = "USD";
-                    activeCurrencies = RegionRepository.GetCurrenciesByRegion(bizCountry.CountryRegion);
-
-                    if (!activeCurrencies.Contains(baseCurrency))
-                    {
-                        activeCurrencies.Add(baseCurrency);
-                    }
-
-                    Console.WriteLine($"[Region Detected]: {bizCountry.CountryRegion}");
+                    activeCurrencies = RegionRepository.GetCurrenciesByRegion(currentCountry.CountryRegion);
+                    if (!activeCurrencies.Contains(baseCurrency)) activeCurrencies.Add(baseCurrency);
                     Console.WriteLine($"[Currencies Loaded]: {activeCurrencies.Count} mapped via JSON.\n");
                     break;
 
@@ -96,50 +89,63 @@ namespace CONVERTinator
                     return;
             }
 
-            // Setting up Composite Pattern for Data Providers
-            Console.WriteLine("Fetching provider data asynchronously...\n");
+            // Zone & Provider Initialization
+            Console.WriteLine("Calculating geopolitical network topology...");
+            HashSet<Region> activeZones = CountryRepository.GetRequiredRegions(currentIso);
+
+            Console.WriteLine($"Fetching provider data asynchronously for {activeZones.Count} region(s)...\n");
 
             var globalComposite = new RegionProviderComposite("Global");
 
-            // --- CIS ---
-            var cisComposite = new RegionProviderComposite("CIS");
-            cisComposite.Add(new RussiaBanksFacade());
-            cisComposite.Add(new MoldovaBanksFacade());
+            if (activeZones.Contains(Region.CIS))
+            {
+                var cisComposite = new RegionProviderComposite("CIS");
+                cisComposite.Add(new RussiaBanksFacade());
+                cisComposite.Add(new MoldovaBanksFacade());
+                cisComposite.Add(new BelarusBanksFacade());
+                cisComposite.Add(new KazakhstanBanksFacade());
+                globalComposite.Add(cisComposite);
+            }
 
-            // --- North America ---
-            var americasComposite = new RegionProviderComposite("AmericasN");
-            americasComposite.Add(new NorthAmericaBanksFacade());
+            if (activeZones.Contains(Region.Americas))
+            {
+                var americasComposite = new RegionProviderComposite("AmericasN");
+                americasComposite.Add(new NorthAmericaBanksFacade());
+                globalComposite.Add(americasComposite);
+            }
 
-            // --- Asia ---
-            var asiaComposite = new RegionProviderComposite("Asia");
-            asiaComposite.Add(new ChinaProvider());
-            asiaComposite.Add(new JapanBanksFacade());
-            asiaComposite.Add(new IndiaBanksFacade());
-            asiaComposite.Add(new SouthKoreaBanksFacade());
-            asiaComposite.Add(new SingaporeBanksFacade());
+            if (activeZones.Contains(Region.Asia))
+            {
+                var asiaComposite = new RegionProviderComposite("Asia");
+                asiaComposite.Add(new ChinaProvider());
+                asiaComposite.Add(new JapanBanksFacade());
+                asiaComposite.Add(new IndiaBanksFacade());
+                asiaComposite.Add(new SouthKoreaBanksFacade());
+                asiaComposite.Add(new SingaporeBanksFacade());
+                globalComposite.Add(asiaComposite);
+            }
 
+            if (activeZones.Contains(Region.Oceania))
+            {
+                var oceaniaComposite = new RegionProviderComposite("Oceania");
+                oceaniaComposite.Add(new AustraliaBanksFacade());
+                oceaniaComposite.Add(new NewZealandBanksFacade());
+                globalComposite.Add(oceaniaComposite);
+            }
 
-            // --- Oceania ---
-            var oceaniaComposite = new RegionProviderComposite("Oceania");
-            oceaniaComposite.Add(new AustraliaBanksFacade());
-            oceaniaComposite.Add(new NewZealandBanksFacade());
+            if (activeZones.Contains(Region.Europe))
+            {
+                var europeComposite = new RegionProviderComposite("Europe");
+                europeComposite.Add(new GermanyBanksFacade());
+                europeComposite.Add(new PolandBanksFacade());
+                europeComposite.Add(new UkraineBanksFacade());
+                europeComposite.Add(new BulgariaBanksFacade());
+                europeComposite.Add(new ItalyBanksFacade());
+                europeComposite.Add(new CzechBanksFacade());
+                globalComposite.Add(europeComposite);
+            }
 
-            // --- Europe (Architectural Delight) ---
-            var europeComposite = new RegionProviderComposite("Europe");
-            europeComposite.Add(new GermanyBanksFacade());
-            europeComposite.Add(new PolandBanksFacade());
-            europeComposite.Add(new UkraineBanksFacade());
-            europeComposite.Add(new BulgariaBanksFacade());
-            europeComposite.Add(new ItalyBanksFacade());
-            europeComposite.Add(new CzechBanksFacade());
-
-            globalComposite.Add(cisComposite);
-            globalComposite.Add(americasComposite);
-            globalComposite.Add(asiaComposite);
-            globalComposite.Add(oceaniaComposite);
-            globalComposite.Add(europeComposite);
-
-            // Fetch all rates in one line! The composite handles Task.WhenAll internally.
+            // Data Fetching & Aggregation
             List<Currency> allRates = await globalComposite.GetRatesAsync();
 
             Console.WriteLine($"Initialization complete. {allRates.Count} pairs aggregated.");
