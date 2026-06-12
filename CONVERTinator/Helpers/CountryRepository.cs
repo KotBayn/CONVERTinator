@@ -121,6 +121,7 @@ namespace CONVERTinator.Helpers
             activeRegions.Add(hostCountry.CountryRegion);
 
             // Scan all bordering countries to dynamically expand the data cluster
+            foreach (var neighborIso in hostCountry.Neighbors)
             {
                 var neighbor = GetCountryByIso(neighborIso);
                 activeRegions.Add(neighbor.CountryRegion);
