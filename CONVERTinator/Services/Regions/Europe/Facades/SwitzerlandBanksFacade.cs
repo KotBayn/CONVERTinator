@@ -6,18 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CONVERTinator.Services.Regions.Oceania.Facades
+namespace CONVERTinator.Services.Regions.Europe.Facades
 {
-    internal class AustraliaBanksFacade : IExchangeRateProvider
+    internal class SwitzerlandBanksFacade : IExchangeRateProvider
     {
         private readonly List<IExchangeRateProvider> _localBanks;
 
-        public AustraliaBanksFacade()
+        public SwitzerlandBanksFacade()
         {
             _localBanks = new List<IExchangeRateProvider>
             {
-                // Universal provider configured for Australian Dollar (AUD)
-                new RegionalFloatRatesProvider("aud", "Reserve Bank of Australia (via FR)")
+                // Universal provider configured for Swiss Franc (CHF)
+                new RegionalFloatRatesProvider("chf", "Swiss National Bank (via FR)")
             };
         }
 
@@ -28,7 +28,7 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
                 try { return await bank.GetRatesAsync(); }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[AUSTRALIA FACADE WARN] Provider failed: {ex.Message}");
+                    Console.WriteLine($"[SWITZERLAND FACADE WARN] Provider failed: {ex.Message}");
                     return new List<Currency>();
                 }
             });
@@ -41,7 +41,7 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
             var usdRateObj = validRates.FirstOrDefault(c => c.Code == "USD");
             if (usdRateObj == null) return new List<Currency>();
 
-            decimal audToUsdCrossRate = usdRateObj.Value;
+            decimal chfToUsdCrossRate = usdRateObj.Value;
 
             var allNormalizedRates = new List<Currency>();
 
@@ -49,16 +49,16 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
             {
                 if (rate.Code == "USD") continue;
 
-                var cleanRate = RateNormalizer.NormalizeForeignBase(rate, audToUsdCrossRate);
+                var cleanRate = RateNormalizer.NormalizeForeignBase(rate, chfToUsdCrossRate);
                 if (cleanRate != null) allNormalizedRates.Add(cleanRate);
             }
 
             allNormalizedRates.Add(new Currency
             {
-                Code = "AUD",
-                Name = "Australian Dollar",
-                Value = 1m / audToUsdCrossRate,
-                Source = "Australia Facade"
+                Code = "CHF",
+                Name = "Swiss Franc",
+                Value = 1m / chfToUsdCrossRate,
+                Source = "Switzerland Facade"
             });
 
             return allNormalizedRates;

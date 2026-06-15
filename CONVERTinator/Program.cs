@@ -3,12 +3,12 @@ using CONVERTinator.Domain.GEO;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services;
 using CONVERTinator.Services.GeoLocator;
-using CONVERTinator.Services.Regions.AmericasN.Providers;
+using CONVERTinator.Services.Regions.AmericasN.Facades;
 using CONVERTinator.Services.Regions.Asia.Facades;
-using CONVERTinator.Services.Regions.Asia.Providers;
+using CONVERTinator.Services.Regions.Asia.Providers; // for time, dont touch
 using CONVERTinator.Services.Regions.CIS.Facades;
 using CONVERTinator.Services.Regions.Europe.Facades;
-using CONVERTinator.Services.Regions.Facades;
+using CONVERTinator.Services.Regions.Oceania.Facades;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -90,152 +90,225 @@ namespace CONVERTinator
             }
 
             // Zone & Provider Initialization
-            Console.WriteLine("Calculating geopolitical network topology...");
-            HashSet<Region> activeZones = CountryRepository.GetRequiredRegions(currentIso);
+            var dbRepository = new CONVERTinator.Repositories.DbRepository();
+            List<Currency> allRates = new List<Currency>();
 
-            Console.WriteLine($"Fetching provider data asynchronously for {activeZones.Count} region(s)...\n");
+            TimeSpan cacheLifetime = TimeSpan.FromHours(2); // Time threshold for cache validity
+            bool useCache = false;
 
-            var globalComposite = new RegionProviderComposite("Global");
-
-            if (activeZones.Contains(Region.CIS))
+            try
+            { 
+                useCache = await dbRepository.IsCacheFreshAsync(cacheLifetime);
+            }
+            catch (Exception ex)
             {
-                var cisComposite = new RegionProviderComposite("CIS");
-                cisComposite.Add(new RussiaBanksFacade());
-                cisComposite.Add(new MoldovaBanksFacade());
-                cisComposite.Add(new BelarusBanksFacade());
-                cisComposite.Add(new KazakhstanBanksFacade());
-                globalComposite.Add(cisComposite);
+                Console.WriteLine($"[DB Warning] Integrity check failed: {ex.Message}. Forcing network fetch.");
             }
 
-            if (activeZones.Contains(Region.Americas))
+            if (useCache)
             {
-                var americasComposite = new RegionProviderComposite("AmericasN");
-                americasComposite.Add(new NorthAmericaBanksFacade());
-                globalComposite.Add(americasComposite);
-            }
-
-            if (activeZones.Contains(Region.Asia))
-            {
-                var asiaComposite = new RegionProviderComposite("Asia");
-                asiaComposite.Add(new ChinaProvider());
-                asiaComposite.Add(new JapanBanksFacade());
-                asiaComposite.Add(new IndiaBanksFacade());
-                asiaComposite.Add(new SouthKoreaBanksFacade());
-                asiaComposite.Add(new SingaporeBanksFacade());
-                globalComposite.Add(asiaComposite);
-            }
-
-            if (activeZones.Contains(Region.Oceania))
-            {
-                var oceaniaComposite = new RegionProviderComposite("Oceania");
-                oceaniaComposite.Add(new AustraliaBanksFacade());
-                oceaniaComposite.Add(new NewZealandBanksFacade());
-                globalComposite.Add(oceaniaComposite);
-            }
-
-            if (activeZones.Contains(Region.Europe))
-            {
-                var europeComposite = new RegionProviderComposite("Europe");
-                europeComposite.Add(new GermanyBanksFacade());
-                europeComposite.Add(new PolandBanksFacade());
-                europeComposite.Add(new UkraineBanksFacade());
-                europeComposite.Add(new BulgariaBanksFacade());
-                europeComposite.Add(new ItalyBanksFacade());
-                europeComposite.Add(new CzechBanksFacade());
-                globalComposite.Add(europeComposite);
-            }
-
-            // Data Fetching & Aggregation
-            List<Currency> allRates = await globalComposite.GetRatesAsync();
-
-            Console.WriteLine($"Initialization complete. {allRates.Count} pairs aggregated.");
-            Console.WriteLine("-----------------------------------------------------");
-            Console.WriteLine("Commands: add [code], rem [code], ch [code], ex [amount], clear, exit");
-
-            // Main Interaction Loop
-            while (true)
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"\n[Base: {baseCurrency}] | [Active pairs: {activeCurrencies.Count}]");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("[Cache Engine]: Fresh local rates detected. Skipping network overhead.");
                 Console.ResetColor();
-                Console.Write("> ");
 
-                string input = Console.ReadLine()?.Trim();
-                if (string.IsNullOrWhiteSpace(input)) continue;
+                allRates = await dbRepository.GetCachedRatesAsync();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("[Cache Engine]: Cache is stale or missing. Initiating global network synchronization...");
+                Console.ResetColor();
+                Console.WriteLine("Calculating geopolitical network topology...");
 
-                string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                string command = parts[0].ToLower();
-                string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
+                HashSet<Region> activeZones = CountryRepository.GetRequiredRegions(currentIso);
 
-                if (command == "exit") break;
+                Console.WriteLine($"Fetching provider data asynchronously for {activeZones.Count} region(s)...\n");
 
-                switch (command)
+                var globalComposite = new RegionProviderComposite("Global");
+
+                if (activeZones.Contains(Region.CIS))
                 {
-                    case "clear":
-                        Console.Clear();
-                        break;
+                    var cisComposite = new RegionProviderComposite("CIS");
+                    cisComposite.Add(new RussiaBanksFacade());
+                    cisComposite.Add(new MoldovaBanksFacade());
+                    cisComposite.Add(new BelarusBanksFacade());
+                    cisComposite.Add(new KazakhstanBanksFacade());
+                    globalComposite.Add(cisComposite);
+                }
 
-                    case "add":
-                        if (string.IsNullOrEmpty(arg)) break;
+                if (activeZones.Contains(Region.Americas))
+                {
+                    var americasComposite = new RegionProviderComposite("AmericasN");
+                    americasComposite.Add(new NorthAmericaBanksFacade());
+                    globalComposite.Add(americasComposite);
+                }
 
-                        if (!activeCurrencies.Contains(arg))
-                        {
-                            activeCurrencies.Add(arg);
-                            Console.WriteLine($"[+] {arg} added.");
-                        }
-                        break;
+                if (activeZones.Contains(Region.Asia))
+                {
+                    var asiaComposite = new RegionProviderComposite("Asia");
+                    asiaComposite.Add(new ChinaProvider());
+                    asiaComposite.Add(new JapanBanksFacade());
+                    asiaComposite.Add(new IndiaBanksFacade());
+                    asiaComposite.Add(new SouthKoreaBanksFacade());
+                    asiaComposite.Add(new SingaporeBanksFacade());
+                    globalComposite.Add(asiaComposite);
+                }
 
-                    case "rem":
-                        if (activeCurrencies.Remove(arg))
-                        {
-                            Console.WriteLine($"[-] {arg} removed.");
-                        }
-                        break;
+                if (activeZones.Contains(Region.Oceania))
+                {
+                    var oceaniaComposite = new RegionProviderComposite("Oceania");
+                    oceaniaComposite.Add(new AustraliaBanksFacade());
+                    oceaniaComposite.Add(new NewZealandBanksFacade());
+                    globalComposite.Add(oceaniaComposite);
+                }
+            
+                /*if (activeZones.Contains(Region.Africa))
+                {
+                    var africaComposite = new RegionProviderComposite("Africa");
+                    africaComposite.Add(new SouthAfricaBanksFacade());
+                    globalComposite.Add(africaComposite);
+                }*/
 
-                    case "ch":
-                        if (!string.IsNullOrEmpty(arg))
-                        {
-                            baseCurrency = arg;
-                            Console.WriteLine($"Base currency updated -> {baseCurrency}");
-                        }
-                        break;
+                /*if (activeZones.Contains(Region.MiddleEast))
+                {
+                    var middleEastComposite = new RegionProviderComposite("Middle East");
+                    middleEastComposite.Add(new UAEProvider());
+                    middleEastComposite.Add(new SaudiArabiaBanksFacade());
+                    globalComposite.Add(middleEastComposite);
+                }*/
 
-                    case "ex":
-                        if (!decimal.TryParse(arg, out decimal amount))
-                        {
-                            Console.WriteLine("Error: Invalid numeric format.");
-                            break;
-                        }
+                if (activeZones.Contains(Region.Europe))
+                {
+                    var europeComposite = new RegionProviderComposite("Europe");
+                    europeComposite.Add(new GermanyBanksFacade());
+                    europeComposite.Add(new PolandBanksFacade());
+                    europeComposite.Add(new UkraineBanksFacade());
+                    europeComposite.Add(new BulgariaBanksFacade());
+                    europeComposite.Add(new ItalyBanksFacade());
+                    europeComposite.Add(new CzechBanksFacade());
+                    europeComposite.Add(new FranceBanksFacade());
+                    europeComposite.Add(new SpainBanksFacade());
+                    europeComposite.Add(new NetherlandsBanksFacade());
+                    europeComposite.Add(new HungaryBanksFacade());
+                    europeComposite.Add(new SwitzerlandBanksFacade());
+                    europeComposite.Add(new FinlandBanksFacade());
+                    europeComposite.Add(new SwedenBanksFacade());
+                    europeComposite.Add(new NorwayBanksFacade());
+                    europeComposite.Add(new DenmarkBanksFacade());
+                    europeComposite.Add(new PortugalBanksFacade());
+                    europeComposite.Add(new GreeceBanksFacade());
+                    europeComposite.Add(new GBBanksFacade());
+                    europeComposite.Add(new RomaniaBanksFacade());
+                    globalComposite.Add(europeComposite);
+                }
 
-                        Console.WriteLine($"\n--- Conversion: {amount} {baseCurrency} ---");
+                // Data Fetching & Aggregation
+                allRates = await globalComposite.GetRatesAsync();
 
-                        foreach (var targetCurrency in activeCurrencies)
-                        {
-                            // Utilizing MedianCalculator to handle all cross-rate math
-                            decimal? convertedAmount = MedianCalculator.Convert(amount, baseCurrency, targetCurrency, allRates);
-
-                            if (convertedAmount == null)
-                            {
-                                Console.ForegroundColor = ConsoleColor.DarkGray;
-                                Console.WriteLine($"{targetCurrency}: N/A (Rate missing)");
-                                Console.ResetColor();
-                            }
-                            else
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"{targetCurrency}: {Math.Round(convertedAmount.Value, 3)}");
-                                Console.ResetColor();
-                            }
-                        }
-                        break;
-
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Unknown command.");
-                        Console.ResetColor();
-                        break;
+                // --- Cache in DB ---
+                if (allRates.Any())
+                {
+                    try
+                    {
+                        await dbRepository.SaveRatesAsync(allRates);
+                        Console.WriteLine("[DB Success] Network data pushed to local cache storage.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[DB Error] Failed to write cache: {ex.Message}");
+                    }
                 }
             }
+
+            Console.WriteLine($"Initialization complete. {allRates.Count} pairs aggregated.");
+                Console.WriteLine("-----------------------------------------------------");
+                Console.WriteLine("Commands: add [code], rem [code], ch [code], ex [amount], clear, exit");
+
+                // Main Interaction Loop
+                while (true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"\n[Base: {baseCurrency}] | [Active pairs: {activeCurrencies.Count}]");
+                    Console.ResetColor();
+                    Console.Write("> ");
+
+                    string input = Console.ReadLine()?.Trim();
+                    if (string.IsNullOrWhiteSpace(input)) continue;
+
+                    string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    string command = parts[0].ToLower();
+                    string arg = parts.Length > 1 ? parts[1].ToUpper() : "";
+
+                    if (command == "exit") break;
+
+                    switch (command)
+                    {
+                        case "clear":
+                            Console.Clear();
+                        break;
+
+                        case "add":
+                            if (string.IsNullOrEmpty(arg)) 
+                                break;
+
+                            if (!activeCurrencies.Contains(arg))
+                            {
+                                activeCurrencies.Add(arg);
+                                Console.WriteLine($"[+] {arg} added.");
+                            }
+                        break;
+
+                        case "rem":
+                            if (activeCurrencies.Remove(arg))
+                            {
+                                Console.WriteLine($"[-] {arg} removed.");
+                            }
+                        break;
+
+                        case "ch":
+                            if (!string.IsNullOrEmpty(arg))
+                            {
+                                baseCurrency = arg;
+                                Console.WriteLine($"Base currency updated -> {baseCurrency}");
+                            }
+                        break;
+
+                        case "ex":
+                            if (!decimal.TryParse(arg, out decimal amount))
+                            {
+                                Console.WriteLine("Error: Invalid numeric format.");
+                                break;
+                            }
+
+                            Console.WriteLine($"\n--- Conversion: {amount} {baseCurrency} ---");
+
+                            foreach (var targetCurrency in activeCurrencies)
+                            {
+                                // Utilizing MedianCalculator to handle all cross-rate math
+                                decimal? convertedAmount = MedianCalculator.Convert(amount, baseCurrency, targetCurrency, allRates);
+
+                                if (convertedAmount == null)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                                    Console.WriteLine($"{targetCurrency}: N/A (Rate missing)");
+                                    Console.ResetColor();
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    Console.WriteLine($"{targetCurrency}: {Math.Round(convertedAmount.Value, 3)}");
+                                    Console.ResetColor();
+                                }
+                            }
+                        break;
+
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Unknown command.");
+                            Console.ResetColor();
+                        break;
+                    }
+                }
         }
     }
 }

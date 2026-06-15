@@ -1,23 +1,24 @@
 ﻿using CONVERTinator.Domain;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services.Providers;
+using CONVERTinator.Services.Regions.Europe.Providers.Hungary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CONVERTinator.Services.Regions.Oceania.Facades
+namespace CONVERTinator.Services.Regions.Europe.Facades
 {
-    internal class AustraliaBanksFacade : IExchangeRateProvider
+    internal class HungaryBanksFacade : IExchangeRateProvider
     {
         private readonly List<IExchangeRateProvider> _localBanks;
 
-        public AustraliaBanksFacade()
+        public HungaryBanksFacade()
         {
             _localBanks = new List<IExchangeRateProvider>
             {
-                // Universal provider configured for Australian Dollar (AUD)
-                new RegionalFloatRatesProvider("aud", "Reserve Bank of Australia (via FR)")
+                // new MnbProvider(); // Magyar Nemzeti Bank (MNB) is the central bank of Hungary.
+                new RegionalFloatRatesProvider("huf", "Magyar Nemzeti Bank via FR")
             };
         }
 
@@ -28,7 +29,7 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
                 try { return await bank.GetRatesAsync(); }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[AUSTRALIA FACADE WARN] Provider failed: {ex.Message}");
+                    Console.WriteLine($"[HUNGARY FACADE WARN] Provider failed: {ex.Message}");
                     return new List<Currency>();
                 }
             });
@@ -41,7 +42,7 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
             var usdRateObj = validRates.FirstOrDefault(c => c.Code == "USD");
             if (usdRateObj == null) return new List<Currency>();
 
-            decimal audToUsdCrossRate = usdRateObj.Value;
+            decimal hufToUsdCrossRate = usdRateObj.Value;
 
             var allNormalizedRates = new List<Currency>();
 
@@ -49,16 +50,16 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
             {
                 if (rate.Code == "USD") continue;
 
-                var cleanRate = RateNormalizer.NormalizeForeignBase(rate, audToUsdCrossRate);
+                var cleanRate = RateNormalizer.NormalizeForeignBase(rate, hufToUsdCrossRate);
                 if (cleanRate != null) allNormalizedRates.Add(cleanRate);
             }
 
             allNormalizedRates.Add(new Currency
             {
-                Code = "AUD",
-                Name = "Australian Dollar",
-                Value = 1m / audToUsdCrossRate,
-                Source = "Australia Facade"
+                Code = "HUF",
+                Name = "Hungarian Forint",
+                Value = 1m / hufToUsdCrossRate,
+                Source = "Hungary Facade"
             });
 
             return allNormalizedRates;
