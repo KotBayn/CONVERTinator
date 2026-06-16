@@ -57,6 +57,12 @@ namespace CONVERTinator
 
             string baseCurrency = "USD";
             var activeCurrencies = new List<string>();
+            
+            
+
+            var dbRepository = new CONVERTinator.Repositories.DbRepository();
+            var userSettings = await dbRepository.GetSettingsAsync();
+            string currentCurrency = userSettings.BaseCurrency;
 
             switch (modeInput)
             {
@@ -64,7 +70,8 @@ namespace CONVERTinator
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("=== Mode: TRAVEL ===");
                     Console.ResetColor();
-                    baseCurrency = currentCountry.CurrencyCode;
+                    currentCurrency = currentCountry.CurrencyCode;
+                    baseCurrency = userSettings.BaseCurrency;
                     activeCurrencies = CountryRepository.GetTravelCurrencies(currentIso);
                     Console.WriteLine($"[Zone Loaded]: {activeCurrencies.Count} local & bordering currencies.\n");
                     break;
@@ -73,8 +80,11 @@ namespace CONVERTinator
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("=== Mode: BUSINESS ===");
                     Console.ResetColor();
-                    baseCurrency = "USD";
-                    activeCurrencies = RegionRepository.GetCurrenciesByRegion(currentCountry.CountryRegion);
+                    baseCurrency = userSettings.BaseCurrency;
+                    activeCurrencies = userSettings.SavedCurrencies
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+
                     if (!activeCurrencies.Contains(baseCurrency)) activeCurrencies.Add(baseCurrency);
                     Console.WriteLine($"[Currencies Loaded]: {activeCurrencies.Count} mapped via JSON.\n");
                     break;
@@ -90,7 +100,6 @@ namespace CONVERTinator
             }
 
             // Zone & Provider Initialization
-            var dbRepository = new CONVERTinator.Repositories.DbRepository();
             List<Currency> allRates = new List<Currency>();
 
             TimeSpan cacheLifetime = TimeSpan.FromHours(2); // Time threshold for cache validity
@@ -248,32 +257,40 @@ namespace CONVERTinator
                         break;
 
                         case "add":
-                            if (string.IsNullOrEmpty(arg)) 
-                                break;
+                        if (string.IsNullOrEmpty(arg)) break;
 
-                            if (!activeCurrencies.Contains(arg))
-                            {
-                                activeCurrencies.Add(arg);
-                                Console.WriteLine($"[+] {arg} added.");
-                            }
+                        if (!activeCurrencies.Contains(arg))
+                        {
+                            activeCurrencies.Add(arg);
+                            Console.WriteLine($"[+] {arg} added.");
+
+                            // СОХРАНЯЕМ В БД
+                            await dbRepository.SaveSettingsAsync(baseCurrency, activeCurrencies);
+                        }
                         break;
 
                         case "rem":
-                            if (activeCurrencies.Remove(arg))
-                            {
-                                Console.WriteLine($"[-] {arg} removed.");
-                            }
+                        if (activeCurrencies.Remove(arg))
+                        {
+                            Console.WriteLine($"[-] {arg} removed.");
+
+                            // СОХРАНЯЕМ В БД
+                            await dbRepository.SaveSettingsAsync(baseCurrency, activeCurrencies);
+                        }
                         break;
 
                         case "ch":
-                            if (!string.IsNullOrEmpty(arg))
-                            {
-                                baseCurrency = arg;
-                                Console.WriteLine($"Base currency updated -> {baseCurrency}");
-                            }
+                        if (!string.IsNullOrEmpty(arg))
+                        {
+                            baseCurrency = arg;
+                            Console.WriteLine($"Base currency updated -> {baseCurrency}");
+
+                            // СОХРАНЯЕМ В БД
+                            await dbRepository.SaveSettingsAsync(baseCurrency, activeCurrencies);
+                        }
                         break;
 
-                        case "ex":
+                    case "ex":
                             if (!decimal.TryParse(arg, out decimal amount))
                             {
                                 Console.WriteLine("Error: Invalid numeric format.");

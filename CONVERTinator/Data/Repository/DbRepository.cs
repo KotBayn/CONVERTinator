@@ -90,5 +90,54 @@ namespace CONVERTinator.Repositories
             // If the time since the oldest record is less than maxAge, the cache is fresh
             return (DateTime.UtcNow - oldestCacheTime) < maxAge;
         }
+
+        /// <summary>
+        /// Get user settings from the database. 
+        /// If there are no settings yet, creates a new row with default values.
+        /// </summary>
+        public async Task<UserSettings> GetSettingsAsync()
+        {
+            using var db = new AppDbContext();
+
+            var settings = await db.Settings.FirstOrDefaultAsync();
+
+            if (settings == null)
+            {
+                // if there are no settings yet, create a new row with default values
+                settings = new UserSettings
+                {
+                    BaseCurrency = "USD",
+                    SavedCurrencies = "EUR" // Defult active currencies
+                };
+
+                db.Settings.Add(settings);
+                await db.SaveChangesAsync();
+            }
+
+            return settings;
+        }
+
+        /// <summary>
+        /// Rewrites user settings in the database. If there are no settings yet, creates a new row.
+        /// </summary>
+        public async Task SaveSettingsAsync(string baseCurrency, List<string> activeCurrencies)
+        {
+            using var db = new AppDbContext();
+
+            var settings = await db.Settings.FirstOrDefaultAsync();
+
+            if (settings == null)
+            {
+                settings = new UserSettings();
+                db.Settings.Add(settings);
+            }
+
+            settings.BaseCurrency = baseCurrency;
+
+            // Convert List<string> to a single comma-separated string for SQLite
+            settings.SavedCurrencies = string.Join(",", activeCurrencies.Select(c => c.Trim().ToUpper()));
+
+            await db.SaveChangesAsync();
+        }
     }
 }
