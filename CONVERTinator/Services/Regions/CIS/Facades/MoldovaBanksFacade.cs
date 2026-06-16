@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CONVERTinator.Services.Regions.Facades
+namespace CONVERTinator.Services.Regions.CIS.Facades
 {
     internal class MoldovaBanksFacade : IExchangeRateProvider
     {

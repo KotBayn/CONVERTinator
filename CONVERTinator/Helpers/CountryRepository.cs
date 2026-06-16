@@ -6,16 +6,21 @@ namespace CONVERTinator.Helpers
 {
     public static class CountryRepository
     {
-        // Our local country database (Graph). 
+        // Local country database (Graph). 
         // Connections are built by ISO codes (including maritime borders for islands).
         private static readonly Dictionary<string, Country> Countries = new Dictionary<string, Country>
         {
             // --- EUROPE ---
             { "PL", new Country { IsoCode = "PL", CurrencyCode = "PLN", CountryRegion = Region.Europe, Neighbors = new List<string> { "DE", "CZ", "SK", "UA", "BY", "LT", "RU" } } },
             { "DE", new Country { IsoCode = "DE", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "DK", "PL", "CZ", "AT", "CH", "FR", "LU", "BE", "NL" } } },
-            { "UA", new Country { IsoCode = "UA", CurrencyCode = "UAH", CountryRegion = Region.CIS, Neighbors = new List<string> { "PL", "SK", "HU", "RO", "MD", "RU", "BY" } } },
-            { "BY", new Country { IsoCode = "BY", CurrencyCode = "BYN", CountryRegion = Region.CIS, Neighbors = new List<string> { "PL", "LT", "LV", "RU", "UA" } } },
-            { "RU", new Country { IsoCode = "RU", CurrencyCode = "RUB", CountryRegion = Region.CIS, Neighbors = new List<string> { "NO", "FI", "EE", "LV", "LT", "PL", "BY", "UA", "GE", "AZ", "KZ", "CN", "MN", "KP" } } },
+            { "UA", new Country { IsoCode = "UA", CurrencyCode = "UAH", CountryRegion = Region.Europe, Neighbors = new List<string> { "PL", "SK", "HU", "RO", "MD", "RU", "BY" } } },
+            { "RO", new Country { IsoCode = "RO", CurrencyCode = "RON", CountryRegion = Region.Europe, Neighbors = new List<string> { "UA", "MD", "BG", "RS", "HU" } } },
+            { "RS", new Country { IsoCode = "RS", CurrencyCode = "RSD", CountryRegion = Region.Europe, Neighbors = new List<string> { "HU", "RO", "BG", "MK", "AL", "ME", "BA", "HR" } } },
+            { "HR", new Country { IsoCode = "HR", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "SI", "HU", "RS", "BA", "ME" } } },
+            { "SI", new Country { IsoCode = "SI", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "IT", "AT", "HU", "HR" } } },
+            { "BG", new Country { IsoCode = "BG", CurrencyCode = "BGN", CountryRegion = Region.Europe, Neighbors = new List<string> { "RO", "RS", "MK", "GR", "TR" } } },
+            { "GR", new Country { IsoCode = "GR", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "AL", "MK", "BG", "TR" } } },
+            { "CY", new Country { IsoCode = "CY", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "GR", "TR", "LB", "SY", "IL", "EG" } } },
             
             // Island Nations & Maritime Borders
             { "IS", new Country { IsoCode = "IS", CurrencyCode = "ISK", CountryRegion = Region.Europe, Neighbors = new List<string> { "GB", "NO", "DK", "IE" } } },
@@ -47,11 +52,16 @@ namespace CONVERTinator.Helpers
             { "LT", new Country { IsoCode = "LT", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "LV", "BY", "PL", "RU" } } },
 
             // --- CIS (Extended) ---
+            { "BY", new Country { IsoCode = "BY", CurrencyCode = "BYN", CountryRegion = Region.CIS, Neighbors = new List<string> { "PL", "LT", "LV", "RU", "UA" } } },
+            { "RU", new Country { IsoCode = "RU", CurrencyCode = "RUB", CountryRegion = Region.CIS, Neighbors = new List<string> { "NO", "FI", "EE", "LV", "LT", "PL", "BY", "UA", "GE", "AZ", "KZ", "CN", "MN", "KP" } } },
             { "KZ", new Country { IsoCode = "KZ", CurrencyCode = "KZT", CountryRegion = Region.CIS, Neighbors = new List<string> { "RU", "CN", "KG", "UZ", "TM" } } },
             { "UZ", new Country { IsoCode = "UZ", CurrencyCode = "UZS", CountryRegion = Region.CIS, Neighbors = new List<string> { "KZ", "KG", "TJ", "AF", "TM" } } },
             { "GE", new Country { IsoCode = "GE", CurrencyCode = "GEL", CountryRegion = Region.CIS, Neighbors = new List<string> { "RU", "TR", "AM", "AZ" } } },
             { "AM", new Country { IsoCode = "AM", CurrencyCode = "AMD", CountryRegion = Region.CIS, Neighbors = new List<string> { "GE", "AZ", "IR", "TR" } } },
             { "AZ", new Country { IsoCode = "AZ", CurrencyCode = "AZN", CountryRegion = Region.CIS, Neighbors = new List<string> { "RU", "GE", "AM", "IR", "TR" } } },
+            { "MD", new Country { IsoCode = "MD", CurrencyCode = "MDL", CountryRegion = Region.CIS, Neighbors = new List<string> { "RO", "UA" } } },
+            { "KG", new Country { IsoCode = "KG", CurrencyCode = "KGS", CountryRegion = Region.CIS, Neighbors = new List<string> { "KZ", "UZ", "TJ", "CN" } } },
+            { "TJ", new Country { IsoCode = "TJ", CurrencyCode = "TJS", CountryRegion = Region.CIS, Neighbors = new List<string> { "UZ", "KG", "CN", "AF" } } },
             
             // --- AMERICAS ---
             { "US", new Country { IsoCode = "US", CurrencyCode = "USD", CountryRegion = Region.Americas, Neighbors = new List<string> { "CA", "MX", "CU", "BS" } } },
@@ -63,6 +73,11 @@ namespace CONVERTinator.Helpers
             { "JP", new Country { IsoCode = "JP", CurrencyCode = "JPY", CountryRegion = Region.Asia, Neighbors = new List<string> { "KR", "RU", "CN", "TW" } } },
             { "KR", new Country { IsoCode = "KR", CurrencyCode = "KRW", CountryRegion = Region.Asia, Neighbors = new List<string> { "KP", "JP", "CN" } } },
             { "TR", new Country { IsoCode = "TR", CurrencyCode = "TRY", CountryRegion = Region.Asia, Neighbors = new List<string> { "GR", "BG", "GE", "AM", "AZ", "IR", "IQ", "SY" } } },
+
+            // --- MIDDLE EAST ---
+            { "SA", new Country { IsoCode = "SA", CurrencyCode = "SAR", CountryRegion = Region.MiddleEast, Neighbors = new List<string> { "YE", "OM", "AE", "QA", "KW", "IQ", "JO" } } },
+            { "AE", new Country { IsoCode = "AE", CurrencyCode = "AED", CountryRegion = Region.MiddleEast, Neighbors = new List<string> { "SA", "OM" } } },
+            { "IL", new Country { IsoCode = "IL", CurrencyCode = "ILS", CountryRegion = Region.MiddleEast, Neighbors = new List<string> { "EG", "JO", "SY", "LB" } } },
             
             // --- OCEANIA ---
             { "AU", new Country { IsoCode = "AU", CurrencyCode = "AUD", CountryRegion = Region.Oceania, Neighbors = new List<string> { "NZ", "ID", "PG", "SB", "VU" } } },
@@ -107,5 +122,30 @@ namespace CONVERTinator.Helpers
 
             return currencies.ToList();
         }
+    
+        /// <summary>
+        /// Dynamic Zone Resolver: Calculates which financial clusters (Regions) 
+        /// must be loaded based on the host country and its immediate geopolitical neighbors.
+        /// </summary>
+        public static HashSet<Region> GetRequiredRegions(string currentIsoCode)
+        {
+            var activeRegions = new HashSet<Region>();
+
+            // Identify the host country and load its primary region
+            var hostCountry = GetCountryByIso(currentIsoCode);
+            activeRegions.Add(hostCountry.CountryRegion);
+
+            // Scan all bordering countries to dynamically expand the data cluster
+            foreach (var neighborIso in hostCountry.Neighbors)
+            {
+                var neighbor = GetCountryByIso(neighborIso);
+                activeRegions.Add(neighbor.CountryRegion);
+            }
+
+            // Always ensure the Americas are loaded if you want the global USD anchor to be rock-solid.
+            // If the user travels to a deep isolated region without USD, the facades still calculate it.
+
+            return activeRegions;
+        } 
     }
 }

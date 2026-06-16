@@ -16,7 +16,9 @@ namespace CONVERTinator.Services.Regions.Europe.Facades
         {
             _localBanks = new List<IExchangeRateProvider>
             {
-                new NbuProvider() // National Bank of Ukraine (Returns rates in UAH base)
+                new NbuProvider(), // National Bank of Ukraine (Returns rates in UAH base)
+                new PrivatBankProvider(), // PrivatBank (Returns rates in UAH base)
+                new MonoBankProvider() // Monobank (Returns rates in UAH base)
             };
         }
 

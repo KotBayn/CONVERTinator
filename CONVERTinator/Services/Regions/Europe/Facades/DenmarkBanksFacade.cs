@@ -6,18 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CONVERTinator.Services.Regions.Oceania.Facades
+namespace CONVERTinator.Services.Regions.Europe.Facades
 {
-    internal class AustraliaBanksFacade : IExchangeRateProvider
+    internal class DenmarkBanksFacade : IExchangeRateProvider
     {
         private readonly List<IExchangeRateProvider> _localBanks;
 
-        public AustraliaBanksFacade()
+        public DenmarkBanksFacade()
         {
             _localBanks = new List<IExchangeRateProvider>
             {
-                // Universal provider configured for Australian Dollar (AUD)
-                new RegionalFloatRatesProvider("aud", "Reserve Bank of Australia (via FR)")
+                new RegionalFloatRatesProvider("dkk", "Danmarks Nationalbank via FR")
             };
         }
 
@@ -28,7 +27,7 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
                 try { return await bank.GetRatesAsync(); }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[AUSTRALIA FACADE WARN] Provider failed: {ex.Message}");
+                    Console.WriteLine($"[DENMARK FACADE WARN] Provider failed: {ex.Message}");
                     return new List<Currency>();
                 }
             });
@@ -41,7 +40,7 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
             var usdRateObj = validRates.FirstOrDefault(c => c.Code == "USD");
             if (usdRateObj == null) return new List<Currency>();
 
-            decimal audToUsdCrossRate = usdRateObj.Value;
+            decimal dkkToUsdCrossRate = usdRateObj.Value;
 
             var allNormalizedRates = new List<Currency>();
 
@@ -49,16 +48,16 @@ namespace CONVERTinator.Services.Regions.Oceania.Facades
             {
                 if (rate.Code == "USD") continue;
 
-                var cleanRate = RateNormalizer.NormalizeForeignBase(rate, audToUsdCrossRate);
+                var cleanRate = RateNormalizer.NormalizeForeignBase(rate, dkkToUsdCrossRate);
                 if (cleanRate != null) allNormalizedRates.Add(cleanRate);
             }
 
             allNormalizedRates.Add(new Currency
             {
-                Code = "AUD",
-                Name = "Australian Dollar",
-                Value = 1m / audToUsdCrossRate,
-                Source = "Australia Facade"
+                Code = "DKK",
+                Name = "Danish Krone",
+                Value = 1m / dkkToUsdCrossRate,
+                Source = "Denmark Facade"
             });
 
             return allNormalizedRates;

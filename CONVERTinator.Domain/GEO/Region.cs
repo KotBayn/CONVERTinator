@@ -15,6 +15,7 @@ namespace CONVERTinator.Domain.GEO
             Asia,
             Americas,
             Africa,
+            MiddleEast,
             Oceania //includes Australia
         }
 }

@@ -20,7 +20,21 @@
   <ItemGroup>
     <Folder Include="Services\Regions\AmericasS\Providers\" />
     <Folder Include="Services\Regions\AmericasS\Facades\" />
+    <Folder Include="Services\Regions\CIS\Providers\Georgia\" />
+    <Folder Include="Services\Regions\CIS\Providers\Azerbaijan\" />
     <Folder Include="Services\Regions\Oceania\Providers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
