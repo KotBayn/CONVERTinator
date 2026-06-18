@@ -21,10 +21,20 @@ namespace CONVERTinator.WebAPI.Controllers
             {
                 var dbRepository = new DbRepository();
                 var rates = await dbRepository.GetCachedRatesAsync();
+                bool isFresh = await dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
+
+                // AUTO-REFRESH LOGIC
+                if (rates.Count == 0 || !isFresh)
+                {
+                    var sync = new CONVERTinator.Services.CacheSyncService();
+                    await sync.ForceUpdateAsync();
+
+                    rates = await dbRepository.GetCachedRatesAsync();
+                }
 
                 if (rates.Count == 0)
                 {
-                    return StatusCode(500, new { error = "Database cache is empty. Run core app first." });
+                    return StatusCode(500, new { error = "Global network failure. Providers did not respond." });
                 }
 
                 // Using MedianCalculator to convert the amount from baseCur to targetCur
@@ -50,21 +60,35 @@ namespace CONVERTinator.WebAPI.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
         [HttpGet("multi")]
-        public async Task<IActionResult> CalculateMultiple(string baseCur, string targetCurs, decimal amount)
+        public async Task<IActionResult> CalculateMultiple(string baseCur, [FromQuery] List<string> targetCurs, decimal amount)
         {
             try
             {
                 var dbRepository = new DbRepository();
                 var rates = await dbRepository.GetCachedRatesAsync();
+                bool isFresh = await dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
 
-                if (rates.Count == 0) return StatusCode(500, new { error = "Database cache is empty." });
+                // Auto-refresh logic
+                if (rates.Count == 0 || !isFresh)
+                {
+                    var sync = new CONVERTinator.Services.CacheSyncService();
+                    await sync.ForceUpdateAsync();
 
-                // Brake string of target currencies into a list, trim spaces, convert to uppercase and remove duplicates
-                var targets = targetCurs.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                        .Select(c => c.Trim().ToUpper())
-                                        .Distinct()
-                                        .ToList();
+                    rates = await dbRepository.GetCachedRatesAsync();
+                }
+
+                if (rates.Count == 0)
+                {
+                    return StatusCode(500, new { error = "Global network failure. Providers did not respond." });
+                }
+                // Trim and uppercase target currencies, remove duplicates
+                var targets = targetCurs
+                                .Where(c => !string.IsNullOrWhiteSpace(c))
+                                .Select(c => c.Trim().ToUpper())
+                                .Distinct()
+                                .ToList();
 
                 // MAX 10 CURRENCIES!!!
                 if (targets.Count > 10)
@@ -72,7 +96,6 @@ namespace CONVERTinator.WebAPI.Controllers
                     return BadRequest(new { error = "Maximum 10 target currencies allowed per request." });
                 }
 
-                // Results
                 var results = new List<object>();
 
                 foreach (var target in targets)
@@ -81,22 +104,24 @@ namespace CONVERTinator.WebAPI.Controllers
 
                     results.Add(new
                     {
-                        currency = target,
-                        rateFound = converted != null,
-                        result = converted != null ? Math.Round(converted.Value, 3) : (decimal?)null
+                        targetCurrency = target,
+                        convertedAmount = converted != null ? Math.Round(converted.Value, 4) : (decimal?)null,
+                        success = converted != null
                     });
                 }
 
                 return Ok(new
                 {
+                    status = "success",
                     baseCurrency = baseCur.ToUpper(),
                     originalAmount = amount,
+                    timestamp = DateTime.UtcNow,
                     conversions = results
                 });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(new { status = "error", error = ex.Message });
             }
         }
     }
