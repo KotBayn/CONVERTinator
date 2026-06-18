@@ -264,7 +264,6 @@ namespace CONVERTinator
                             activeCurrencies.Add(arg);
                             Console.WriteLine($"[+] {arg} added.");
 
-                            // СОХРАНЯЕМ В БД
                             await dbRepository.SaveSettingsAsync(baseCurrency, activeCurrencies);
                         }
                         break;
@@ -274,21 +273,26 @@ namespace CONVERTinator
                         {
                             Console.WriteLine($"[-] {arg} removed.");
 
-                            // СОХРАНЯЕМ В БД
                             await dbRepository.SaveSettingsAsync(baseCurrency, activeCurrencies);
                         }
                         break;
 
-                        case "ch":
-                        if (!string.IsNullOrEmpty(arg))
+                    case "ch":
+                        
+                        if (!string.IsNullOrEmpty(arg) && arg.Length == 3 && arg.All(char.IsLetter))
                         {
-                            baseCurrency = arg;
+                            baseCurrency = arg.ToUpper();
                             Console.WriteLine($"Base currency updated -> {baseCurrency}");
 
-                            // СОХРАНЯЕМ В БД
                             await dbRepository.SaveSettingsAsync(baseCurrency, activeCurrencies);
                         }
-                        break;
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Error: Invalid currency code. Use 3 letters (e.g., USD, EUR).");
+                            Console.ResetColor();
+                        }
+                    break;
 
                     case "ex":
                             if (!decimal.TryParse(arg, out decimal amount))
@@ -317,7 +321,7 @@ namespace CONVERTinator
                                     Console.ResetColor();
                                 }
                             }
-                        break;
+                    break;
 
                         default:
                             Console.ForegroundColor = ConsoleColor.Red;
