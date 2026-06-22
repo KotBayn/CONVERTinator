@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\GeoLocator\**" />
+    <EmbeddedResource Remove="Services\GeoLocator\**" />
+    <None Remove="Services\GeoLocator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CONVERTinator.Domain\CONVERTinator.Domain.csproj" />
   </ItemGroup>
 

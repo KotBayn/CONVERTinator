@@ -1,49 +1,44 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CONVERTinator.Repositories;
 using CONVERTinator.Helpers;
+using CONVERTinator.Services;
 
 namespace CONVERTinator.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")] 
+    [Route("api/[controller]")]
     public class ConvertController : ControllerBase
     {
+        private readonly DbRepository _dbRepository = new DbRepository();
+        private readonly CacheSyncService _cacheSyncService = new CacheSyncService();
         // method to calculate exchange rate between two currencies
         [HttpGet("exchange")]
-        [ProducesResponseType(200)] 
-        [ProducesResponseType(400)] 
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CalculateExchange(string baseCur, string targetCur, decimal amount)
         {
             try
             {
-                var dbRepository = new DbRepository();
-                var rates = await dbRepository.GetCachedRatesAsync();
-                bool isFresh = await dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
+                var rates = await _dbRepository.GetCachedRatesAsync();
+                bool isCacheFresh = await _dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
 
                 // AUTO-REFRESH LOGIC
-                if (rates.Count == 0 || !isFresh)
+                if (rates.Count == 0 || !isCacheFresh)
                 {
-                    var sync = new CONVERTinator.Services.CacheSyncService();
-                    await sync.ForceUpdateAsync();
+                    await _cacheSyncService.ForceUpdateAsync();
 
-                    rates = await dbRepository.GetCachedRatesAsync();
+                    rates = await _dbRepository.GetCachedRatesAsync();
                 }
 
-                if (rates.Count == 0)
-                {
-                    return StatusCode(500, new { error = "Global network failure. Providers did not respond." });
-                }
-
-                // Using MedianCalculator to convert the amount from baseCur to targetCur
                 decimal? result = MedianCalculator.Convert(amount, baseCur.ToUpper(), targetCur.ToUpper(), rates);
 
                 if (result == null)
-                {
                     return NotFound(new { error = $"Conversion path between {baseCur} and {targetCur} not found." });
-                }
 
                 return Ok(new
                 {
@@ -51,13 +46,14 @@ namespace CONVERTinator.WebAPI.Controllers
                     baseCurrency = baseCur.ToUpper(),
                     targetCurrency = targetCur.ToUpper(),
                     originalAmount = amount,
-                    convertedAmount = Math.Round(result.Value, 3),
+                    convertedAmount = Math.Round(result.Value, 4),
                     timestamp = DateTime.UtcNow
                 });
             }
+
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return StatusCode(500, new { status = "error", error = ex.Message });
             }
         }
 
@@ -66,46 +62,32 @@ namespace CONVERTinator.WebAPI.Controllers
         {
             try
             {
-                var dbRepository = new DbRepository();
-                var rates = await dbRepository.GetCachedRatesAsync();
-                bool isFresh = await dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
+                // Check if base currency is valid
+                var rates = await _dbRepository.GetCachedRatesAsync();
+                bool isCacheFresh = await _dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
 
-                // Auto-refresh logic
-                if (rates.Count == 0 || !isFresh)
+                if (rates.Count == 0 || !isCacheFresh)
                 {
-                    var sync = new CONVERTinator.Services.CacheSyncService();
-                    await sync.ForceUpdateAsync();
-
-                    rates = await dbRepository.GetCachedRatesAsync();
+                    await _cacheSyncService.ForceUpdateAsync();
+                    rates = await _dbRepository.GetCachedRatesAsync();
                 }
 
-                if (rates.Count == 0)
-                {
-                    return StatusCode(500, new { error = "Global network failure. Providers did not respond." });
-                }
-                // Trim and uppercase target currencies, remove duplicates
-                var targets = targetCurs
-                                .Where(c => !string.IsNullOrWhiteSpace(c))
-                                .Select(c => c.Trim().ToUpper())
-                                .Distinct()
-                                .ToList();
+                var targets = targetCurs.Where(c => !string.IsNullOrWhiteSpace(c))
+                                        .Select(c => c.Trim().ToUpper())
+                                        .Distinct()
+                                        .ToList();
 
-                // MAX 10 CURRENCIES!!!
                 if (targets.Count > 10)
-                {
-                    return BadRequest(new { error = "Maximum 10 target currencies allowed per request." });
-                }
+                    return BadRequest(new { error = "Maximum 10 target currencies allowed." });
 
                 var results = new List<object>();
-
                 foreach (var target in targets)
                 {
                     decimal? converted = MedianCalculator.Convert(amount, baseCur.ToUpper(), target, rates);
-
                     results.Add(new
                     {
                         targetCurrency = target,
-                        convertedAmount = converted != null ? Math.Round(converted.Value, 4) : (decimal?)null,
+                        convertedAmount = converted != null ? Math.Round(converted.Value, 3) : (decimal?)null,
                         success = converted != null
                     });
                 }
@@ -121,7 +103,7 @@ namespace CONVERTinator.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { status = "error", error = ex.Message });
+                return StatusCode(500, new { status = "error", error = ex.Message });
             }
         }
     }
