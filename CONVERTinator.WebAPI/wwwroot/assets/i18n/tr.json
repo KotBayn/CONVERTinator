@@ -1,0 +1,20 @@
+{
+  "nav_home": "Ana Sayfa",
+  "nav_rates": "Kurlar",
+  "nav_about": "Hakkımızda",
+  "region_europe": "Avrupa",
+  "region_cis": "BDT",
+  "region_americas": "Amerika",
+  "region_asia": "Asya",
+  "region_middle_east": "Orta Doğu",
+  "region_oceania": "Okyanusya",
+  "hero_title": "<span class=\"gradient-text\">Sınır tanımayan</span><br>döviz bozdurma",
+  "feature_1": "30+ para birimi için anında çeviri",
+  "feature_2": "Bölge ve yerel kurların otomatik tespiti",
+  "feature_3": "4 ondalık basamağa kadar hassasiyet",
+  "graph_title": "Trend İzleme",
+  "converter_title": "Çevirici",
+  "converter_count": "/10 para birimi",
+  "label_base": "TEMEL PARA BİRİMİ",
+  "label_target": "ŞUNA ÇEVİR"
+}

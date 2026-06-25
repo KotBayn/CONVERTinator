@@ -11,12 +11,31 @@ namespace CONVERTinator.Repositories
 {
     public class DbRepository
     {
+        private readonly DbContextOptions<AppDbContext> _options;
+
+        // Default constructor for the real application (production mode)
+        public DbRepository()
+        {
+        }
+
+        // Constructor for testing (accepts in-memory database options)
+        public DbRepository(DbContextOptions<AppDbContext> options)
+        {
+            _options = options;
+        }
+
+        // Factory method: decides which database context to provide
+        private AppDbContext CreateContext()
+        {
+            return _options != null ? new AppDbContext(_options) : new AppDbContext();
+        }
+
         /// <summary>
         /// Read cached rates from the database
         /// </summary>
         public async Task<List<Currency>> GetCachedRatesAsync()
         {
-            using var db = new AppDbContext();
+            using var db = CreateContext();
             var cached = await db.CachedRates.ToListAsync();
             // Map CachedRate entities to Currency domain models
             return cached.Select(c => new Currency
@@ -32,7 +51,7 @@ namespace CONVERTinator.Repositories
         /// </summary>
         public async Task SaveRatesAsync(List<Currency> rates)
         {
-            using var db = new AppDbContext();
+            using var db = CreateContext();
             var oldRates = await db.CachedRates.ToListAsync();
             db.CachedRates.RemoveRange(oldRates);
 
@@ -54,7 +73,7 @@ namespace CONVERTinator.Repositories
         /// </summary>
         public async Task<bool> IsCacheFreshAsync(TimeSpan maxAge)
         {
-            using var db = new AppDbContext();
+            using var db = CreateContext();
             if (!await db.CachedRates.AnyAsync()) return false;
 
             DateTime oldestCacheTime = await db.CachedRates.MinAsync(r => r.FetchTime);
@@ -66,7 +85,7 @@ namespace CONVERTinator.Repositories
         /// </summary>
         public async Task<UserSettings> GetSettingsAsync()
         {
-            using var db = new AppDbContext();
+            using var db = CreateContext();
             var settings = await db.Settings.FirstOrDefaultAsync();
 
             if (settings == null)
@@ -87,7 +106,7 @@ namespace CONVERTinator.Repositories
         /// </summary>
         public async Task SaveSettingsAsync(string baseCurrency, List<string> activeCurrencies)
         {
-            using var db = new AppDbContext();
+            using var db = CreateContext();
             var settings = await db.Settings.FirstOrDefaultAsync();
 
             if (settings == null)

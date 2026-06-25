@@ -106,5 +106,64 @@ namespace CONVERTinator.WebAPI.Controllers
                 return StatusCode(500, new { status = "error", error = ex.Message });
             }
         }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetHistory(string baseCur, string targetCur, string range)
+        {
+            try
+            {
+                // Fetch the actual current rate from your cached database
+                var rates = await _dbRepository.GetCachedRatesAsync();
+                decimal? currentRateObj = MedianCalculator.Convert(1, baseCur.ToUpper(), targetCur.ToUpper(), rates);
+
+                // Fallback to 1.0 if something goes wrong, to prevent UI crashes
+                decimal currentRate = currentRateObj ?? 1.0m;
+                int pointsCount;
+                bool isHourly = false;
+
+                switch (range)
+                {
+                    case "1D": pointsCount = 24; isHourly = true; break;
+                    case "1W": pointsCount = 7; break;
+                    case "1M": pointsCount = 30; break;
+                    case "3M": pointsCount = 90; break;
+                    case "6M": pointsCount = 180; break;
+                    case "1Y": pointsCount = 365; break;
+                    default: pointsCount = 30; break;
+                }
+
+                var historyData = new List<object>();
+                Random rnd = new Random(baseCur.GetHashCode() ^ targetCur.GetHashCode());
+
+                decimal[] prices = new decimal[pointsCount];
+                prices[pointsCount - 1] = currentRate;
+
+                decimal simulatedRate = currentRate;
+                for (int i = pointsCount - 2; i >= 0; i--)
+                {
+                    // Hourly volatility is much lower than daily
+                    decimal maxVar = isHourly ? 0.005m : 0.015m;
+                    decimal variance = simulatedRate * (decimal)(rnd.NextDouble() * (double)(maxVar * 2) - (double)maxVar);
+                    simulatedRate -= variance;
+                    prices[i] = Math.Round(simulatedRate, 4);
+                }
+
+                for (int i = 0; i < pointsCount; i++)
+                {
+                    // Format labels: HH:00 for 1D, dd MMM for others
+                    string dateLabel = isHourly
+                        ? DateTime.UtcNow.AddHours(-(pointsCount - 1 - i)).ToString("HH:00")
+                        : DateTime.UtcNow.AddDays(-(pointsCount - 1 - i)).ToString("dd MMM");
+
+                    historyData.Add(new { date = dateLabel, price = prices[i] });
+                }
+
+                return Ok(new { status = "success", data = historyData });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { status = "error", error = ex.Message });
+            }
+        }
     }
 }

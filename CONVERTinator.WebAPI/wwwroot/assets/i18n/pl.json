@@ -1,0 +1,20 @@
+{
+  "nav_home": "Strona główna",
+  "nav_rates": "Kursy",
+  "nav_about": "O nas",
+  "region_europe": "Europa",
+  "region_cis": "WNP",
+  "region_americas": "Ameryka",
+  "region_asia": "Azja",
+  "region_middle_east": "Bliski Wschód",
+  "region_oceania": "Oceania",
+  "hero_title": "<span class=\"gradient-text\">Wymiana walut</span><br>bez granic",
+  "feature_1": "Natychmiastowa konwersja dla ponad 30 walut",
+  "feature_2": "Automatyczne wykrywanie regionu i lokalnych kursów",
+  "feature_3": "Dokładność do 4 miejsc po przecinku",
+  "graph_title": "Monitorowanie trendów",
+  "converter_title": "Kalkulator",
+  "converter_count": "/10 walut",
+  "label_base": "WALUTA BAZOWA",
+  "label_target": "WYMIEŃ NA"
+}

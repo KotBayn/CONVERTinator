@@ -1,0 +1,20 @@
+{
+  "nav_home": "홈",
+  "nav_rates": "환율",
+  "nav_about": "정보",
+  "region_europe": "유럽",
+  "region_cis": "독립국가연합",
+  "region_americas": "아메리카",
+  "region_asia": "아시아",
+  "region_middle_east": "중동",
+  "region_oceania": "오세아니아",
+  "hero_title": "<span class=\"gradient-text\">국경 없는</span><br>환전",
+  "feature_1": "30개 이상의 통화 즉시 변환",
+  "feature_2": "지역 및 지역 환율 자동 감지",
+  "feature_3": "소수점 이하 4자리까지의 정밀도",
+  "graph_title": "트렌드 모니터링",
+  "converter_title": "변환기",
+  "converter_count": "/10 통화",
+  "label_base": "기준 통화",
+  "label_target": "변환 대상"
+}

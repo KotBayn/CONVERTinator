@@ -1,0 +1,20 @@
+{
+  "nav_home": "ホーム",
+  "nav_rates": "レート",
+  "nav_about": "概要",
+  "region_europe": "ヨーロッパ",
+  "region_cis": "CIS",
+  "region_americas": "南北アメリカ",
+  "region_asia": "アジア",
+  "region_middle_east": "中東",
+  "region_oceania": "オセアニア",
+  "hero_title": "<span class=\"gradient-text\">国境のない</span><br>通貨両替",
+  "feature_1": "30以上の通貨を即時換算",
+  "feature_2": "地域と現地レートの自動検出",
+  "feature_3": "小数点以下4桁までの精度",
+  "graph_title": "トレンド監視",
+  "converter_title": "コンバーター",
+  "converter_count": "/10 通貨",
+  "label_base": "基軸通貨",
+  "label_target": "換算先"
+}

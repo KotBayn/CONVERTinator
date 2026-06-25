@@ -21,7 +21,14 @@ namespace CONVERTinator.Helpers
             { "BG", new Country { IsoCode = "BG", CurrencyCode = "BGN", CountryRegion = Region.Europe, Neighbors = new List<string> { "RO", "RS", "MK", "GR", "TR" } } },
             { "GR", new Country { IsoCode = "GR", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "AL", "MK", "BG", "TR" } } },
             { "CY", new Country { IsoCode = "CY", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "GR", "TR", "LB", "SY", "IL", "EG" } } },
-            
+            // Small European States (Microstates)
+            { "LU", new Country { IsoCode = "LU", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "BE", "FR", "DE" } } },
+            { "LI", new Country { IsoCode = "LI", CurrencyCode = "CHF", CountryRegion = Region.Europe, Neighbors = new List<string> { "CH", "AT" } } },
+            { "AD", new Country { IsoCode = "AD", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "ES", "FR" } } },
+            { "MC", new Country { IsoCode = "MC", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "FR" } } },
+            { "SM", new Country { IsoCode = "SM", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "IT" } } },
+            { "VA", new Country { IsoCode = "VA", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "IT" } } },
+
             // Island Nations & Maritime Borders
             { "IS", new Country { IsoCode = "IS", CurrencyCode = "ISK", CountryRegion = Region.Europe, Neighbors = new List<string> { "GB", "NO", "DK", "IE" } } },
             { "GB", new Country { IsoCode = "GB", CurrencyCode = "GBP", CountryRegion = Region.Europe, Neighbors = new List<string> { "IE", "FR", "BE", "NL", "IS" } } },

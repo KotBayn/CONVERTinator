@@ -1,0 +1,20 @@
+{
+  "nav_home": "Início",
+  "nav_rates": "Taxas",
+  "nav_about": "Sobre nós",
+  "region_europe": "Europa",
+  "region_cis": "CEI",
+  "region_americas": "Américas",
+  "region_asia": "Ásia",
+  "region_middle_east": "Oriente Médio",
+  "region_oceania": "Oceania",
+  "hero_title": "<span class=\"gradient-text\">Câmbio de moedas</span><br>sem fronteiras",
+  "feature_1": "Conversão instantânea para mais de 30 moedas",
+  "feature_2": "Detecção automática de região e taxas",
+  "feature_3": "Precisão de até 4 casas decimais",
+  "graph_title": "Monitoramento de tendências",
+  "converter_title": "Conversor",
+  "converter_count": "/10 moedas",
+  "label_base": "MOEDA BASE",
+  "label_target": "CAMBIAR PARA"
+}

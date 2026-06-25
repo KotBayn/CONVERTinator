@@ -1,0 +1,20 @@
+{
+  "nav_home": "Accueil",
+  "nav_rates": "Taux",
+  "nav_about": "À propos",
+  "region_europe": "Europe",
+  "region_cis": "CEI",
+  "region_americas": "Amériques",
+  "region_asia": "Asie",
+  "region_middle_east": "Moyen-Orient",
+  "region_oceania": "Océanie",
+  "hero_title": "<span class=\"gradient-text\">Échange de devises</span><br>sans frontières",
+  "feature_1": "Conversion instantanée pour plus de 30 devises",
+  "feature_2": "Détection automatique de la région et des taux",
+  "feature_3": "Précision jusqu'à 4 décimales",
+  "graph_title": "Suivi des tendances",
+  "converter_title": "Convertisseur",
+  "converter_count": "/10 devises",
+  "label_base": "DEVISE DE BASE",
+  "label_target": "CHANGER EN"
+}

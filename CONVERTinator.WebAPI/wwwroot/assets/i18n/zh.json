@@ -1,0 +1,20 @@
+{
+  "nav_home": "首页",
+  "nav_rates": "汇率",
+  "nav_about": "关于我们",
+  "region_europe": "欧洲",
+  "region_cis": "独联体",
+  "region_americas": "美洲",
+  "region_asia": "亚洲",
+  "region_middle_east": "中东",
+  "region_oceania": "大洋洲",
+  "hero_title": "<span class=\"gradient-text\">无国界</span><br>货币兑换",
+  "feature_1": "支持30多种货币即时转换",
+  "feature_2": "自动检测地区和本地汇率",
+  "feature_3": "精度高达小数点后4位",
+  "graph_title": "趋势监控",
+  "converter_title": "兑换器",
+  "converter_count": "/10 种货币",
+  "label_base": "基础货币",
+  "label_target": "兑换为"
+}

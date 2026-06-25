@@ -141,33 +141,47 @@ function stopFlagRotation(iconEl) {
 MODULE 4: CORE LOGIC & API (Auto-Detection & Manual)
 --------------------------------------------------------- */
 async function initApp() {
-    let isoCode = 'RU';
+    let iso = 'US';
+    let region = 'Americas'; 
+    let baseCurrency = 'USD';
+
     try {
+        // Fetch the location data directly from the self-contained C# controller
+        // You can test other regions locally by appending a query string, e.g., ?overrideIso=NO
         const response = await fetch('https://localhost:7256/api/Location/current', {
             method: 'GET',
             headers: { 'Accept': 'application/json' },
         });
+
         if (response.ok) {
             const data = await response.json();
             if (data.isoCode) {
-                isoCode = data.isoCode.toUpperCase();
+                iso = data.isoCode.toUpperCase();
+                region = data.region;
+                baseCurrency = data.currencyCode; 
             }
         }
     } catch (error) {
-        console.warn('Backend is offline. Using fallback ISO code (RU).');
+        console.warn('Backend is offline. Using fallback environment profiles (RU/CIS).', error);
     }
-    applyRegionSettings(isoCode);
+
+    // Initialize application state with the resolved parameters
+    applyRegionSettings(iso, region, baseCurrency);
 }
 
-function applyRegionSettings(isoCode) {
-    const region = CountryToRegionMap[isoCode] || 'Global';
-    const bgImageFile = RegionBackgrounds[region];
-
+function applyRegionSettings(isoCode, regionName, currencyCode) {
     const regionSelector = document.getElementById('regionSelector');
     if (regionSelector) {
-        regionSelector.value = region;
+        regionSelector.value = regionName;
     }
 
+    // Enforce the detected primary country currency as the base asset
+    const baseCurrencySelect = document.getElementById('baseCurrency');
+    if (baseCurrencySelect && currencyCode) {
+        baseCurrencySelect.value = currencyCode;
+    }
+
+    const bgImageFile = RegionBackgrounds[regionName] || RegionBackgrounds['Global'];
     const bgElement = document.getElementById('bg-image');
     if (bgElement) {
         bgElement.style.opacity = 0.5;
@@ -177,12 +191,17 @@ function applyRegionSettings(isoCode) {
         }, 200);
     }
 
-    window.location.hash = `#${region}`;
-    console.log(`[App] Location: ${isoCode} | Region: ${region} | Background: ${bgImageFile}`);
+    // Update the URL hash routing signature silently
+    window.location.hash = `#${regionName}`;
+    console.log(`[Smart Init] IP mapped -> ISO: ${isoCode} | Region: ${regionName} | Base: ${currencyCode}`);
 
-    updateConversions();
+    if (typeof updateTargetOptions === 'function') updateTargetOptions();
+    if (typeof updateConversions === 'function') updateConversions();
+    if (typeof updateChartToggles === 'function') updateChartToggles();
+    if (typeof renderCurrencyChart === 'function') renderCurrencyChart();
 }
 
+// Global DOM listener for interactive manual region overrides from the header select
 document.addEventListener('DOMContentLoaded', () => {
     const regionSelector = document.getElementById('regionSelector');
     if (regionSelector) {
@@ -200,32 +219,92 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             window.location.hash = `#${selectedRegion}`;
-            console.log(`[Manual] Region: ${selectedRegion} | Backgr: ${bgImageFile}`);
-
-            setTimeout(renderCurrencyChart, 300);
+            console.log(`[Manual Override] User switched region to: ${selectedRegion} | Background: ${bgImageFile}`);
         });
     }
 });
 
 /* ---------------------------------------------------------
-MODULE 5: DYNAMIC CONVERTER UI & LOGIC
+MODULE 5: REAL API CONVERSION (Optimized Single Request)
 --------------------------------------------------------- */
-const MAX_CURRENCIES = 10;
-let currentCurrencyCount = 2;
 
-// DOM Elements
-const targetRowsContainer = document.getElementById('targetRows');
-const addCurrencyBtn = document.getElementById('addCurrencyBtn');
-const removeCurrencyBtn = document.getElementById('removeCurrencyBtn'); // NEW: Remove button
-const currencyCountSpan = document.getElementById('currencyCount');
-const baseCurrencySelect = document.getElementById('baseCurrency');
-const amountInput = document.getElementById('amount');
+// Debounce function to protect your C# server from spam
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
-// Stub rates for testing (to be replaced by C# API)
-const STUB_RATES = {
-    'USD': 1.0, 'EUR': 0.92, 'RUB': 92.5, 'GBP': 0.78,
-    'JPY': 156.0, 'CNY': 7.25, 'PLN': 4.0
-};
+// The main fetching engine
+async function performRealConversion() {
+    const amountInput = document.getElementById('amount');
+    const baseCurrencySelect = document.getElementById('baseCurrency');
+    
+    if (!amountInput || !baseCurrencySelect) return;
+    
+    const amount = parseFloat(amountInput.value) || 0;
+    const baseCurrency = baseCurrencySelect.value;
+    const targetRows = document.querySelectorAll('.target-row');
+    const targetCurrencies = Array.from(targetRows).map(row => {
+        const select = row.querySelector('.target-select');
+        return select ? select.value : null;
+    }).filter(val => val !== null);
+
+    if (targetCurrencies.length === 0) return;
+
+    try {
+        // Build the URL for a SINGLE request containing all targets
+        // IMPORTANT: Adjust 'baseCur', 'amount', and 'targetCur' parameter names 
+        // if they differ in C# controller!
+        const url = new URL('https://localhost:7256/api/Convert/exchange');
+        url.searchParams.append('baseCur', baseCurrency);
+        url.searchParams.append('amount', amount);
+        
+        // Append each target currency. ASP.NET will automatically parse this into a List<string>
+        targetCurrencies.forEach(cur => url.searchParams.append('targetCur', cur));
+
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+        const data = await response.json();
+
+        // Map the backend results directly to the UI rows
+        if (data.status === "success" && data.conversions) {
+            targetRows.forEach(row => {
+                const select = row.querySelector('.target-select');
+                const resultInput = row.querySelector('.target-result');
+                if (!select || !resultInput) return;
+
+                // Find the specific currency in the backend response array
+                const conversion = data.conversions.find(c => c.targetCurrency === select.value);
+
+                if (conversion && conversion.success) {
+                    resultInput.value = conversion.convertedAmount.toLocaleString('us-US', {
+                        minimumFractionDigits: 3,
+                        maximumFractionDigits: 3
+                    }) + ' ' + select.value;
+                } else {
+                    resultInput.value = "BAD API";
+                }
+            });
+        }
+
+    } catch (err) {
+        console.warn(`[API Error] Failed to fetch rates:`, err);
+        // Optional: you can add the local stub fallback here if the server drops
+    }
+
+    if (typeof updateChartToggles === 'function') updateChartToggles();
+    if (typeof renderCurrencyChart === 'function') renderCurrencyChart();
+}
+
+const updateConversions = debounce(performRealConversion, 300);
 
 /* ---------------------------------------------------------
 FILTER: Hide base currency from target selects

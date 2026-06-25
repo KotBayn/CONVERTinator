@@ -13,14 +13,19 @@ namespace CONVERTinator.Data
         public AppDbContext()
         {
             Directory.CreateDirectory("Data");
-
             // auto-migrate database 
             Database.Migrate();
+        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=Data/convertinator.db");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=Data/convertinator.db");
+            }
         }
     }
 }

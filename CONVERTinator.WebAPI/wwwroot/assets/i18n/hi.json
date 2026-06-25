@@ -1,0 +1,20 @@
+{
+  "nav_home": "होम",
+  "nav_rates": "दरें",
+  "nav_about": "हमारे बारे में",
+  "region_europe": "यूरोप",
+  "region_cis": "सीआईएस",
+  "region_americas": "अमेरिका",
+  "region_asia": "एशिया",
+  "region_middle_east": "मध्य पूर्व",
+  "region_oceania": "ओशिनिया",
+  "hero_title": "<span class=\"gradient-text\">बिना सीमाओं के</span><br>मुद्रा विनिमय",
+  "feature_1": "30+ मुद्राओं में तुरंत रूपांतरण",
+  "feature_2": "क्षेत्र और स्थानीय दरों का स्वतः पता लगाना",
+  "feature_3": "4 दशमलव स्थानों तक सटीकता",
+  "graph_title": "ट्रेंड मॉनिटरिंग",
+  "converter_title": "कनवर्टर",
+  "converter_count": "/10 मुद्राएँ",
+  "label_base": "आधार मुद्रा",
+  "label_target": "इसमें बदलें"
+}
