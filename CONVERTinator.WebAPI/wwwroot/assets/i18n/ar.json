@@ -1,0 +1,20 @@
+{
+  "nav_home": "الرئيسية",
+  "nav_rates": "الأسعار",
+  "nav_about": "معلومات عنا",
+  "region_europe": "أوروبا",
+  "region_cis": "رابطة الدول المستقلة",
+  "region_americas": "الأمريكتان",
+  "region_asia": "آسيا",
+  "region_middle_east": "الشرق الأوسط",
+  "region_oceania": "أوقيانوسيا",
+  "hero_title": "<span class=\"gradient-text\">تحويل العملات</span><br>بلا حدود",
+  "feature_1": "تحويل فوري لأكثر من 30 عملة",
+  "feature_2": "اكتشاف تلقائي للمنطقة والأسعار المحلية",
+  "feature_3": "دقة تصل إلى 4 منازل عشرية",
+  "graph_title": "مراقبة الاتجاهات",
+  "converter_title": "محول",
+  "converter_count": "/10 عملات",
+  "label_base": "العملة الأساسية",
+  "label_target": "التحويل إلى"
+}

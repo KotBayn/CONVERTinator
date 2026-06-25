@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\GeoLocator\**" />
+    <EmbeddedResource Remove="Services\GeoLocator\**" />
+    <None Remove="Services\GeoLocator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CONVERTinator.Domain\CONVERTinator.Domain.csproj" />
   </ItemGroup>
 
@@ -30,6 +36,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.28">
       <PrivateAssets>all</PrivateAssets>

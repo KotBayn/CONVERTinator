@@ -1,0 +1,20 @@
+{
+  "nav_home": "Home",
+  "nav_rates": "Rates",
+  "nav_about": "About",
+  "region_europe": "Europe",
+  "region_cis": "CIS",
+  "region_americas": "Americas",
+  "region_asia": "Asia",
+  "region_middle_east": "Middle East",
+  "region_oceania": "Oceania",
+  "hero_title": "<span class=\"gradient-text\">Currency exchange</span><br>without borders",
+  "feature_1": "Instant conversion across 30+ currencies",
+  "feature_2": "Auto-detection of region and local rates",
+  "feature_3": "Precision up to 4 decimal places",
+  "graph_title": "Trend Monitoring",
+  "converter_title": "Converter",
+  "converter_count": "/10 currencies",
+  "label_base": "BASE CURRENCY",
+  "label_target": "EXCHANGE TO"
+}

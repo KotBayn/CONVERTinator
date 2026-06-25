@@ -1,0 +1,20 @@
+{
+  "nav_home": "Startpagina",
+  "nav_rates": "Tarieven",
+  "nav_about": "Over ons",
+  "region_europe": "Europa",
+  "region_cis": "GOS",
+  "region_americas": "Amerika",
+  "region_asia": "Azië",
+  "region_middle_east": "Midden-Oosten",
+  "region_oceania": "Oceanië",
+  "hero_title": "<span class=\"gradient-text\">Valutawissel</span><br>zonder grenzen",
+  "feature_1": "Directe conversie voor 30+ valuta's",
+  "feature_2": "Automatische detectie van regio en lokale koersen",
+  "feature_3": "Nauwkeurigheid tot 4 decimalen",
+  "graph_title": "Trendmonitoring",
+  "converter_title": "Converter",
+  "converter_count": "/10 valuta's",
+  "label_base": "BASISVALUTA",
+  "label_target": "WISSELEN NAAR"
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONVERTinator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-wrapper">
+        <img id="bg-image" src="10-full-background.svg" alt="Background">
+        <div class="bg-overlay"></div>
+        <div class="floating-orbs">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <button class="moon-btn" aria-label="Toggle theme"></button>
+        
+        <div class="logo">
+            <span class="logo-purple">CONVERT</span><span class="logo-inator">inator</span>
+        </div>
+        
+        <nav class="nav">
+            <a href="#" class="nav-link active">Главная</a>
+            <a href="#" class="nav-link">Курсы</a>
+            <a href="#" class="nav-link">О нас</a>
+        </nav>
+
+        <div class="header-actions">
+            <div class="location-badge glass">
+                <span class="globe">&#127757;</span>
+                <select id="regionSelector" class="region-select">
+                    <option value="Europe">Европа</option>
+                    <option value="CIS">СНГ</option>
+                    <option value="Americas">Америка</option>
+                    <option value="Asia">Азия</option>
+                    <option value="MiddleEast">Ближний Восток</option>
+                    <option value="Oceania">Океания</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        
+        <div class="left-column">
+            <section class="hero">
+                <h1 class="hero-title">
+                    <span class="gradient-text">Обмен валют</span>
+                    <br>без границ
+                </h1>
+                <ul class="hero-list">
+                    <li class="glass" data-emoji-rotate="money">
+                        <span class="feature-icon" id="moneyIcon">&#128181;</span>
+                        <span>Мгновенный пересчёт по 30+ валютам</span>
+                    </li>
+                    <li class="glass" data-emoji-rotate="flags">
+                        <span class="feature-icon" id="flagIcon">🇷🇺</span>
+                        <span>Автоопределение региона и локальный курс</span>
+                    </li>
+                    <li class="glass">
+                        <span class="feature-icon">&#127919;</span>
+                        <span>Точность до 4 знаков после запятой</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="graph-card glass">
+                <div class="graph-header">
+                    <h2 class="graph-title">Мониторинг трендов</h2>
+                    <div class="time-range" id="timeRangeControls">
+                        <button class="time-btn" data-range="1h">1H</button>
+                        <button class="time-btn" data-range="6h">6H</button>
+                        <button class="time-btn" data-range="1D">1D</button>
+                        <button class="time-btn" data-range="1W">1W</button>
+                        <button class="time-btn active" data-range="1M">1M</button>
+                        <button class="time-btn" data-range="3M">3M</button>
+                        <button class="time-btn" data-range="6M">6M</button>
+                        <button class="time-btn" data-range="1Y">1Y</button>
+                    </div>
+                </div>
+                <div class="canvas-container" id="canvasContainer">
+                    <canvas id="currencyChart"></canvas>
+                </div>
+                <div class="chart-toggles" id="chartToggles"></div> 
+            </section>
+        </div>
+
+        <div class="right-column">
+            <section class="converter-card glass">
+                <div class="converter-header">
+                    <h2 class="converter-title">Конвертер</h2>
+                    <span class="currency-count">
+                        <span id="currencyCount">2</span>/10 валют
+                    </span>
+                </div>
+
+                <div class="converter-block">
+                    <label class="block-label">ВЫБРАННАЯ ВАЛЮТА</label>
+                    <div class="row">
+                        <select id="baseCurrency" class="glass select"></select>
+                        <input type="number" id="amount" class="glass input amount-input" value="1000" step="0.01">
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <div class="arrows-container">
+                        <span class="arrow-up">↑</span>
+                        <span class="arrow-down">↓</span>
+                    </div>
+                </div>
+
+                <div class="converter-block">
+                    <label class="block-label">ОБМЕН</label>
+                    <div id="targetRows">
+                      <div class="row target-row">
+                        <select class="glass select target-select"></select>
+                        <input type="text" class="glass input result-input target-result" value="0.0000" readonly>
+                      </div>
+                      <div class="row target-row">
+                        <select class="glass select target-select"></select>
+                        <input type="text" class="glass input result-input target-result" value="0.0000" readonly>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="addCurrencyBtn" class="action-btn add-btn">
+                        <span class="plus-icon">&plus;</span> 
+                    </button>
+                    <button id="removeCurrencyBtn" class="action-btn remove-btn" style="display: none;">
+                        <span class="minus-icon">&minus;</span> 
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <section class="ad-banner">
+            <div class="ad-content glass">
+               <span>AdSense (900x120)</span>
+            </div>
+        </section>
+
+    </main>
+    
+
+    <script src="script.js"></script>
+</body>
+</html>

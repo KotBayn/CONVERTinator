@@ -9,14 +9,21 @@ namespace CONVERTinator.Services.Providers
 {
     public class RegionalFloatRatesProvider : IExchangeRateProvider
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly HttpClient _httpClient;
         private readonly string _baseCurrencyCode;
         private readonly string _url;
         private readonly string _sourceName;
 
-        // Constructor injection allows us to use this single class for Japan, Australia, India, etc.
+        // FAKER: DO NOT TOUCH!!
         public RegionalFloatRatesProvider(string baseCurrencyCode, string sourceName)
+            : this(new HttpClient(), baseCurrencyCode, sourceName)
         {
+        }
+
+        // Constructor injection allows us to use this single class for Japan, Australia, India, etc.
+        public RegionalFloatRatesProvider(HttpClient httpClient, string baseCurrencyCode, string sourceName)
+        {
+            _httpClient = httpClient;
             _baseCurrencyCode = baseCurrencyCode.ToLower();
             _url = $"http://www.floatrates.com/daily/{_baseCurrencyCode}.json";
             _sourceName = sourceName;

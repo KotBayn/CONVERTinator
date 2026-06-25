@@ -1,0 +1,20 @@
+{
+  "nav_home": "Startseite",
+  "nav_rates": "Kurse",
+  "nav_about": "Über uns",
+  "region_europe": "Europa",
+  "region_cis": "GUS",
+  "region_americas": "Amerika",
+  "region_asia": "Asien",
+  "region_middle_east": "Naher Osten",
+  "region_oceania": "Ozeanien",
+  "hero_title": "<span class=\"gradient-text\">Währungsumtausch</span><br>ohne Grenzen",
+  "feature_1": "Sofortige Umrechnung für 30+ Währungen",
+  "feature_2": "Automatische Erkennung von Region und lokalen Kursen",
+  "feature_3": "Genauigkeit bis zu 4 Dezimalstellen",
+  "graph_title": "Trendbeobachtung",
+  "converter_title": "Umrechner",
+  "converter_count": "/10 Währungen",
+  "label_base": "BASISWÄHRUNG",
+  "label_target": "UMTAUSCHEN IN"
+}

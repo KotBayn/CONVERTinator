@@ -1,0 +1,20 @@
+{
+  "nav_home": "Головна",
+  "nav_rates": "Курси",
+  "nav_about": "Про нас",
+  "region_europe": "Європа",
+  "region_cis": "СНД",
+  "region_americas": "Америка",
+  "region_asia": "Азія",
+  "region_middle_east": "Близький Схід",
+  "region_oceania": "Океанія",
+  "hero_title": "<span class=\"gradient-text\">Обмін валют</span><br>без кордонів",
+  "feature_1": "Миттєвий перерахунок по 30+ валютах",
+  "feature_2": "Автовизначення регіону та локального курсу",
+  "feature_3": "Точність до 4 знаків після коми",
+  "graph_title": "Моніторинг трендів",
+  "converter_title": "Конвертер",
+  "converter_count": "/10 валют",
+  "label_base": "ОБРАНА ВАЛЮТА",
+  "label_target": "ОБМІН НА"
+}
