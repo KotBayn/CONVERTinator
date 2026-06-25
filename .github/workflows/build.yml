@@ -1,25 +1,37 @@
-name: C# CI
+name: CONVERTinator CI/CD
 
-# Запускать сборку при каждом пуше в ветку main
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] 
 
 jobs:
-  build:
-    runs-on: ubuntu-latest # Поднимаем бесплатный линукс-сервер от GitHub
+  build-and-deploy:
+    runs-on: ubuntu-latest 
 
     steps:
-    - name: Копируем код
+    - name: Copy Code
       uses: actions/checkout@v4
       
-    - name: Устанавливаем .NET
+    - name: Install .NET 8
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x' # Укажи свою версию, если у тебя 7.0 или 6.0
+        dotnet-version: '8.0.x'
         
-    - name: Подтягиваем пакеты (Restore)
+    - name: Restore Packages
       run: dotnet restore
       
-    - name: Собираем проект (Build)
+    - name: Build Project
       run: dotnet build --no-restore --configuration Release
+      
+    - name: Run Tests (BRONYA)
+      run: dotnet test --no-build --verbosity normal --configuration Release
+
+    - name: Prepare Files for Publish
+      run: dotnet publish CONVERTinator.WebAPI/CONVERTinator.WebAPI.csproj -c Release -o ./myapp
+      
+    - name: Deploy to Azure App Service
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'convertinator-app-2026' 
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./myapp
