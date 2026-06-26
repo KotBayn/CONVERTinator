@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="bg-wrapper">
+        <div class="bg-overlay"></div>
+        <div class="floating-orbs">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-3"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="logo">
+            <span class="logo-purple">CONVERT</span><span class="logo-inator">inator</span>
+        </div>
+        
+        <div class="header-actions">
+            <select id="langSelector" class="glass select-small">
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="pt">Português</option>
+                    <option value="zh">中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="ar">العربية</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="pl">Polski</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="uk">Українська</option>
+                </select>
+            <button class="moon-btn" aria-label="Toggle theme"></button>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="converter-card glass">
+            <div class="converter-header">
+                <h2 class="converter-title" data-i18n="converter_title">Конвертер</h2>
+                <span class="currency-count">
+                    <span id="currencyCount">2</span><span data-i18n="converter_count">/10 валют</span>
+                </span>
+            </div>
+
+            <div class="converter-block">
+                <label class="block-label" data-i18n="label_base">БАЗА</label>
+                <div class="row">
+                    <select id="baseCurrency" class="glass select"></select>
+                    <input type="number" id="amount" class="glass input amount-input" value="10" step="0.01">
+                </div>
+            </div>
+
+            <div class="divider">
+                <div class="arrows-container">
+                    <span class="arrow-down">↓</span>
+                </div>
+            </div>
+
+            <div class="converter-block">
+                <label class="block-label" data-i18n="label_target">ОБМЕН</label>
+                <div id="targetRows">
+                  </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="addCurrencyBtn" class="action-btn add-btn">
+                    <span class="plus-icon">&plus;</span> 
+                </button>
+                <button id="removeCurrencyBtn" class="action-btn remove-btn" style="display: none;">
+                    <span class="minus-icon">&minus;</span> 
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="popup.js"></script>
+</body>
+</html>

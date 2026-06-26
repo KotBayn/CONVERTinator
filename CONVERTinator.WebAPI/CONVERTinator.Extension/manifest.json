@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "CONVERTinator",
+  "version": "1.0",
+  "description": "Обмен валют без границ",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://convertinator.onrender.com/*"
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
