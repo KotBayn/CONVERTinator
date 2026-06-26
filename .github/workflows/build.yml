@@ -29,7 +29,7 @@ jobs:
     - name: Prepare Files for Publication (Publish)
       run: dotnet publish CONVERTinator.WebAPI/CONVERTinator.WebAPI.csproj -c Release -o ./myapp
       
-    - name: 🚀 Deploy to Azure App Service
+    - name: Deploy to Azure App Service
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'convertinator-app-2026' 
