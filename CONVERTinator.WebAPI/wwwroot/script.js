@@ -586,54 +586,50 @@ window.addEventListener('scroll', () => {
 /* --------------------------------------------------------------------------
    MODULE 7: I18N (INTERNATIONALIZATION) ENGINE
    -------------------------------------------------------------------------- */
-// The Ultimate Global Mapping: ISO Country Code -> Language JSON file
 const CountryToLanguage = {
-    // CIS & Eastern Europe (Russian - for now)
     'RU': 'ru', 'BY': 'ru', 'KZ': 'ru', 'KG': 'ru', 'TJ': 'ru', 'UZ': 'ru',
-
-    // English-speaking & Default fallback for Scandinavia/Africa (English)
     'US': 'en', 'GB': 'en', 'AU': 'en', 'CA': 'en', 'NZ': 'en', 'IE': 'en',
-    
-    // Core Europe
-    'DE': 'de', 'AT': 'de', 'CH': 'de', 'LI': 'de',                 // German
-    'FR': 'fr', 'BE': 'fr', 'LU': 'fr', 'MC': 'fr',                 // French
-    'NL': 'nl',                                                     // Dutch
-    'UA': 'uk',                                                     // Ukraine
-    'PL': 'pl',                                                     // Poland
-
-    // Latin America & Spain (Spanish)
+    'DE': 'de', 'AT': 'de', 'CH': 'de', 'LI': 'de',
+    'FR': 'fr', 'BE': 'fr', 'LU': 'fr', 'MC': 'fr',
+    'NL': 'nl', 'UA': 'uk', 'PL': 'pl',
     'ES': 'es', 'MX': 'es', 'AR': 'es', 'CO': 'es', 'CL': 'es', 
     'PE': 'es', 'VE': 'es', 'EC': 'es', 'GT': 'es', 'CU': 'es', 
     'BO': 'es', 'DO': 'es', 'HN': 'es', 'PY': 'es', 'SV': 'es', 
     'NI': 'es', 'CR': 'es', 'PA': 'es', 'UY': 'es',
-    
-    // Brazil & Portugal (Portuguese)
     'BR': 'pt', 'PT': 'pt', 'AO': 'pt', 'MZ': 'pt',
-
-    // Asia
-    'CN': 'zh', 'TW': 'zh', 'SG': 'zh', 'HK': 'zh',                 // Chinese
-    'JP': 'ja',                                                     // Japanese
-    'KR': 'ko',                                                     // Korean
-    'IN': 'hi',                                                     // Hindi (India)
-
-    // Middle East & North Africa (Arabic & Turkish)
-    'TR': 'tr',                                                     // Turkish
+    'CN': 'zh', 'TW': 'zh', 'SG': 'zh', 'HK': 'zh',
+    'JP': 'ja', 'KR': 'ko', 'IN': 'hi', 'TR': 'tr',
     'AE': 'ar', 'SA': 'ar', 'EG': 'ar', 'IQ': 'ar', 'MA': 'ar', 
     'DZ': 'ar', 'SY': 'ar', 'YE': 'ar', 'TN': 'ar', 'JO': 'ar', 
     'LY': 'ar', 'LB': 'ar', 'KW': 'ar', 'OM': 'ar', 'QA': 'ar', 'BH': 'ar'
 };
 
-async function loadLanguage(isoCode) {
-    // Fallback to English ('en') if the country code is not in our massive dictionary
-    const langCode = CountryToLanguage[isoCode] || 'en';
+function getSystemLanguage() {
+    const browserLang = navigator.language || navigator.userLanguage; 
+    const shortLang = browserLang.split('-')[0].toLowerCase(); 
     
+    const supportedLangs = ['en', 'ru', 'es', 'fr', 'de', 'pt', 'zh', 'ja', 'ko', 'hi', 'ar', 'tr', 'pl', 'nl', 'uk'];
+    return supportedLangs.includes(shortLang) ? shortLang : 'en';
+}
+
+async function loadLanguage(isoCode = null) {
+    let langCode = localStorage.getItem('userLang');
+
+    if (!langCode) {
+        langCode = getSystemLanguage();
+    }
+
+    const langSelector = document.getElementById('langSelector');
+    if (langSelector) {
+        langSelector.value = langCode;
+    }
+
     try {
         const response = await fetch(`assets/i18n/${langCode}.json`);
         if (!response.ok) throw new Error('Translation file not found');
         
         const translations = await response.json();
 
-        // Inject translations into the DOM
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             if (translations[key]) {
@@ -641,11 +637,9 @@ async function loadLanguage(isoCode) {
             }
         });
         
-        // Update HTML lang attribute for SEO and Screen Readers
         document.documentElement.lang = langCode;
         
-        // Handle RTL (Right-to-Left) layout for Arabic
-        if (langCode === 'ar') {
+        if (langCode === 'ar' || langCode === 'he') {
             document.documentElement.setAttribute('dir', 'rtl');
         } else {
             document.documentElement.removeAttribute('dir');
@@ -655,6 +649,17 @@ async function loadLanguage(isoCode) {
         console.warn(`[i18n] Failed to load language dictionary for: ${langCode}`, e);
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const langSelector = document.getElementById('langSelector');
+    if (langSelector) {
+        langSelector.addEventListener('change', (e) => {
+            const newLang = e.target.value;
+            localStorage.setItem('userLang', newLang); 
+            loadLanguage(); 
+        });
+    }
+});
 
 /* --------------------------------------------------------------------------
    APP BOOTSTRAP
@@ -666,7 +671,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
 
-    // Attach listeners to the initial default HTML rows
     document.querySelectorAll('.target-select').forEach(select => {
         select.addEventListener('change', () => {
             if (typeof updateTargetOptions === 'function') updateTargetOptions();
