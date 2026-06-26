@@ -5,10 +5,27 @@ const API_BASE = 'https://convertinator.onrender.com';
 const MAX_CURRENCIES = 10;
 let currentCurrencyCount = 2;
 
-const ALL_CURRENCIES = ['USD', 'EUR', 'RUB', 'GBP', 'JPY', 'CNY', 'AED', 'ARS', 'AUD', 'BRL', 'CAD', 'CHF', 'GEL', 'HKD', 'ILS', 'INR', 'KRW', 'KZT', 'MXN', 'PLN', 'TRY', 'UAH', 'ZAR']; // Сокращенный список самых популярных для скорости работы, можешь расширить.
+const CurrencyToCountryFlag = {
+    'USD': '🇺🇸', 'EUR': '🇪🇺', 'RUB': '🇷🇺', 'GBP': '🇬🇧', 'JPY': '🇯🇵', 'CNY': '🇨🇳', 
+    'AED': '🇦🇪', 'AFN': '🇦🇫', 'ALL': '🇦🇱', 'AMD': '🇦🇲', 'AOA': '🇦🇴', 'ARS': '🇦🇷',
+    'AUD': '🇦🇺', 'AWG': '🇦🇼', 'AZN': '🇦🇿', 'BAM': '🇧🇦', 'BBD': '🇧🇧', 'BDT': '🇧🇩', 
+    'BHD': '🇧🇭', 'BIF': '🇧🇮', 'BMD': '🇧🇲', 'BND': '🇧🇳', 'BOB': '🇧🇴', 'BRL': '🇧🇷',
+    'BSD': '🇧🇸', 'BTN': '🇧🇹', 'BWP': '🇧🇼', 'BYN': '🇧🇾', 'BZD': '🇧🇿', 'CAD': '🇨🇦', 
+    'CHF': '🇨🇭', 'CLP': '🇨🇱', 'COP': '🇨🇴', 'CRC': '🇨🇷', 'CUP': '🇨🇺', 'CZK': '🇨🇿', 
+    'DKK': '🇩🇰', 'DOP': '🇩🇴', 'DZD': '🇩🇿', 'EGP': '🇪🇬', 'GEL': '🇬🇪', 'HKD': '🇭🇰', 
+    'HUF': '🇭🇺', 'IDR': '🇮🇩', 'ILS': '🇮🇱', 'INR': '🇮🇳', 'IQD': '🇮🇶', 'IRR': '🇮🇷', 
+    'ISK': '🇮🇸', 'JMD': '🇯🇲', 'JOD': '🇯🇴', 'KES': '🇰🇪', 'KGS': '🇰🇬', 'KHR': '🇰🇭', 
+    'KRW': '🇰🇷', 'KWD': '🇰🇼', 'KZT': '🇰🇿', 'LBP': '🇱🇧', 'LKR': '🇱🇰', 'MAD': '🇲🇦', 
+    'MDL': '🇲🇩', 'MNT': '🇲🇳', 'MXN': '🇲🇽', 'MYR': '🇲🇾', 'NOK': '🇳🇴', 'NZD': '🇳🇿', 
+    'OMR': '🇴🇲', 'PEN': '🇵🇪', 'PHP': '🇵🇭', 'PKR': '🇵🇰', 'PLN': '🇵🇱', 'QAR': '🇶🇦', 
+    'RON': '🇷🇴', 'RSD': '🇷🇸', 'SAR': '🇸🇦', 'SEK': '🇸🇪', 'SGD': '🇸🇬', 'SYP': '🇸🇾', 
+    'THB': '🇹🇭', 'TJS': '🇹🇯', 'TMT': '🇹🇲', 'TND': '🇹🇳', 'TRY': '🇹🇷', 'UAH': '🇺🇦', 
+    'UZS': '🇺🇿', 'VND': '🇻🇳', 'ZAR': '🇿🇦'
+};
 
-const OPTIONS_HTML = ALL_CURRENCIES
-    .map(code => `<option value="${code}">${code}</option>`)
+const ALL_CURRENCY_CODES = Object.keys(CurrencyToCountryFlag);
+const OPTIONS_HTML = ALL_CURRENCY_CODES
+    .map(code => `<option value="${code}">${CurrencyToCountryFlag[code]} ${code}</option>`)
     .join('');
 
 const amountInput = document.getElementById('amount');
@@ -19,16 +36,14 @@ const removeCurrencyBtn = document.getElementById('removeCurrencyBtn');
 const currencyCountSpan = document.getElementById('currencyCount');
 
 /* --------------------------------------------------------------------------
-   1. Initialization (chrome.storage)
+   1. INITIALIZATION & STATE MANAGEMENT (chrome.storage)
    -------------------------------------------------------------------------- */
 async function initApp() {
     chrome.storage.local.get(['theme', 'lang', 'baseCur', 'targetCurs', 'amount'], async (data) => {
 
         const isDark = data.theme !== 'light';
         document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-
-        let lang = data.lang;
-        if (!lang) lang = getSystemLanguage();
+        let lang = data.lang || getSystemLanguage();
         document.getElementById('langSelector').value = lang;
         await loadLanguage(lang);
 
@@ -41,14 +56,13 @@ async function initApp() {
                 const geo = await res.json();
                 base = geo.currencyCode || 'USD';
             } catch {
-                base = 'USD'; // Fallback
+                base = 'USD'; 
             }
         }
 
         if (data.amount) amountInput.value = data.amount;
 
         buildCurrencyUI(base, targets);
-        updateConversions();
     });
 }
 
@@ -62,7 +76,7 @@ function saveState() {
 }
 
 /* --------------------------------------------------------------------------
-   2. Internationalize
+   2. INTERNATIONALIZATION ENGINE (Remote Proxy Fetch)
    -------------------------------------------------------------------------- */
 function getSystemLanguage() {
     const browserLang = navigator.language || navigator.userLanguage;
@@ -73,12 +87,10 @@ function getSystemLanguage() {
 
 async function loadLanguage(langCode) {
     try {
-
         const response = await fetch(`${API_BASE}/assets/i18n/${langCode}.json`);
         if (!response.ok) return;
-        
         const translations = await response.json();
-
+        
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             if (translations[key]) element.innerHTML = translations[key];
@@ -90,7 +102,7 @@ async function loadLanguage(langCode) {
             document.documentElement.removeAttribute('dir');
         }
     } catch (e) {
-        console.warn('Translate error', e);
+        console.warn('Localization loading failed', e);
     }
 }
 
@@ -100,25 +112,60 @@ document.getElementById('langSelector').addEventListener('change', (e) => {
     loadLanguage(newLang);
 });
 
-document.querySelector('.moon-btn').addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const newTheme = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    chrome.storage.local.set({ theme: newTheme });
-});
-
 /* --------------------------------------------------------------------------
-   3. UI logic & Convertion
+   3. DYNAMIC UI & EXCLUSION FILTER LOGIC
    -------------------------------------------------------------------------- */
+function updateTargetOptions() {
+    const targetSelects = Array.from(document.querySelectorAll('.target-select'));
+    if (!baseCurrencySelect) return;
+    const baseValue = baseCurrencySelect.value;
+
+    Array.from(baseCurrencySelect.options).forEach(option => {
+        option.hidden = false; option.disabled = false;
+    });
+
+    targetSelects.forEach(select => {
+        if (select.value === baseValue) {
+            const used = new Set([baseValue, ...targetSelects.map(s => s.value)]);
+            const available = ALL_CURRENCY_CODES.find(code => !used.has(code));
+            if (available) select.value = available;
+        }
+    });
+
+    const targetValues = targetSelects.map(s => s.value);
+    targetSelects.forEach(select => {
+        const currentValue = select.value;
+        Array.from(select.options).forEach(option => {
+            const isBase = option.value === baseValue;
+            const isUsedInOtherTarget = targetValues.includes(option.value) && option.value !== currentValue;
+            const shouldHide = isBase || isUsedInOtherTarget;
+            option.hidden = shouldHide;
+            option.disabled = shouldHide;
+        });
+    });
+}
+
+function getRandomCurrency() {
+    const allSelects = [baseCurrencySelect, ...document.querySelectorAll('.target-select')].filter(el => el !== null);
+    const selectedValues = new Set(allSelects.map(s => s.value));
+    const available = ALL_CURRENCY_CODES.filter(code => !selectedValues.has(code));
+    return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : null;
+}
+
 function buildCurrencyUI(base, targets) {
     baseCurrencySelect.innerHTML = OPTIONS_HTML;
     baseCurrencySelect.value = base;
 
     targetRowsContainer.innerHTML = '';
-    currentCurrencyCount = targets.length;
+    currentCurrencyCount = 0;
     
-    targets.forEach(cur => addTargetRow(cur));
+    const uniqueTargets = [...new Set(targets)].filter(t => t !== base);
+    const finalTargets = uniqueTargets.length > 0 ? uniqueTargets : (base !== 'USD' ? ['USD'] : ['EUR']);
+
+    finalTargets.forEach(cur => addTargetRow(cur));
     updateCounters();
+    updateTargetOptions();
+    updateConversions();
 }
 
 function addTargetRow(currencyVal) {
@@ -130,10 +177,13 @@ function addTargetRow(currencyVal) {
     `;
     
     targetRowsContainer.appendChild(row);
+    currentCurrencyCount++;
+    
     const select = row.querySelector('.target-select');
     if (currencyVal) select.value = currencyVal;
 
     select.addEventListener('change', () => {
+        updateTargetOptions();
         saveState();
         updateConversions();
     });
@@ -147,9 +197,12 @@ function updateCounters() {
 
 addCurrencyBtn.addEventListener('click', () => {
     if (currentCurrencyCount >= MAX_CURRENCIES) return;
-    addTargetRow('USD');
-    currentCurrencyCount++;
+    
+    const randomCur = getRandomCurrency();
+    addTargetRow(randomCur);
+    
     updateCounters();
+    updateTargetOptions();
     saveState();
     updateConversions();
 });
@@ -159,12 +212,19 @@ removeCurrencyBtn.addEventListener('click', () => {
     targetRowsContainer.lastElementChild.remove();
     currentCurrencyCount--;
     updateCounters();
+    updateTargetOptions();
+    saveState();
+    updateConversions();
+});
+
+baseCurrencySelect.addEventListener('change', () => {
+    updateTargetOptions();
     saveState();
     updateConversions();
 });
 
 /* --------------------------------------------------------------------------
-   4. RENDER (Debounce & API)
+   4. DISTRIBUTED CALCULATION SERVICE (API FETCH)
    -------------------------------------------------------------------------- */
 function debounce(func, wait) {
     let timeout;
@@ -189,7 +249,7 @@ async function performRealConversion() {
         targetCurs.forEach(cur => url.searchParams.append('targetCurs', cur));
 
         const response = await fetch(url.toString());
-        if (!response.ok) throw new Error('API Error');
+        if (!response.ok) throw new Error('API Execution Error');
         const data = await response.json();
 
         if (data.status === "success" && data.conversions) {
@@ -206,7 +266,7 @@ async function performRealConversion() {
             });
         }
     } catch (err) {
-        console.warn('API connection failed', err);
+        console.warn('Production API network channel is currently unavailable', err);
     }
 }
 
@@ -216,10 +276,18 @@ amountInput.addEventListener('input', () => {
     saveState();
     updateConversions();
 });
-baseCurrencySelect.addEventListener('change', () => {
-    saveState();
-    updateConversions();
-});
 
-// START APP
+// Theme Toggle Switcher
+const moonBtn = document.querySelector('.moon-btn');
+if (moonBtn) {
+    moonBtn.addEventListener('click', () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        const newTheme = isDark ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        chrome.storage.local.set({ theme: newTheme });
+    });
+}
+
+// Bootstrap application scope execution
 document.addEventListener('DOMContentLoaded', initApp);
