@@ -1,6 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using CONVERTinator.Domain;
 using CONVERTinator.Domain.GEO;
+
 
 namespace CONVERTinator.Helpers
 {
@@ -8,88 +14,46 @@ namespace CONVERTinator.Helpers
     {
         // Local country database (Graph). 
         // Connections are built by ISO codes (including maritime borders for islands).
-        private static readonly Dictionary<string, Country> Countries = new Dictionary<string, Country>
+        private static readonly Dictionary<string, Country> Countries;
+        
+        static CountryRepository()
         {
-            // --- EUROPE ---
-            { "PL", new Country { IsoCode = "PL", CurrencyCode = "PLN", CountryRegion = Region.Europe, Neighbors = new List<string> { "DE", "CZ", "SK", "UA", "BY", "LT", "RU" } } },
-            { "DE", new Country { IsoCode = "DE", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "DK", "PL", "CZ", "AT", "CH", "FR", "LU", "BE", "NL" } } },
-            { "UA", new Country { IsoCode = "UA", CurrencyCode = "UAH", CountryRegion = Region.Europe, Neighbors = new List<string> { "PL", "SK", "HU", "RO", "MD", "RU", "BY" } } },
-            { "RO", new Country { IsoCode = "RO", CurrencyCode = "RON", CountryRegion = Region.Europe, Neighbors = new List<string> { "UA", "MD", "BG", "RS", "HU" } } },
-            { "RS", new Country { IsoCode = "RS", CurrencyCode = "RSD", CountryRegion = Region.Europe, Neighbors = new List<string> { "HU", "RO", "BG", "MK", "AL", "ME", "BA", "HR" } } },
-            { "HR", new Country { IsoCode = "HR", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "SI", "HU", "RS", "BA", "ME" } } },
-            { "SI", new Country { IsoCode = "SI", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "IT", "AT", "HU", "HR" } } },
-            { "BG", new Country { IsoCode = "BG", CurrencyCode = "BGN", CountryRegion = Region.Europe, Neighbors = new List<string> { "RO", "RS", "MK", "GR", "TR" } } },
-            { "GR", new Country { IsoCode = "GR", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "AL", "MK", "BG", "TR" } } },
-            { "CY", new Country { IsoCode = "CY", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "GR", "TR", "LB", "SY", "IL", "EG" } } },
-            // Small European States (Microstates)
-            { "LU", new Country { IsoCode = "LU", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "BE", "FR", "DE" } } },
-            { "LI", new Country { IsoCode = "LI", CurrencyCode = "CHF", CountryRegion = Region.Europe, Neighbors = new List<string> { "CH", "AT" } } },
-            { "AD", new Country { IsoCode = "AD", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "ES", "FR" } } },
-            { "MC", new Country { IsoCode = "MC", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "FR" } } },
-            { "SM", new Country { IsoCode = "SM", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "IT" } } },
-            { "VA", new Country { IsoCode = "VA", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "IT" } } },
+            string baseDir = AppContext.BaseDirectory;
+            Console.WriteLine("\n===== DEBUG INFO =====");
+            Console.WriteLine($"[DEBUG] Base Directory: {baseDir}");
 
-            // Island Nations & Maritime Borders
-            { "IS", new Country { IsoCode = "IS", CurrencyCode = "ISK", CountryRegion = Region.Europe, Neighbors = new List<string> { "GB", "NO", "DK", "IE" } } },
-            { "GB", new Country { IsoCode = "GB", CurrencyCode = "GBP", CountryRegion = Region.Europe, Neighbors = new List<string> { "IE", "FR", "BE", "NL", "IS" } } },
-            { "IE", new Country { IsoCode = "IE", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "GB", "IS", "FR" } } },
-            
-            // Western & Southern Europe
-            { "FR", new Country { IsoCode = "FR", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "BE", "LU", "DE", "CH", "IT", "MC", "AD", "ES", "GB" } } },
-            { "IT", new Country { IsoCode = "IT", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "FR", "CH", "AT", "SI", "SM", "VA" } } },
-            { "ES", new Country { IsoCode = "ES", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "PT", "FR", "AD", "MA" } } },
-            { "PT", new Country { IsoCode = "PT", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "ES" } } },
-            { "NL", new Country { IsoCode = "NL", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "DE", "BE", "GB" } } },
-            { "BE", new Country { IsoCode = "BE", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "FR", "LU", "DE", "NL", "GB" } } },
-            { "CH", new Country { IsoCode = "CH", CurrencyCode = "CHF", CountryRegion = Region.Europe, Neighbors = new List<string> { "FR", "DE", "AT", "LI", "IT" } } },
-            { "AT", new Country { IsoCode = "AT", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "DE", "CZ", "SK", "HU", "SI", "IT", "CH", "LI" } } },
-            { "CZ", new Country { IsoCode = "CZ", CurrencyCode = "CZK", CountryRegion = Region.Europe, Neighbors = new List<string> { "DE", "PL", "SK", "AT" } } },
-            { "SK", new Country { IsoCode = "SK", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "CZ", "PL", "UA", "HU", "AT" } } },
-            { "HU", new Country { IsoCode = "HU", CurrencyCode = "HUF", CountryRegion = Region.Europe, Neighbors = new List<string> { "SK", "UA", "RO", "RS", "HR", "SI", "AT" } } },
+            string filePath = Path.Combine(baseDir, "Services", "Countries.json");
+            Console.WriteLine($"[DEBUG] Expected file path: {filePath}");
 
-            // Northern Europe
-            { "NO", new Country { IsoCode = "NO", CurrencyCode = "NOK", CountryRegion = Region.Europe, Neighbors = new List<string> { "SE", "FI", "RU", "IS", "DK", "GB" } } },
-            { "SE", new Country { IsoCode = "SE", CurrencyCode = "SEK", CountryRegion = Region.Europe, Neighbors = new List<string> { "NO", "FI", "DK" } } },
-            { "FI", new Country { IsoCode = "FI", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "SE", "NO", "RU", "EE" } } },
-            { "DK", new Country { IsoCode = "DK", CurrencyCode = "DKK", CountryRegion = Region.Europe, Neighbors = new List<string> { "DE", "SE", "NO", "IS", "GB" } } },
-            
-            // Baltics
-            { "EE", new Country { IsoCode = "EE", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "LV", "RU", "FI" } } },
-            { "LV", new Country { IsoCode = "LV", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "EE", "LT", "RU", "BY" } } },
-            { "LT", new Country { IsoCode = "LT", CurrencyCode = "EUR", CountryRegion = Region.Europe, Neighbors = new List<string> { "LV", "BY", "PL", "RU" } } },
-
-            // --- CIS (Extended) ---
-            { "BY", new Country { IsoCode = "BY", CurrencyCode = "BYN", CountryRegion = Region.CIS, Neighbors = new List<string> { "PL", "LT", "LV", "RU", "UA" } } },
-            { "RU", new Country { IsoCode = "RU", CurrencyCode = "RUB", CountryRegion = Region.CIS, Neighbors = new List<string> { "NO", "FI", "EE", "LV", "LT", "PL", "BY", "UA", "GE", "AZ", "KZ", "CN", "MN", "KP" } } },
-            { "KZ", new Country { IsoCode = "KZ", CurrencyCode = "KZT", CountryRegion = Region.CIS, Neighbors = new List<string> { "RU", "CN", "KG", "UZ", "TM" } } },
-            { "UZ", new Country { IsoCode = "UZ", CurrencyCode = "UZS", CountryRegion = Region.CIS, Neighbors = new List<string> { "KZ", "KG", "TJ", "AF", "TM" } } },
-            { "GE", new Country { IsoCode = "GE", CurrencyCode = "GEL", CountryRegion = Region.CIS, Neighbors = new List<string> { "RU", "TR", "AM", "AZ" } } },
-            { "AM", new Country { IsoCode = "AM", CurrencyCode = "AMD", CountryRegion = Region.CIS, Neighbors = new List<string> { "GE", "AZ", "IR", "TR" } } },
-            { "AZ", new Country { IsoCode = "AZ", CurrencyCode = "AZN", CountryRegion = Region.CIS, Neighbors = new List<string> { "RU", "GE", "AM", "IR", "TR" } } },
-            { "MD", new Country { IsoCode = "MD", CurrencyCode = "MDL", CountryRegion = Region.CIS, Neighbors = new List<string> { "RO", "UA" } } },
-            { "KG", new Country { IsoCode = "KG", CurrencyCode = "KGS", CountryRegion = Region.CIS, Neighbors = new List<string> { "KZ", "UZ", "TJ", "CN" } } },
-            { "TJ", new Country { IsoCode = "TJ", CurrencyCode = "TJS", CountryRegion = Region.CIS, Neighbors = new List<string> { "UZ", "KG", "CN", "AF" } } },
-            
-            // --- AMERICAS ---
-            { "US", new Country { IsoCode = "US", CurrencyCode = "USD", CountryRegion = Region.Americas, Neighbors = new List<string> { "CA", "MX", "CU", "BS" } } },
-            { "CA", new Country { IsoCode = "CA", CurrencyCode = "CAD", CountryRegion = Region.Americas, Neighbors = new List<string> { "US", "GL" } } },
-            { "MX", new Country { IsoCode = "MX", CurrencyCode = "MXN", CountryRegion = Region.Americas, Neighbors = new List<string> { "US", "GT", "BZ", "CU" } } },
-            
-            // --- ASIA ---
-            { "CN", new Country { IsoCode = "CN", CurrencyCode = "CNY", CountryRegion = Region.Asia, Neighbors = new List<string> { "RU", "MN", "KP", "VN", "LA", "MM", "IN", "BT", "NP", "PK", "AF", "TJ", "KG", "KZ" } } },
-            { "JP", new Country { IsoCode = "JP", CurrencyCode = "JPY", CountryRegion = Region.Asia, Neighbors = new List<string> { "KR", "RU", "CN", "TW" } } },
-            { "KR", new Country { IsoCode = "KR", CurrencyCode = "KRW", CountryRegion = Region.Asia, Neighbors = new List<string> { "KP", "JP", "CN" } } },
-            { "TR", new Country { IsoCode = "TR", CurrencyCode = "TRY", CountryRegion = Region.Asia, Neighbors = new List<string> { "GR", "BG", "GE", "AM", "AZ", "IR", "IQ", "SY" } } },
-
-            // --- MIDDLE EAST ---
-            { "SA", new Country { IsoCode = "SA", CurrencyCode = "SAR", CountryRegion = Region.MiddleEast, Neighbors = new List<string> { "YE", "OM", "AE", "QA", "KW", "IQ", "JO" } } },
-            { "AE", new Country { IsoCode = "AE", CurrencyCode = "AED", CountryRegion = Region.MiddleEast, Neighbors = new List<string> { "SA", "OM" } } },
-            { "IL", new Country { IsoCode = "IL", CurrencyCode = "ILS", CountryRegion = Region.MiddleEast, Neighbors = new List<string> { "EG", "JO", "SY", "LB" } } },
-            
-            // --- OCEANIA ---
-            { "AU", new Country { IsoCode = "AU", CurrencyCode = "AUD", CountryRegion = Region.Oceania, Neighbors = new List<string> { "NZ", "ID", "PG", "SB", "VU" } } },
-            { "NZ", new Country { IsoCode = "NZ", CurrencyCode = "NZD", CountryRegion = Region.Oceania, Neighbors = new List<string> { "AU", "FJ", "TO" } } }
-        };
+            bool exists = File.Exists(filePath);
+            Console.WriteLine($"[DEBUG] File exists: {exists}");
+            Console.WriteLine("======================\n");
+            // Load the country graph from a JSON file at startup
+            if (exists)
+            {
+                try
+                {
+                    string json = File.ReadAllText(filePath);
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        Converters = { new JsonStringEnumConverter() }
+                    };
+                    Countries = JsonSerializer.Deserialize<Dictionary<string, Country>>(json, options) 
+                                ?? throw new InvalidOperationException("Failed to deserialize country data.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[CRITICAL] Failed to parse: {ex.Message}");
+                    Countries = new Dictionary<string, Country>();
+                }
+            }
+            else
+            {
+                Console.WriteLine($"[CRITICAL] countries.json file not found at path: {filePath}");
+                Countries = new Dictionary<string, Country>();
+            }
+        }
         public static Country GetCountryByIso(string isoCode)
         {
             if (Countries.TryGetValue(isoCode.ToUpper(), out var country))
@@ -101,7 +65,7 @@ namespace CONVERTinator.Helpers
             return new Country
             {
                 IsoCode = isoCode.ToUpper(),
-                CurrencyCode = "USD",
+                CurrencyCode = Constants.MainCurrency.USD,
                 CountryRegion = Region.Global,
                 Neighbors = new List<string>()
             };
@@ -119,13 +83,13 @@ namespace CONVERTinator.Helpers
             }
 
             // FOOLPROOF: If we have less than 3 unique currencies, inject major global ones
-            if (currencies.Count < 3) currencies.Add("USD");
-            if (currencies.Count < 3) currencies.Add("EUR");
+            if (currencies.Count < 3) currencies.Add(Constants.MainCurrency.USD);
+            if (currencies.Count < 3) currencies.Add(Constants.MainCurrency.EUR);
             if (currencies.Count < 3) currencies.Add("GBP");
 
             // Always enforce global anchor currencies availability
-            currencies.Add("USD");
-            currencies.Add("EUR");
+            currencies.Add(Constants.MainCurrency.USD);
+            currencies.Add(Constants.MainCurrency.EUR);
 
             return currencies.ToList();
         }

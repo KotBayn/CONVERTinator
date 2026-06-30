@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services.Regions.CIS.Providers.Belarus;
 

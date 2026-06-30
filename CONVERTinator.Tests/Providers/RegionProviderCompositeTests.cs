@@ -4,7 +4,8 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 using CONVERTinator.Services;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Interfaces;
+using CONVERTinator.Domain.Entities;
 
 namespace CONVERTinator.Tests.Providers
 {

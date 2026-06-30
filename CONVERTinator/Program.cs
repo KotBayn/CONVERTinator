@@ -1,5 +1,6 @@
-﻿using CONVERTinator.Domain;
+﻿using CONVERTinator.Domain.Entities;
 using CONVERTinator.Domain.GEO;
+using CONVERTinator.Domain;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CONVERTinator
 {
-    class Program
+    static class Program
     {
         static async Task Main(string[] args)
         {
@@ -48,7 +49,7 @@ namespace CONVERTinator
             string? modeInput = Console.ReadLine()?.Trim();
             Console.Clear();
 
-            string baseCurrency = "USD";
+            string baseCurrency = Constants.MainCurrency.USD;
             var activeCurrencies = new List<string>();
 
             var dbRepository = new CONVERTinator.Repositories.DbRepository();
@@ -92,7 +93,7 @@ namespace CONVERTinator
 
             // Cache check and synchronization
             List<Currency> allRates = new List<Currency>();
-            TimeSpan cacheLifetime = TimeSpan.FromHours(2);
+            TimeSpan cacheLifetime = TimeSpan.FromHours(Constants.Cache.CacheExpirationHours);
             bool useCache = false;
 
             try
@@ -121,7 +122,7 @@ namespace CONVERTinator
                 // Synchronize cache with network sources
                 try
                 {
-                    var syncService = new CacheSyncService();
+                    var syncService = new CacheSyncService(dbRepository);
                     await syncService.ForceUpdateAsync();
 
                     allRates = await dbRepository.GetCachedRatesAsync();
@@ -130,7 +131,7 @@ namespace CONVERTinator
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"[Error] Failed to update cache: {ex.Message}");
+                    Console.WriteLine($"[Error] {Constants.ErrorMessages.CacheUpdateFailed}: {ex.Message}");
                     Console.ResetColor();
                 }
             }
@@ -190,7 +191,7 @@ namespace CONVERTinator
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Error: Invalid currency code. Use 3 letters (e.g., USD, EUR).");
+                            Console.WriteLine($"[Error]: {Constants.ErrorMessages.InvalidCurrencyCode}");
                             Console.ResetColor();
                         }
                         break;
@@ -198,7 +199,7 @@ namespace CONVERTinator
                     case "ex":
                         if (!decimal.TryParse(arg, out decimal amount))
                         {
-                            Console.WriteLine("Error: Invalid numeric format.");
+                            Console.WriteLine($"[Error]: {Constants.ErrorMessages.InvalidNumericFormat}");
                             break;
                         }
 
@@ -225,7 +226,7 @@ namespace CONVERTinator
 
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Unknown command.");
+                        Console.WriteLine($"[Error]: {Constants.ErrorMessages.UnknownCommand}");
                         Console.ResetColor();
                         break;
                 }

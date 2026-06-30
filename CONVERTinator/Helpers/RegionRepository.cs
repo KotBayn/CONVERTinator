@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata;
 using System.Text.Json;
 using CONVERTinator.Domain.GEO;
+using CONVERTinator.Domain;
 
 namespace CONVERTinator.Helpers
 {
@@ -65,7 +67,7 @@ namespace CONVERTinator.Helpers
                 return globalCurrencies;
             }
 
-            return new List<string> { "USD", "EUR" };
+            return new List<string> { Constants.MainCurrency.USD, Constants.MainCurrency.EUR };
         }
     }
 }

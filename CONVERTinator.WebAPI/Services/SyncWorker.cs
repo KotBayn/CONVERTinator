@@ -3,7 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using CONVERTinator.Services; 
+using Microsoft.Extensions.DependencyInjection;
+using CONVERTinator.Domain.Interfaces;
+using CONVERTinator.Domain;
+using System.Reflection.Metadata;
 
 namespace CONVERTinator.WebAPI
 {
@@ -11,10 +14,12 @@ namespace CONVERTinator.WebAPI
     public class SyncWorker : BackgroundService
     {
         private readonly ILogger<SyncWorker> _logger;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public SyncWorker(ILogger<SyncWorker> logger)
+        public SyncWorker(ILogger<SyncWorker> logger, IServiceScopeFactory serviceScopeFactory)
         {
             _logger = logger;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -25,8 +30,11 @@ namespace CONVERTinator.WebAPI
             {
                 try
                 {
-                    var cacheSyncService = new CacheSyncService();
-                    await cacheSyncService.ForceUpdateAsync();
+                    using (var scope = _serviceScopeFactory.CreateScope())
+                    {
+                        var cacheSyncService = scope.ServiceProvider.GetRequiredService<ICacheSyncService>();
+                        await cacheSyncService.ForceUpdateAsync();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -36,7 +44,7 @@ namespace CONVERTinator.WebAPI
                 _logger.LogInformation("[Sync Worker] Sleeping for 2 hours...");
 
                 // Suspend execution for 2 hours
-                await Task.Delay(TimeSpan.FromHours(2), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(Constants.Cache.CacheExpirationHours), stoppingToken);
             }
         }
     }

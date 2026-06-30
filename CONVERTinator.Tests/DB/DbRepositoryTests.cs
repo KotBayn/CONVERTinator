@@ -6,7 +6,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using CONVERTinator.Data;
-using CONVERTinator.Domain;
 using CONVERTinator.Domain.Entities;
 using CONVERTinator.Repositories;
 

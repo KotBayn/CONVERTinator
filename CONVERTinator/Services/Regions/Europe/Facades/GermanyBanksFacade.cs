@@ -1,11 +1,12 @@
-﻿using CONVERTinator.Domain;
-using CONVERTinator.Helpers;
+﻿using CONVERTinator.Helpers;
 using CONVERTinator.Services.Regions.Europe.Providers.Germany;
 using CONVERTinator.Services.Regions.Europe.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CONVERTinator.Domain.Interfaces;
+using CONVERTinator.Domain.Entities;
 
 namespace CONVERTinator.Services.Regions.Europe.Facades
 {

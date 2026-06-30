@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using CONVERTinator.Domain;
+﻿using Microsoft.EntityFrameworkCore;
 using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
 using CONVERTinator.Data;
 
 namespace CONVERTinator.Repositories
 {
-    public class DbRepository
+    public class DbRepository : IDbRepository
     {
         private readonly DbContextOptions<AppDbContext> _options;
 

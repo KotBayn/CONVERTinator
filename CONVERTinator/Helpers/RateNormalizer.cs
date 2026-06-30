@@ -1,5 +1,5 @@
 ﻿using System;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
 
 namespace CONVERTinator.Helpers
 {

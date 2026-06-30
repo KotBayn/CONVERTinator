@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CONVERTinator.Domain;
+using CONVERTinator.Domain.GEO;
+using CONVERTinator.Domain.Interfaces;
+using CONVERTinator.Helpers;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using CONVERTinator.Helpers;
-using CONVERTinator.Domain.GEO;
 
 namespace CONVERTinator.WebAPI.Controllers
 {
@@ -13,12 +15,19 @@ namespace CONVERTinator.WebAPI.Controllers
     [Route("api/[controller]")]
     public class LocationController : ControllerBase
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+
+        public LocationController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        {
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+        }
 
         [HttpGet("current")]
         public async Task<IActionResult> GetCurrentLocation([FromQuery] string overrideIso = null)
         {
-            string isoCode = "US"; // Default fallback country code
+            string isoCode = Constants.MainCurrency.MainISO; // Default fallback country code
 
             if (!string.IsNullOrWhiteSpace(overrideIso))
             {
@@ -30,6 +39,7 @@ namespace CONVERTinator.WebAPI.Controllers
                 {
                     // Get the REAL user IP from Render's load balancer
                     string userIp = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+                    string baseUrl = _configuration["ExternalApis:IpGeolocationBaseUrl"];
 
                     // Fallback for local development
                     if (string.IsNullOrEmpty(userIp))
@@ -52,17 +62,18 @@ namespace CONVERTinator.WebAPI.Controllers
                         : $"http://ip-api.com/json/{userIp}";
 
                     // Execute the request
-                    var response = await _httpClient.GetStringAsync(apiUrl);
+                    var client = _httpClientFactory.CreateClient();
+                    string response = await client.GetStringAsync(apiUrl);
                     using var doc = JsonDocument.Parse(response);
 
                     if (doc.RootElement.TryGetProperty("countryCode", out var codeProp))
                     {
-                        isoCode = codeProp.GetString() ?? "US";
+                        isoCode = codeProp.GetString() ?? Constants.MainCurrency.MainISO;
                     }
                 }
                 catch (Exception)
                 {
-                    isoCode = "US";
+                    isoCode = Constants.MainCurrency.MainISO;
                 }
             }
 

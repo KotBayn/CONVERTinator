@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
 
 namespace CONVERTinator.Helpers
 {

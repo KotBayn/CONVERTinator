@@ -1,4 +1,6 @@
 using CONVERTinator.Services;
+using CONVERTinator.Repositories;
+using CONVERTinator.Domain.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,9 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient(); 
+builder.Services.AddScoped<IDbRepository, DbRepository>();
+builder.Services.AddScoped<ICacheSyncService, CacheSyncService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<CONVERTinator.WebAPI.SyncWorker>();

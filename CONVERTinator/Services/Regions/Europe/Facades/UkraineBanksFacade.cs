@@ -1,4 +1,5 @@
-﻿using CONVERTinator.Domain;
+﻿using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
 using CONVERTinator.Helpers;
 using CONVERTinator.Services.Regions.Europe.Providers.Ukraine;
 using System;

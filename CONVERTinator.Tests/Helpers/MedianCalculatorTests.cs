@@ -3,7 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Xunit;
 using CONVERTinator.Helpers;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
 
 namespace CONVERTinator.Tests.Helpers
 {

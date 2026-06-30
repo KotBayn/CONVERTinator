@@ -1,5 +1,6 @@
 ﻿using CONVERTinator.Domain;
 using CONVERTinator.Domain.GEO;
+using CONVERTinator.Domain.Interfaces;
 using CONVERTinator.Helpers;
 using CONVERTinator.Repositories;
 using CONVERTinator.Services.Regions.AmericasN.Facades;
@@ -15,11 +16,16 @@ using System.Threading.Tasks;
 
 namespace CONVERTinator.Services
 {
-    public class CacheSyncService
+    public class CacheSyncService : ICacheSyncService
     {
+        private readonly IDbRepository _dbRepository;
+        public CacheSyncService(IDbRepository dbRepository)
+        {
+            _dbRepository = dbRepository;
+        }
+
         public async Task ForceUpdateAsync()
         {
-            var dbRepository = new DbRepository();
             var globalComposite = new RegionProviderComposite("Global Aggregator");
             Console.WriteLine("[API Cache Sync] Starting global network fetch for all world regions...");
 
@@ -84,7 +90,7 @@ namespace CONVERTinator.Services
             // All in SQLite DB
             if (allRates != null && allRates.Any())
             {
-                await dbRepository.SaveRatesAsync(allRates);
+                await _dbRepository.SaveRatesAsync(allRates);
                 Console.WriteLine($"[API Cache Sync] Successfully cached {allRates.Count} currency pairs.");
             }
             else

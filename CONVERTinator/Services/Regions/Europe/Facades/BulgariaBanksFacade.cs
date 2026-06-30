@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
 using CONVERTinator.Services.Regions.Europe.Providers;
 
 namespace CONVERTinator.Services.Regions.Europe.Facades

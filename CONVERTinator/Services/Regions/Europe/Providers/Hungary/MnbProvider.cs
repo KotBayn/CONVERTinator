@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
 
 namespace CONVERTinator.Services.Regions.Europe.Providers.Hungary
 {

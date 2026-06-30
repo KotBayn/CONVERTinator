@@ -1,4 +1,4 @@
-﻿namespace CONVERTinator.Domain
+﻿namespace CONVERTinator.Domain.Entities
 {
     public class Currency
     {

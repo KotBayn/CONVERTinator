@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CONVERTinator.Domain;
+using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
 
 namespace CONVERTinator.Services.Regions.Europe.Providers.Bulgaria
 {

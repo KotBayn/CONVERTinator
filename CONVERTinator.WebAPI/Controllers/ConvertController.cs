@@ -5,7 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CONVERTinator.Repositories;
 using CONVERTinator.Helpers;
-using CONVERTinator.Services;
+using CONVERTinator.Domain.Interfaces;
+using CONVERTinator.Domain;
 
 namespace CONVERTinator.WebAPI.Controllers
 {
@@ -13,8 +14,14 @@ namespace CONVERTinator.WebAPI.Controllers
     [Route("api/[controller]")]
     public class ConvertController : ControllerBase
     {
-        private readonly DbRepository _dbRepository = new DbRepository();
-        private readonly CacheSyncService _cacheSyncService = new CacheSyncService();
+        private readonly IDbRepository _dbRepository;
+        private readonly ICacheSyncService _cacheSyncService;
+
+        public ConvertController(IDbRepository dbRepository, ICacheSyncService cacheSyncService)
+        {
+            _dbRepository = dbRepository;
+            _cacheSyncService = cacheSyncService;
+        }
         // method to calculate exchange rate between two currencies
         [HttpGet("exchange")]
         [ProducesResponseType(200)]
@@ -25,7 +32,7 @@ namespace CONVERTinator.WebAPI.Controllers
             try
             {
                 var rates = await _dbRepository.GetCachedRatesAsync();
-                bool isCacheFresh = await _dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
+                bool isCacheFresh = await _dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(Constants.Cache.CacheExpirationHours));
 
                 // AUTO-REFRESH LOGIC
                 if (rates.Count == 0 || !isCacheFresh)
@@ -64,7 +71,7 @@ namespace CONVERTinator.WebAPI.Controllers
             {
                 // Check if base currency is valid
                 var rates = await _dbRepository.GetCachedRatesAsync();
-                bool isCacheFresh = await _dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(2));
+                bool isCacheFresh = await _dbRepository.IsCacheFreshAsync(TimeSpan.FromHours(Constants.Cache.CacheExpirationHours));
 
                 if (rates.Count == 0 || !isCacheFresh)
                 {
@@ -77,8 +84,8 @@ namespace CONVERTinator.WebAPI.Controllers
                                         .Distinct()
                                         .ToList();
 
-                if (targets.Count > 10)
-                    return BadRequest(new { error = "Maximum 10 target currencies allowed." });
+                if (targets.Count > Constants.Validation.MaxTargetCurrencyLength)
+                    return BadRequest(new { error = $"Maximum {Constants.Validation.MaxTargetCurrencyLength} target currencies allowed." });
 
                 var results = new List<object>();
                 foreach (var target in targets)
