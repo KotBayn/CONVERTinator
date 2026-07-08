@@ -1,63 +1,15 @@
 {
-  "PL": {
-    "IsoCode": "PL",
-    "CurrencyCode": "PLN",
+  "AL": {
+    "IsoCode": "AL",
+    "CurrencyCode": "ALL",
     "CountryRegion": "Europe",
-    "Neighbors": [ "DE", "CZ", "SK", "UA", "BY", "LT", "RU", "DK", "SE" ]
+    "Neighbors": [ "GR", "ME", "MK", "RS" ]
   },
-  "DE": {
-    "IsoCode": "DE",
+  "AD": {
+    "IsoCode": "AD",
     "CurrencyCode": "EUR",
     "CountryRegion": "Europe",
-    "Neighbors": [ "DK", "PL", "CZ", "AT", "CH", "FR", "LU", "BE", "NL", "GB", "SE" ]
-  },
-  "FR": {
-    "IsoCode": "FR",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "GB", "BE", "LU", "DE", "CH", "IT", "MC", "ES", "AD", "BR", "SR", "CA" ]
-  },
-  "GB": {
-    "IsoCode": "GB",
-    "CurrencyCode": "GBP",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "IE", "FR", "BE", "NL", "DE", "DK", "NO" ]
-  },
-  "IT": {
-    "IsoCode": "IT",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "FR", "CH", "AT", "SI", "SM", "VA", "HR", "ME", "AL", "GR", "LY", "TN", "DZ", "MT", "ES" ]
-  },
-  "ES": {
-    "IsoCode": "ES",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "FR", "AD", "PT", "MA", "DZ", "IT" ]
-  },
-  "PT": {
-    "IsoCode": "PT",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "ES", "MA" ]
-  },
-  "NL": {
-    "IsoCode": "NL",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "DE", "BE", "GB", "VE", "FR" ]
-  },
-  "BE": {
-    "IsoCode": "BE",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "FR", "LU", "DE", "NL", "GB" ]
-  },
-  "CH": {
-    "IsoCode": "CH",
-    "CurrencyCode": "CHF",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "AT", "FR", "IT", "LI", "DE" ]
+    "Neighbors": [ "FR", "ES" ]
   },
   "AT": {
     "IsoCode": "AT",
@@ -65,29 +17,95 @@
     "CountryRegion": "Europe",
     "Neighbors": [ "CZ", "DE", "HU", "IT", "LI", "SK", "SI", "CH" ]
   },
-  "SE": {
-    "IsoCode": "SE",
-    "CurrencyCode": "SEK",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "FI", "NO", "DK", "EE", "LV", "LT", "PL", "DE", "RU" ]
+  "BY": {
+    "IsoCode": "BY",
+    "CurrencyCode": "BYN",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "LV", "LT", "PL", "RU", "UA" ]
   },
-  "NO": {
-    "IsoCode": "NO",
-    "CurrencyCode": "NOK",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "FI", "SE", "RU", "GB", "DK", "IS" ]
-  },
-  "FI": {
-    "IsoCode": "FI",
+  "BE": {
+    "IsoCode": "BE",
     "CurrencyCode": "EUR",
     "CountryRegion": "Europe",
-    "Neighbors": [ "NO", "SE", "RU", "EE" ]
+    "Neighbors": [ "FR", "DE", "LU", "NL", "GB" ]
+  },
+  "BA": {
+    "IsoCode": "BA",
+    "CurrencyCode": "BAM",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "HR", "ME", "RS" ]
+  },
+  "BG": {
+    "IsoCode": "BG",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "GR", "MK", "RO", "RS", "TR" ]
+  },
+  "HR": {
+    "IsoCode": "HR",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BA", "HU", "IT", "ME", "RS", "SI" ]
+  },
+  "CY": {
+    "IsoCode": "CY",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "EG", "GR", "IL", "LB", "SY", "TR", "GB" ]
+  },
+  "CZ": {
+    "IsoCode": "CZ",
+    "CurrencyCode": "CZK",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "DE", "PL", "SK" ]
   },
   "DK": {
     "IsoCode": "DK",
     "CurrencyCode": "DKK",
     "CountryRegion": "Europe",
-    "Neighbors": [ "DE", "SE", "NO", "GB", "PL", "CA", "IS" ]
+    "Neighbors": [ "DE", "NO", "PL", "SE", "GB" ]
+  },
+  "EE": {
+    "IsoCode": "EE",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "FI", "LV", "RU", "SE" ]
+  },
+  "FI": {
+    "IsoCode": "FI",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "NO", "RU", "SE", "EE" ]
+  },
+  "FR": {
+    "IsoCode": "FR",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AD", "BE", "CH", "DE", "ES", "IT", "LU", "MC", "GB" ]
+  },
+  "DE": {
+    "IsoCode": "DE",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "BE", "CZ", "DK", "FR", "LU", "NL", "PL", "CH" ]
+  },
+  "GR": {
+    "IsoCode": "GR",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AL", "BG", "MK", "TR", "CY", "EG", "IT" ]
+  },
+  "HU": {
+    "IsoCode": "HU",
+    "CurrencyCode": "HUF",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "HR", "RO", "RS", "SK", "SI", "UA" ]
+  },
+  "IS": {
+    "IsoCode": "IS",
+    "CurrencyCode": "ISK",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "NO", "GB" ]
   },
   "IE": {
     "IsoCode": "IE",
@@ -95,125 +113,41 @@
     "CountryRegion": "Europe",
     "Neighbors": [ "GB" ]
   },
-  "GR": {
-    "IsoCode": "GR",
+  "IT": {
+    "IsoCode": "IT",
     "CurrencyCode": "EUR",
     "CountryRegion": "Europe",
-    "Neighbors": [ "AL", "MK", "BG", "TR", "CY", "EG", "LY", "IT" ]
-  },
-  "UA": {
-    "IsoCode": "UA",
-    "CurrencyCode": "UAH",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "RU", "BY", "PL", "SK", "HU", "RO", "MD", "TR", "BG", "GE" ]
-  },
-  "RO": {
-    "IsoCode": "RO",
-    "CurrencyCode": "RON",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "BG", "HU", "MD", "RS", "UA", "TR" ]
-  },
-  "CZ": {
-    "IsoCode": "CZ",
-    "CurrencyCode": "CZK",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "DE", "PL", "SK", "AT" ]
-  },
-  "SK": {
-    "IsoCode": "SK",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "CZ", "PL", "UA", "HU", "AT" ]
-  },
-  "HU": {
-    "IsoCode": "HU",
-    "CurrencyCode": "HUF",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "AT", "SK", "UA", "RO", "RS", "HR", "SI" ]
-  },
-  "BG": {
-    "IsoCode": "BG",
-    "CurrencyCode": "BGN",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "RO", "RS", "MK", "GR", "TR", "UA" ]
-  },
-  "RS": {
-    "IsoCode": "RS",
-    "CurrencyCode": "RSD",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "HU", "RO", "BG", "MK", "AL", "ME", "BA", "HR" ]
-  },
-  "HR": {
-    "IsoCode": "HR",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "SI", "HU", "RS", "BA", "ME", "IT" ]
-  },
-  "LT": {
-    "IsoCode": "LT",
-    "CurrencyCode": "EUR",
-    "CountryRegion": "Europe",
-    "Neighbors": [ "LV", "BY", "PL", "RU", "SE" ]
+    "Neighbors": [ "AT", "CH", "FR", "GR", "MT", "SI", "SM", "VA", "HR", "BA", "ME", "AL", "TN", "LY", "EG" ]
   },
   "LV": {
     "IsoCode": "LV",
     "CurrencyCode": "EUR",
     "CountryRegion": "Europe",
-    "Neighbors": [ "EE", "RU", "BY", "LT", "SE" ]
+    "Neighbors": [ "EE", "LT", "RU", "BY", "SE", "FI" ]
   },
-  "EE": {
-    "IsoCode": "EE",
+  "LI": {
+    "IsoCode": "LI",
+    "CurrencyCode": "CHF",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "CH" ]
+  },
+  "LT": {
+    "IsoCode": "LT",
     "CurrencyCode": "EUR",
     "CountryRegion": "Europe",
-    "Neighbors": [ "RU", "LV", "FI", "SE" ]
+    "Neighbors": [ "BY", "LV", "PL", "RU", "SE" ]
   },
-  "RU": {
-    "IsoCode": "RU",
-    "CurrencyCode": "RUB",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "NO", "FI", "EE", "LV", "LT", "PL", "BY", "UA", "GE", "AZ", "KZ", "CN", "MN", "KP", "JP", "US", "TR" ]
+  "LU": {
+    "IsoCode": "LU",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BE", "DE", "FR" ]
   },
-  "BY": {
-    "IsoCode": "BY",
-    "CurrencyCode": "BYN",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "LV", "LT", "PL", "RU", "UA" ]
-  },
-  "KZ": {
-    "IsoCode": "KZ",
-    "CurrencyCode": "KZT",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "CN", "KG", "RU", "TM", "UZ", "AZ", "IR" ]
-  },
-  "UZ": {
-    "IsoCode": "UZ",
-    "CurrencyCode": "UZS",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "AF", "KZ", "KG", "TJ", "TM" ]
-  },
-  "AM": {
-    "IsoCode": "AM",
-    "CurrencyCode": "AMD",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "TR", "GE", "AZ", "IR" ]
-  },
-  "AZ": {
-    "IsoCode": "AZ",
-    "CurrencyCode": "AZN",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "RU", "GE", "AM", "IR", "TR", "KZ", "TM" ]
-  },
-  "KG": {
-    "IsoCode": "KG",
-    "CurrencyCode": "KGS",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "KZ", "UZ", "TJ", "CN" ]
-  },
-  "TJ": {
-    "IsoCode": "TJ",
-    "CurrencyCode": "TJS",
-    "CountryRegion": "CIS",
-    "Neighbors": [ "KG", "UZ", "AF", "CN" ]
+  "MT": {
+    "IsoCode": "MT",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "IT" ]
   },
   "MD": {
     "IsoCode": "MD",
@@ -221,29 +155,191 @@
     "CountryRegion": "CIS",
     "Neighbors": [ "RO", "UA" ]
   },
+  "MC": {
+    "IsoCode": "MC",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "FR" ]
+  },
+  "ME": {
+    "IsoCode": "ME",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AL", "BA", "HR", "RS", "IT" ]
+  },
+  "NL": {
+    "IsoCode": "NL",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BE", "DE", "GB" ]
+  },
+  "MK": {
+    "IsoCode": "MK",
+    "CurrencyCode": "MKD",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AL", "BG", "GR", "RS" ]
+  },
+  "NO": {
+    "IsoCode": "NO",
+    "CurrencyCode": "NOK",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "DK", "FI", "IS", "RU", "SE", "GB" ]
+  },
+  "PL": {
+    "IsoCode": "PL",
+    "CurrencyCode": "PLN",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BY", "CZ", "DE", "LT", "RU", "SK", "UA" ]
+  },
+  "PT": {
+    "IsoCode": "PT",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "ES" ]
+  },
+  "RO": {
+    "IsoCode": "RO",
+    "CurrencyCode": "RON",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BG", "HU", "MD", "RS", "UA" ]
+  },
+  "RU": {
+    "IsoCode": "RU",
+    "CurrencyCode": "RUB",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AZ", "BY", "EE", "FI", "GE", "KZ", "KP", "LV", "LT", "MN", "NO", "PL", "UA", "JP", "US" ]
+  },
+  "SM": {
+    "IsoCode": "SM",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "IT" ]
+  },
+  "RS": {
+    "IsoCode": "RS",
+    "CurrencyCode": "RSD",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BA", "BG", "HR", "HU", "MK", "ME", "RO" ]
+  },
+  "SK": {
+    "IsoCode": "SK",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "CZ", "HU", "PL", "UA" ]
+  },
+  "SI": {
+    "IsoCode": "SI",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "HR", "IT", "HU" ]
+  },
+  "ES": {
+    "IsoCode": "ES",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AD", "FR", "MA", "PT", "DZ", "GB" ]
+  },
+  "SE": {
+    "IsoCode": "SE",
+    "CurrencyCode": "SEK",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "DK", "EE", "FI", "LV", "LT", "NO", "PL", "DE" ]
+  },
+  "CH": {
+    "IsoCode": "CH",
+    "CurrencyCode": "CHF",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "AT", "FR", "DE", "IT", "LI" ]
+  },
   "TR": {
     "IsoCode": "TR",
     "CurrencyCode": "TRY",
     "CountryRegion": "MiddleEast",
-    "Neighbors": [ "AM", "AZ", "BG", "GE", "GR", "IR", "IQ", "SY", "CY", "EG", "RU", "UA", "RO" ]
+    "Neighbors": [ "AM", "AZ", "BG", "CY", "GE", "GR", "IR", "IQ", "SY", "UA" ]
+  },
+  "UA": {
+    "IsoCode": "UA",
+    "CurrencyCode": "UAH",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BY", "BG", "HU", "MD", "PL", "RO", "RU", "SK" ]
+  },
+  "GB": {
+    "IsoCode": "GB",
+    "CurrencyCode": "GBP",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "BE", "DK", "FR", "DE", "IE", "NL", "NO", "IS", "ES" ]
+  },
+  "VA": {
+    "IsoCode": "VA",
+    "CurrencyCode": "EUR",
+    "CountryRegion": "Europe",
+    "Neighbors": [ "IT" ]
+  },
+  "AM": {
+    "IsoCode": "AM",
+    "CurrencyCode": "AMD",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AZ", "GE", "IR", "TR" ]
+  },
+  "AZ": {
+    "IsoCode": "AZ",
+    "CurrencyCode": "AZN",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AM", "GE", "IR", "RU", "TR", "TM", "KZ" ]
+  },
+  "GE": {
+    "IsoCode": "GE",
+    "CurrencyCode": "GEL",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AM", "AZ", "RU", "TR" ]
+  },
+  "KZ": {
+    "IsoCode": "KZ",
+    "CurrencyCode": "KZT",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "CN", "KG", "RU", "TM", "UZ" ]
+  },
+  "KG": {
+    "IsoCode": "KG",
+    "CurrencyCode": "KGS",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "CN", "KZ", "TJ", "UZ" ]
+  },
+  "TJ": {
+    "IsoCode": "TJ",
+    "CurrencyCode": "TJS",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AF", "CN", "KG", "UZ" ]
+  },
+  "TM": {
+    "IsoCode": "TM",
+    "CurrencyCode": "TMT",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AF", "IR", "KZ", "UZ" ]
+  },
+  "UZ": {
+    "IsoCode": "UZ",
+    "CurrencyCode": "UZS",
+    "CountryRegion": "CIS",
+    "Neighbors": [ "AF", "KZ", "KG", "TJ", "TM" ]
+  },
+  "BH": {
+    "IsoCode": "BH",
+    "CurrencyCode": "BHD",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "IR", "QA", "SA" ]
   },
   "EG": {
     "IsoCode": "EG",
     "CurrencyCode": "EGP",
     "CountryRegion": "MiddleEast",
-    "Neighbors": [ "IL", "LY", "SD", "PS", "SA", "JO", "CY", "GR", "TR" ]
-  },
-  "SA": {
-    "IsoCode": "SA",
-    "CurrencyCode": "SAR",
-    "CountryRegion": "MiddleEast",
-    "Neighbors": [ "IQ", "JO", "KW", "OM", "QA", "AE", "YE", "BH", "EG", "SD", "ER", "IR" ]
+    "Neighbors": [ "CY", "GR", "IL", "JO", "LY", "SA", "SD" ]
   },
   "IR": {
     "IsoCode": "IR",
     "CurrencyCode": "IRR",
     "CountryRegion": "MiddleEast",
-    "Neighbors": [ "AF", "AM", "AZ", "IQ", "PK", "TR", "TM", "KW", "SA", "BH", "QA", "AE", "OM", "RU", "KZ" ]
+    "Neighbors": [ "AM", "AZ", "AF", "IQ", "PK", "TM", "TR", "BH", "SA", "AE", "OM", "YE" ]
   },
   "IQ": {
     "IsoCode": "IQ",
@@ -255,43 +351,25 @@
     "IsoCode": "IL",
     "CurrencyCode": "ILS",
     "CountryRegion": "MiddleEast",
-    "Neighbors": [ "EG", "JO", "LB", "SY", "PS", "CY" ]
-  },
-  "AE": {
-    "IsoCode": "AE",
-    "CurrencyCode": "AED",
-    "CountryRegion": "MiddleEast",
-    "Neighbors": [ "OM", "SA", "QA", "IR" ]
-  },
-  "QA": {
-    "IsoCode": "QA",
-    "CurrencyCode": "QAR",
-    "CountryRegion": "MiddleEast",
-    "Neighbors": [ "SA", "AE", "BH", "IR" ]
-  },
-  "SY": {
-    "IsoCode": "SY",
-    "CurrencyCode": "SYP",
-    "CountryRegion": "MiddleEast",
-    "Neighbors": [ "IQ", "IL", "JO", "LB", "TR", "CY" ]
+    "Neighbors": [ "CY", "EG", "JO", "LB", "SY" ]
   },
   "JO": {
     "IsoCode": "JO",
     "CurrencyCode": "JOD",
     "CountryRegion": "MiddleEast",
-    "Neighbors": [ "SY", "IQ", "SA", "IL", "PS", "EG" ]
-  },
-  "LB": {
-    "IsoCode": "LB",
-    "CurrencyCode": "LBP",
-    "CountryRegion": "MiddleEast",
-    "Neighbors": [ "SY", "IL", "CY" ]
+    "Neighbors": [ "IQ", "IL", "SA", "SY" ]
   },
   "KW": {
     "IsoCode": "KW",
     "CurrencyCode": "KWD",
     "CountryRegion": "MiddleEast",
-    "Neighbors": [ "IQ", "SA", "IR" ]
+    "Neighbors": [ "IQ", "SA" ]
+  },
+  "LB": {
+    "IsoCode": "LB",
+    "CurrencyCode": "LBP",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "CY", "IL", "SY", "TR" ]
   },
   "OM": {
     "IsoCode": "OM",
@@ -299,35 +377,233 @@
     "CountryRegion": "MiddleEast",
     "Neighbors": [ "AE", "SA", "YE", "IR", "PK" ]
   },
-  "US": {
-    "IsoCode": "US",
+  "QA": {
+    "IsoCode": "QA",
+    "CurrencyCode": "QAR",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "AE", "BH", "SA" ]
+  },
+  "SA": {
+    "IsoCode": "SA",
+    "CurrencyCode": "SAR",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "BH", "IQ", "JO", "KW", "OM", "QA", "YE", "AE", "EG", "ER", "IR", "SD" ]
+  },
+  "SY": {
+    "IsoCode": "SY",
+    "CurrencyCode": "SYP",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "IQ", "IL", "JO", "LB", "TR", "CY" ]
+  },
+  "AE": {
+    "IsoCode": "AE",
+    "CurrencyCode": "AED",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "OM", "QA", "SA", "IR" ]
+  },
+  "YE": {
+    "IsoCode": "YE",
+    "CurrencyCode": "YER",
+    "CountryRegion": "MiddleEast",
+    "Neighbors": [ "OM", "SA", "DJ", "ER", "SO" ]
+  },
+  "AF": {
+    "IsoCode": "AF",
+    "CurrencyCode": "AFN",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "IR", "PK", "TJ", "TM", "UZ" ]
+  },
+  "BD": {
+    "IsoCode": "BD",
+    "CurrencyCode": "BDT",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "IN", "MM" ]
+  },
+  "BT": {
+    "IsoCode": "BT",
+    "CurrencyCode": "BTN",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "IN" ]
+  },
+  "BN": {
+    "IsoCode": "BN",
+    "CurrencyCode": "BND",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "MY", "PH", "VN" ]
+  },
+  "KH": {
+    "IsoCode": "KH",
+    "CurrencyCode": "KHR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "LA", "TH", "VN" ]
+  },
+  "CN": {
+    "IsoCode": "CN",
+    "CurrencyCode": "CNY",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "AF", "BT", "IN", "KZ", "KG", "LA", "MM", "MN", "NP", "KP", "PK", "RU", "TJ", "VN", "JP", "KR", "PH", "BN", "MY", "ID" ]
+  },
+  "IN": {
+    "IsoCode": "IN",
+    "CurrencyCode": "INR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "AF", "BD", "BT", "CN", "MM", "NP", "PK", "LK", "MV" ]
+  },
+  "ID": {
+    "IsoCode": "ID",
+    "CurrencyCode": "IDR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "AU", "TL", "PG", "MY", "PH", "SG", "TH", "VN" ]
+  },
+  "JP": {
+    "IsoCode": "JP",
+    "CurrencyCode": "JPY",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "KP", "KR", "PH", "RU" ]
+  },
+  "LA": {
+    "IsoCode": "LA",
+    "CurrencyCode": "LAK",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "KH", "MM", "TH", "VN" ]
+  },
+  "MY": {
+    "IsoCode": "MY",
+    "CurrencyCode": "MYR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "BN", "ID", "TH", "SG", "VN" ]
+  },
+  "MV": {
+    "IsoCode": "MV",
+    "CurrencyCode": "MVR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "IN", "LK" ]
+  },
+  "MN": {
+    "IsoCode": "MN",
+    "CurrencyCode": "MNT",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "RU" ]
+  },
+  "MM": {
+    "IsoCode": "MM",
+    "CurrencyCode": "MMK",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "BD", "CN", "IN", "LA", "TH" ]
+  },
+  "NP": {
+    "IsoCode": "NP",
+    "CurrencyCode": "NPR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "IN" ]
+  },
+  "KP": {
+    "IsoCode": "KP",
+    "CurrencyCode": "KPW",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "KR", "RU", "JP" ]
+  },
+  "PK": {
+    "IsoCode": "PK",
+    "CurrencyCode": "PKR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "AF", "CN", "IN", "IR", "OM" ]
+  },
+  "PH": {
+    "IsoCode": "PH",
+    "CurrencyCode": "PHP",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "BN", "ID", "JP", "TW", "VN" ]
+  },
+  "SG": {
+    "IsoCode": "SG",
+    "CurrencyCode": "SGD",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "MY", "ID" ]
+  },
+  "KR": {
+    "IsoCode": "KR",
+    "CurrencyCode": "KRW",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "JP", "KP" ]
+  },
+  "LK": {
+    "IsoCode": "LK",
+    "CurrencyCode": "LKR",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "IN", "MV" ]
+  },
+  "TW": {
+    "IsoCode": "TW",
+    "CurrencyCode": "TWD",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "JP", "PH" ]
+  },
+  "TH": {
+    "IsoCode": "TH",
+    "CurrencyCode": "THB",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "KH", "LA", "MM", "MY", "ID", "VN" ]
+  },
+  "TL": {
+    "IsoCode": "TL",
     "CurrencyCode": "USD",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "CA", "MX", "CU", "BS", "RU" ]
+    "CountryRegion": "Asia",
+    "Neighbors": [ "AU", "ID" ]
   },
-  "CA": {
-    "IsoCode": "CA",
-    "CurrencyCode": "CAD",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "US", "DK", "FR" ]
+  "VN": {
+    "IsoCode": "VN",
+    "CurrencyCode": "VND",
+    "CountryRegion": "Asia",
+    "Neighbors": [ "CN", "KH", "LA", "TH", "BN", "MY", "PH", "ID" ]
   },
-  "MX": {
-    "IsoCode": "MX",
-    "CurrencyCode": "MXN",
+  "AG": {
+    "IsoCode": "AG",
+    "CurrencyCode": "XCD",
     "CountryRegion": "Americas",
-    "Neighbors": [ "US", "GT", "BZ", "CU", "HN" ]
-  },
-  "BR": {
-    "IsoCode": "BR",
-    "CurrencyCode": "BRL",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "FR", "SR", "GY", "VE", "CO", "PE", "BO", "PY", "AR", "UY" ]
+    "Neighbors": [ "KN", "GB" ]
   },
   "AR": {
     "IsoCode": "AR",
     "CurrencyCode": "ARS",
     "CountryRegion": "Americas",
     "Neighbors": [ "BO", "BR", "CL", "PY", "UY", "GB" ]
+  },
+  "BS": {
+    "IsoCode": "BS",
+    "CurrencyCode": "BSD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CU", "HT", "US", "GB" ]
+  },
+  "BB": {
+    "IsoCode": "BB",
+    "CurrencyCode": "BBD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "GY", "LC", "VC", "TT", "VE" ]
+  },
+  "BZ": {
+    "IsoCode": "BZ",
+    "CurrencyCode": "BZD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "GT", "HN", "MX" ]
+  },
+  "BO": {
+    "IsoCode": "BO",
+    "CurrencyCode": "BOB",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "AR", "BR", "CL", "PY", "PE" ]
+  },
+  "BR": {
+    "IsoCode": "BR",
+    "CurrencyCode": "BRL",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "AR", "BO", "CO", "FR", "GY", "PY", "PE", "SR", "UY", "VE" ]
+  },
+  "CA": {
+    "IsoCode": "CA",
+    "CurrencyCode": "CAD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "US", "DK" ]
   },
   "CL": {
     "IsoCode": "CL",
@@ -339,7 +615,103 @@
     "IsoCode": "CO",
     "CurrencyCode": "COP",
     "CountryRegion": "Americas",
-    "Neighbors": [ "BR", "EC", "PA", "PE", "VE", "NI", "CR", "HN", "JM", "HT", "DO" ]
+    "Neighbors": [ "BR", "CR", "EC", "HT", "JM", "NI", "PA", "PE", "VE" ]
+  },
+  "CR": {
+    "IsoCode": "CR",
+    "CurrencyCode": "CRC",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CO", "EC", "NI", "PA" ]
+  },
+  "CU": {
+    "IsoCode": "CU",
+    "CurrencyCode": "CUP",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BS", "HT", "HN", "JM", "MX", "US", "GB" ]
+  },
+  "DM": {
+    "IsoCode": "DM",
+    "CurrencyCode": "XCD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "FR", "VE" ]
+  },
+  "DO": {
+    "IsoCode": "DO",
+    "CurrencyCode": "DOP",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CO", "HT", "VE", "US", "GB" ]
+  },
+  "EC": {
+    "IsoCode": "EC",
+    "CurrencyCode": "USD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CO", "CR", "PE" ]
+  },
+  "SV": {
+    "IsoCode": "SV",
+    "CurrencyCode": "USD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "GT", "HN", "NI" ]
+  },
+  "GD": {
+    "IsoCode": "GD",
+    "CurrencyCode": "XCD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "TT", "VC", "VE" ]
+  },
+  "GT": {
+    "IsoCode": "GT",
+    "CurrencyCode": "GTQ",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BZ", "SV", "HN", "MX" ]
+  },
+  "GY": {
+    "IsoCode": "GY",
+    "CurrencyCode": "GYD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BR", "VE", "SR", "BB", "TT" ]
+  },
+  "HT": {
+    "IsoCode": "HT",
+    "CurrencyCode": "HTG",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BS", "CU", "DO", "JM", "GB", "US" ]
+  },
+  "HN": {
+    "IsoCode": "HN",
+    "CurrencyCode": "HNL",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BZ", "CR", "SV", "GT", "CU", "GB", "NI" ]
+  },
+  "JM": {
+    "IsoCode": "JM",
+    "CurrencyCode": "JMD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CU", "CO", "HT", "GB", "PA" ]
+  },
+  "MX": {
+    "IsoCode": "MX",
+    "CurrencyCode": "MXN",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BZ", "CU", "GT", "US" ]
+  },
+  "NI": {
+    "IsoCode": "NI",
+    "CurrencyCode": "NIO",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CR", "SV", "GT", "HN", "CO" ]
+  },
+  "PA": {
+    "IsoCode": "PA",
+    "CurrencyCode": "PAB",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "CO", "CR", "CU", "JM", "EC" ]
+  },
+  "PY": {
+    "IsoCode": "PY",
+    "CurrencyCode": "PYG",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "AR", "BO", "BR", "UY" ]
   },
   "PE": {
     "IsoCode": "PE",
@@ -347,179 +719,197 @@
     "CountryRegion": "Americas",
     "Neighbors": [ "BO", "BR", "CL", "CO", "EC" ]
   },
-  "VE": {
-    "IsoCode": "VE",
-    "CurrencyCode": "VES",
+  "KN": {
+    "IsoCode": "KN",
+    "CurrencyCode": "XCD",
     "CountryRegion": "Americas",
-    "Neighbors": [ "BR", "CO", "GY", "TT", "GD", "VC", "LC", "DM", "DO", "US", "NL" ]
+    "Neighbors": [ "AG", "GB" ]
   },
-  "CU": {
-    "IsoCode": "CU",
-    "CurrencyCode": "CUP",
+  "LC": {
+    "IsoCode": "LC",
+    "CurrencyCode": "XCD",
     "CountryRegion": "Americas",
-    "Neighbors": [ "US", "BS", "HT", "JM", "MX", "GB" ]
+    "Neighbors": [ "BB", "VC", "FR" ]
   },
-  "PA": {
-    "IsoCode": "PA",
-    "CurrencyCode": "PAB",
+  "VC": {
+    "IsoCode": "VC",
+    "CurrencyCode": "XCD",
     "CountryRegion": "Americas",
-    "Neighbors": [ "CR", "CO" ]
+    "Neighbors": [ "BB", "GD", "KN", "LC", "TT" ]
+  },
+  "SR": {
+    "IsoCode": "SR",
+    "CurrencyCode": "SRD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BR", "FR", "GY" ]
+  },
+  "TT": {
+    "IsoCode": "TT",
+    "CurrencyCode": "TTD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BB", "GD", "GY", "VE", "VC" ]
+  },
+  "US": {
+    "IsoCode": "US",
+    "CurrencyCode": "USD",
+    "CountryRegion": "Americas",
+    "Neighbors": [ "BS", "CA", "CU", "MX", "RU", "JP" ]
   },
   "UY": {
     "IsoCode": "UY",
     "CurrencyCode": "UYU",
     "CountryRegion": "Americas",
-    "Neighbors": [ "BR", "AR" ]
+    "Neighbors": [ "AR", "BR", "GB" ]
   },
-  "BO": {
-    "IsoCode": "BO",
-    "CurrencyCode": "BOB",
+  "VE": {
+    "IsoCode": "VE",
+    "CurrencyCode": "VES",
     "CountryRegion": "Americas",
-    "Neighbors": [ "BR", "PY", "AR", "CL", "PE" ]
+    "Neighbors": [ "BB", "BR", "CO", "DM", "DO", "GD", "GY", "KN", "LC", "TT", "VC", "US" ]
   },
-  "EC": {
-    "IsoCode": "EC",
-    "CurrencyCode": "USD",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "CO", "PE", "CR" ]
-  },
-  "CR": {
-    "IsoCode": "CR",
-    "CurrencyCode": "CRC",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "NI", "PA", "EC", "CO" ]
-  },
-  "DO": {
-    "IsoCode": "DO",
-    "CurrencyCode": "DOP",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "HT", "US", "CO", "VE", "GB" ]
-  },
-  "HT": {
-    "IsoCode": "HT",
-    "CurrencyCode": "HTG",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "DO", "CU", "JM", "BS", "CO" ]
-  },
-  "JM": {
-    "IsoCode": "JM",
-    "CurrencyCode": "JMD",
-    "CountryRegion": "Americas",
-    "Neighbors": [ "CU", "HT", "CO", "GB", "HN", "NI" ]
-  },
-  "CN": {
-    "IsoCode": "CN",
-    "CurrencyCode": "CNY",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "AF", "BT", "IN", "KZ", "KP", "KG", "LA", "MN", "MM", "NP", "PK", "RU", "TJ", "VN", "KR", "JP", "PH", "MY", "BN", "TW" ]
-  },
-  "IN": {
-    "IsoCode": "IN",
-    "CurrencyCode": "INR",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "BD", "BT", "CN", "MM", "NP", "PK", "LK", "MV", "ID", "TH" ]
-  },
-  "JP": {
-    "IsoCode": "JP",
-    "CurrencyCode": "JPY",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "CN", "KP", "KR", "RU", "TW", "PH", "US" ]
-  },
-  "KR": {
-    "IsoCode": "KR",
-    "CurrencyCode": "KRW",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "KP", "CN", "JP" ]
-  },
-  "KP": {
-    "IsoCode": "KP",
-    "CurrencyCode": "KPW",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "CN", "KR", "RU", "JP" ]
-  },
-  "ID": {
-    "IsoCode": "ID",
-    "CurrencyCode": "IDR",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "TL", "MY", "PG", "AU", "SG", "PH", "VN", "TH", "IN", "PW" ]
-  },
-  "PK": {
-    "IsoCode": "PK",
-    "CurrencyCode": "PKR",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "AF", "CN", "IN", "IR", "OM" ]
-  },
-  "VN": {
-    "IsoCode": "VN",
-    "CurrencyCode": "VND",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "KH", "CN", "LA", "ID", "MY", "PH", "TH" ]
-  },
-  "TH": {
-    "IsoCode": "TH",
-    "CurrencyCode": "THB",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "MM", "KH", "LA", "MY", "VN", "IN", "ID" ]
-  },
-  "SG": {
-    "IsoCode": "SG",
-    "CurrencyCode": "SGD",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "MY", "ID" ]
-  },
-  "MY": {
-    "IsoCode": "MY",
-    "CurrencyCode": "MYR",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "BN", "ID", "TH", "SG", "VN", "PH", "CN" ]
-  },
-  "PH": {
-    "IsoCode": "PH",
-    "CurrencyCode": "PHP",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "CN", "ID", "JP", "MY", "PW", "TW", "VN" ]
-  },
-  "BD": {
-    "IsoCode": "BD",
-    "CurrencyCode": "BDT",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "IN", "MM" ]
-  },
-  "LK": {
-    "IsoCode": "LK",
-    "CurrencyCode": "LKR",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "IN", "MV" ]
-  },
-  "MM": {
-    "IsoCode": "MM",
-    "CurrencyCode": "MMK",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "BD", "IN", "CN", "LA", "TH" ]
-  },
-  "KH": {
-    "IsoCode": "KH",
-    "CurrencyCode": "KHR",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "TH", "LA", "VN" ]
-  },
-  "LA": {
-    "IsoCode": "LA",
-    "CurrencyCode": "LAK",
-    "CountryRegion": "Asia",
-    "Neighbors": [ "CN", "MM", "VN", "KH", "TH" ]
-  },
-  "ZA": {
-    "IsoCode": "ZA",
-    "CurrencyCode": "ZAR",
+  "DZ": {
+    "IsoCode": "DZ",
+    "CurrencyCode": "DZD",
     "CountryRegion": "Africa",
-    "Neighbors": [ "BW", "LS", "MZ", "NA", "SZ", "ZW" ]
+    "Neighbors": [ "FR", "IT", "LY", "ML", "MR", "MA", "NE", "EH", "TN", "ES" ]
   },
-  "NG": {
-    "IsoCode": "NG",
-    "CurrencyCode": "NGN",
+  "AO": {
+    "IsoCode": "AO",
+    "CurrencyCode": "AOA",
     "CountryRegion": "Africa",
-    "Neighbors": [ "BJ", "CM", "TD", "NE", "GQ", "ST", "GH" ]
+    "Neighbors": [ "CD", "CG", "NA", "ZM" ]
+  },
+  "BJ": {
+    "IsoCode": "BJ",
+    "CurrencyCode": "XOF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BF", "NE", "NG", "TG" ]
+  },
+  "BW": {
+    "IsoCode": "BW",
+    "CurrencyCode": "BWP",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "NA", "ZA", "ZM", "ZW" ]
+  },
+  "BF": {
+    "IsoCode": "BF",
+    "CurrencyCode": "XOF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BJ", "CI", "GH", "ML", "NE", "TG" ]
+  },
+  "BI": {
+    "IsoCode": "BI",
+    "CurrencyCode": "BIF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CD", "RW", "TZ" ]
+  },
+  "CV": {
+    "IsoCode": "CV",
+    "CurrencyCode": "CVE",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "GM", "MR", "SN" ]
+  },
+  "CM": {
+    "IsoCode": "CM",
+    "CurrencyCode": "XAF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CF", "TD", "CG", "GQ", "GA", "NG" ]
+  },
+  "CF": {
+    "IsoCode": "CF",
+    "CurrencyCode": "XAF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CM", "TD", "CD", "CG", "SS", "SD" ]
+  },
+  "TD": {
+    "IsoCode": "TD",
+    "CurrencyCode": "XAF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CM", "CF", "LY", "NE", "NG", "SD" ]
+  },
+  "KM": {
+    "IsoCode": "KM",
+    "CurrencyCode": "KMF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "MG", "MZ", "SC", "TZ" ]
+  },
+  "CG": {
+    "IsoCode": "CG",
+    "CurrencyCode": "XAF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "AO", "CM", "CF", "CD", "GA" ]
+  },
+  "CD": {
+    "IsoCode": "CD",
+    "CurrencyCode": "CDF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "AO", "BI", "CF", "CG", "RW", "SS", "TZ", "UG", "ZM" ]
+  },
+  "CI": {
+    "IsoCode": "CI",
+    "CurrencyCode": "XOF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BF", "GH", "GN", "LR", "ML" ]
+  },
+  "DJ": {
+    "IsoCode": "DJ",
+    "CurrencyCode": "DJF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "ER", "ET", "SO", "YE" ]
+  },
+  "GQ": {
+    "IsoCode": "GQ",
+    "CurrencyCode": "XAF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CM", "GA", "NG", "ST" ]
+  },
+  "ER": {
+    "IsoCode": "ER",
+    "CurrencyCode": "ERN",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DJ", "ET", "SD", "SA", "YE" ]
+  },
+  "SZ": {
+    "IsoCode": "SZ",
+    "CurrencyCode": "SZL",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "MZ", "ZA" ]
+  },
+  "ET": {
+    "IsoCode": "ET",
+    "CurrencyCode": "ETB",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DJ", "ER", "KE", "SO", "SS", "SD" ]
+  },
+  "GA": {
+    "IsoCode": "GA",
+    "CurrencyCode": "XAF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CM", "CG", "GQ" ]
+  },
+  "GM": {
+    "IsoCode": "GM",
+    "CurrencyCode": "GMD",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CV", "SN" ]
+  },
+  "GH": {
+    "IsoCode": "GH",
+    "CurrencyCode": "GHS",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BF", "CI", "TG" ]
+  },
+  "GN": {
+    "IsoCode": "GN",
+    "CurrencyCode": "GNF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CI", "GW", "LR", "ML", "SN", "SL" ]
+  },
+  "GW": {
+    "IsoCode": "GW",
+    "CurrencyCode": "XOF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "GN", "SN" ]
   },
   "KE": {
     "IsoCode": "KE",
@@ -527,94 +917,262 @@
     "CountryRegion": "Africa",
     "Neighbors": [ "ET", "SO", "SS", "TZ", "UG" ]
   },
-  "DZ": {
-    "IsoCode": "DZ",
-    "CurrencyCode": "DZD",
+  "LS": {
+    "IsoCode": "LS",
+    "CurrencyCode": "LSL",
     "CountryRegion": "Africa",
-    "Neighbors": [ "LY", "ML", "MR", "MA", "NE", "TN", "ES", "IT" ]
+    "Neighbors": [ "MZ", "ZA" ]
+  },
+  "LR": {
+    "IsoCode": "LR",
+    "CurrencyCode": "LRD",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CI", "GN", "SL" ]
+  },
+  "LY": {
+    "IsoCode": "LY",
+    "CurrencyCode": "LYD",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DZ", "EG", "NE", "SD", "TN", "IT" ]
+  },
+  "MG": {
+    "IsoCode": "MG",
+    "CurrencyCode": "MGA",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "KM", "MU", "MZ", "SC", "TZ" ]
+  },
+  "MW": {
+    "IsoCode": "MW",
+    "CurrencyCode": "MWK",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "MZ", "TZ", "ZM" ]
+  },
+  "ML": {
+    "IsoCode": "ML",
+    "CurrencyCode": "XOF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DZ", "BF", "CI", "GN", "MR", "NE", "SN" ]
+  },
+  "MR": {
+    "IsoCode": "MR",
+    "CurrencyCode": "MRU",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DZ", "CV", "ML", "SN", "EH" ]
+  },
+  "MU": {
+    "IsoCode": "MU",
+    "CurrencyCode": "MUR",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "MG", "SC" ]
   },
   "MA": {
     "IsoCode": "MA",
     "CurrencyCode": "MAD",
     "CountryRegion": "Africa",
-    "Neighbors": [ "DZ", "EH", "ES", "PT" ]
+    "Neighbors": [ "DZ", "EH", "ES" ]
   },
-  "ET": {
-    "IsoCode": "ET",
-    "CurrencyCode": "ETB",
+  "MZ": {
+    "IsoCode": "MZ",
+    "CurrencyCode": "MZN",
     "CountryRegion": "Africa",
-    "Neighbors": [ "ER", "DJ", "SO", "KE", "SS", "SD" ]
+    "Neighbors": [ "KM", "MG", "MW", "SZ", "TZ", "ZA", "ZM", "ZW" ]
   },
-  "GH": {
-    "IsoCode": "GH",
-    "CurrencyCode": "GHS",
+  "NA": {
+    "IsoCode": "NA",
+    "CurrencyCode": "NAD",
     "CountryRegion": "Africa",
-    "Neighbors": [ "BF", "TG", "CI", "BJ", "NG" ]
+    "Neighbors": [ "AO", "BW", "ZA", "ZM" ]
   },
-  "TZ": {
-    "IsoCode": "TZ",
-    "CurrencyCode": "TZS",
+  "NE": {
+    "IsoCode": "NE",
+    "CurrencyCode": "XOF",
     "CountryRegion": "Africa",
-    "Neighbors": [ "KE", "UG", "RW", "BI", "CD", "ZM", "MW", "MZ", "SC", "KM" ]
+    "Neighbors": [ "DZ", "BJ", "BF", "TD", "LY", "NG", "ML" ]
   },
-  "CD": {
-    "IsoCode": "CD",
-    "CurrencyCode": "CDF",
+  "NG": {
+    "IsoCode": "NG",
+    "CurrencyCode": "NGN",
     "CountryRegion": "Africa",
-    "Neighbors": [ "CF", "SS", "UG", "RW", "BI", "TZ", "ZM", "AO", "CG" ]
+    "Neighbors": [ "BJ", "CM", "TD", "GQ", "NE" ]
   },
-  "AO": {
-    "IsoCode": "AO",
-    "CurrencyCode": "AOA",
+  "RW": {
+    "IsoCode": "RW",
+    "CurrencyCode": "RWF",
     "CountryRegion": "Africa",
-    "Neighbors": [ "CD", "ZM", "NA", "CG" ]
+    "Neighbors": [ "BI", "CD", "TZ", "UG" ]
+  },
+  "ST": {
+    "IsoCode": "ST",
+    "CurrencyCode": "STN",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "GQ", "GA", "NG" ]
   },
   "SN": {
     "IsoCode": "SN",
     "CurrencyCode": "XOF",
     "CountryRegion": "Africa",
-    "Neighbors": [ "MR", "ML", "GN", "GW", "GM", "CV" ]
+    "Neighbors": [ "CV", "GM", "GN", "GW", "ML", "MR" ]
   },
-  "CI": {
-    "IsoCode": "CI",
-    "CurrencyCode": "XOF",
+  "SC": {
+    "IsoCode": "SC",
+    "CurrencyCode": "SCR",
     "CountryRegion": "Africa",
-    "Neighbors": [ "ML", "BF", "GH", "LR", "GN" ]
+    "Neighbors": [ "KM", "MG", "MU", "TZ" ]
   },
-  "UG": {
-    "IsoCode": "UG",
-    "CurrencyCode": "UGX",
+  "SL": {
+    "IsoCode": "SL",
+    "CurrencyCode": "SLE",
     "CountryRegion": "Africa",
-    "Neighbors": [ "SS", "KE", "TZ", "RW", "CD" ]
+    "Neighbors": [ "GN", "LR" ]
+  },
+  "SO": {
+    "IsoCode": "SO",
+    "CurrencyCode": "SOS",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DJ", "ET", "KE", "YE" ]
+  },
+  "ZA": {
+    "IsoCode": "ZA",
+    "CurrencyCode": "ZAR",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BW", "LS", "MZ", "NA", "SZ", "ZW" ]
+  },
+  "SS": {
+    "IsoCode": "SS",
+    "CurrencyCode": "SSP",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CF", "CD", "ET", "KE", "SD", "UG" ]
   },
   "SD": {
     "IsoCode": "SD",
     "CurrencyCode": "SDG",
     "CountryRegion": "Africa",
-    "Neighbors": [ "EG", "ER", "ET", "SS", "CF", "TD", "LY", "SA" ]
+    "Neighbors": [ "CF", "TD", "EG", "ER", "ET", "LY", "SS", "SA" ]
+  },
+  "TZ": {
+    "IsoCode": "TZ",
+    "CurrencyCode": "TZS",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BI", "CD", "KE", "MW", "MZ", "RW", "SC", "UG", "ZM" ]
+  },
+  "TG": {
+    "IsoCode": "TG",
+    "CurrencyCode": "XOF",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BJ", "BF", "GH" ]
+  },
+  "TN": {
+    "IsoCode": "TN",
+    "CurrencyCode": "TND",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DZ", "IT", "LY" ]
+  },
+  "UG": {
+    "IsoCode": "UG",
+    "CurrencyCode": "UGX",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "CD", "KE", "RW", "SS", "TZ" ]
+  },
+  "EH": {
+    "IsoCode": "EH",
+    "CurrencyCode": "MAD",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "DZ", "MA", "MR", "ES" ]
+  },
+  "ZM": {
+    "IsoCode": "ZM",
+    "CurrencyCode": "ZMW",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "AO", "BW", "CD", "MW", "MZ", "NA", "TZ", "ZW" ]
+  },
+  "ZW": {
+    "IsoCode": "ZW",
+    "CurrencyCode": "ZWL",
+    "CountryRegion": "Africa",
+    "Neighbors": [ "BW", "MZ", "ZA", "ZM" ]
   },
   "AU": {
     "IsoCode": "AU",
     "CurrencyCode": "AUD",
     "CountryRegion": "Oceania",
-    "Neighbors": [ "ID", "PG", "TL", "NZ", "SB", "VU", "FR" ]
-  },
-  "NZ": {
-    "IsoCode": "NZ",
-    "CurrencyCode": "NZD",
-    "CountryRegion": "Oceania",
-    "Neighbors": [ "AU", "FJ", "TO", "WS", "CK", "NU" ]
+    "Neighbors": [ "TL", "ID", "NZ", "PG", "SB", "VU" ]
   },
   "FJ": {
     "IsoCode": "FJ",
     "CurrencyCode": "FJD",
     "CountryRegion": "Oceania",
-    "Neighbors": [ "VU", "TO", "WS", "TV", "FR", "NZ" ]
+    "Neighbors": [ "NZ", "SB", "TO", "TV", "VU" ]
+  },
+  "KI": {
+    "IsoCode": "KI",
+    "CurrencyCode": "AUD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "FJ", "TV", "MH", "NR" ]
+  },
+  "MH": {
+    "IsoCode": "MH",
+    "CurrencyCode": "USD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "KI", "NR", "TV" ]
+  },
+  "FM": {
+    "IsoCode": "FM",
+    "CurrencyCode": "USD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "NR", "PW" ]
+  },
+  "NR": {
+    "IsoCode": "NR",
+    "CurrencyCode": "AUD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "KI", "MH", "SB", "TV", "FM" ]
+  },
+  "NZ": {
+    "IsoCode": "NZ",
+    "CurrencyCode": "NZD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "AU", "FJ", "TO" ]
+  },
+  "PW": {
+    "IsoCode": "PW",
+    "CurrencyCode": "USD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "FM", "PH" ]
   },
   "PG": {
     "IsoCode": "PG",
     "CurrencyCode": "PGK",
     "CountryRegion": "Oceania",
-    "Neighbors": [ "ID", "AU", "SB", "FM" ]
+    "Neighbors": [ "AU", "ID", "SB" ]
+  },
+  "WS": {
+    "IsoCode": "WS",
+    "CurrencyCode": "WST",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "TO" ]
+  },
+  "SB": {
+    "IsoCode": "SB",
+    "CurrencyCode": "SBD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "AU", "FJ", "NR", "PG", "VU" ]
+  },
+  "TO": {
+    "IsoCode": "TO",
+    "CurrencyCode": "TOP",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "FJ", "NZ", "WS" ]
+  },
+  "TV": {
+    "IsoCode": "TV",
+    "CurrencyCode": "AUD",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "FJ", "KI", "NR", "SB" ]
+  },
+  "VU": {
+    "IsoCode": "VU",
+    "CurrencyCode": "VUV",
+    "CountryRegion": "Oceania",
+    "Neighbors": [ "FJ", "SB", "AU" ]
   }
 }

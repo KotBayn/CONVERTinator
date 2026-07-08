@@ -4,6 +4,8 @@ using FluentAssertions;
 using Xunit;
 using CONVERTinator.Helpers;
 using CONVERTinator.Domain.Entities;
+using CONVERTinator.Domain.Interfaces;
+using CONVERTinator.Domain;
 
 namespace CONVERTinator.Tests.Helpers
 {

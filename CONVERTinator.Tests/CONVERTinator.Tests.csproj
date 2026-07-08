@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CONVERTinator.Domain\CONVERTinator.Domain.csproj" />
     <ProjectReference Include="..\CONVERTinator\CONVERTinator.csproj" />
   </ItemGroup>
 
