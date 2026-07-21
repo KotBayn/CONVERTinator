@@ -84,7 +84,7 @@ namespace CONVERTinator.Tests.Zoning
             var regions = CountryRepository.GetRequiredRegions("TR");
 
             // Assert: The graph resolver must figure out to load data from all these endpoints!
-            regions.Should().Contain(Region.Asia);       // Host region
+            regions.Should().Contain(Region.MiddleEast);       // Host region
             regions.Should().Contain(Region.Europe);     // Because of GR, BG
             regions.Should().Contain(Region.CIS);        // Because of GE, AM, AZ
 
