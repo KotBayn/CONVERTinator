@@ -342,7 +342,7 @@ if (baseCurrencySelect) {
 /* --------------------------------------------------------------------------
 MODULE 5: SMART CANVAS GRAPH ENGINE (NEON COLORS & TWO-PASS RENDERING)
 -------------------------------------------------------------------------- */
-let hiddenChartCurrencies = new Set(); // Stores currencies the user has manually hidden
+let hiddenChartCurrencies = new Set();
 let currentRange = '1M';
 
 const chartColors = {
@@ -350,31 +350,30 @@ const chartColors = {
     text: 'rgba(255, 255, 255, 0.5)'
 };
 
-// Generate neon color based on currency position (0 = base, 1 = first target, etc.)
+// Generate color based on currency position
 function getCurrencyColor(index) {
     if (index === 0) {
         // Base currency - always PURPLE
         return {
             border: '#9245e5',
-            fill: 'rgba(146, 69, 229, 0.15)' // 15% opacity
+            fill: 'rgba(146, 69, 229, 0.15)'
         };
     } else if (index === 1) {
-        // First target currency - always SALAD GREEN
+        // First target - always SALAD GREEN
         return {
             border: '#4db892',
-            fill: 'rgba(77, 184, 146, 0.10)' // 10% opacity
+            fill: 'rgba(77, 184, 146, 0.10)'
         };
     } else {
-        // All other currencies (3rd, 4th, 5th...) - random neon color
+        // All others - random neon
         const hue = Math.floor(Math.random() * 360);
         return {
             border: `hsl(${hue}, 100%, 60%)`,
-            fill: `hsla(${hue}, 100%, 60%, 0.05)` // 5% opacity in HSLA format
+            fill: `hsla(${hue}, 100%, 60%, 0.05)`
         };
     }
 }
 
-// Fetches historical trend data from API
 async function fetchRealHistory(baseCur, targetCur, range) {
     try {
         const url = `/api/Convert/history?baseCur=${baseCur}&targetCur=${targetCur}&range=${range}`;
@@ -388,7 +387,6 @@ async function fetchRealHistory(baseCur, targetCur, range) {
     }
 }
 
-// Main rendering function for the Canvas context
 async function renderCurrencyChart() {
     const canvas = document.getElementById('currencyChart');
     const container = document.getElementById('canvasContainer');
@@ -408,14 +406,13 @@ async function renderCurrencyChart() {
 
     const baseCurrency = baseCurrencySelect.value;
     const currentTargets = Array.from(document.querySelectorAll('.target-select')).map(s => s.value);
-    // Filter out user-hidden currencies
     const linesToDraw = ['base', ...currentTargets].filter(cur => !hiddenChartCurrencies.has(cur));
 
     // Fetch data + assign colors by index
     const fetchPromises = linesToDraw.map(async (curType, index) => {
         const targetCur = curType === 'base' ? 'USD' : curType;
         const dataPoints = await fetchRealHistory(baseCurrency, targetCur, currentRange);
-        const colors = getCurrencyColor(index); // Get border and fill colors
+        const colors = getCurrencyColor(index);
         return {
             dataPoints,
             strokeColor: colors.border,
@@ -427,7 +424,6 @@ async function renderCurrencyChart() {
 
     const results = await Promise.all(fetchPromises);
 
-    // Calculate boundaries for the Y-Axis
     let globalMin = Infinity;
     let globalMax = -Infinity;
     results.forEach(({ dataPoints }) => {
@@ -438,11 +434,11 @@ async function renderCurrencyChart() {
     });
 
     const priceRange = globalMax - globalMin || 1;
-    globalMin -= priceRange * 0.05; // 5% visual padding
+    globalMin -= priceRange * 0.05;
     globalMax += priceRange * 0.05;
     const bufferedRange = globalMax - globalMin;
 
-    // Draw grid and axes
+    // Draw grid
     ctx.font = '10px Inter, sans-serif';
     ctx.fillStyle = chartColors.text;
     ctx.textAlign = 'left';
@@ -459,10 +455,10 @@ async function renderCurrencyChart() {
         ctx.fillText(priceLabel.toFixed(4), width - padding.right + 5, y + 4);
     }
 
-    // TWO-PASS RENDERING: Prevent fills from overlapping lines
+    // TWO-PASS RENDERING
 
-    // PASS 1: Draw ALL fills (gradients) FIRST
-    results.forEach(({ dataPoints, fillColor, targetCur, isBase }) => {
+    // PASS 1: Draw ALL fills FIRST (very transparent)
+    results.forEach(({ dataPoints, fillColor }) => {
         if (!dataPoints || dataPoints.length === 0) return;
 
         ctx.beginPath();
@@ -472,22 +468,21 @@ async function renderCurrencyChart() {
             pIndex === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
         });
 
-        // Close path for fill
         const lastX = padding.left + graphWidth;
         ctx.lineTo(lastX, height - padding.bottom);
         ctx.lineTo(padding.left, height - padding.bottom);
         ctx.closePath();
 
-        ctx.fillStyle = fillColor; // Use pre-calculated HSLA or RGBA
+        ctx.fillStyle = fillColor;
         ctx.fill();
     });
 
-    // PASS 2: Draw ALL lines ON TOP of fills
+    // PASS 2: Draw ALL lines ON TOP
     results.forEach(({ dataPoints, strokeColor, targetCur, isBase }, index) => {
         if (!dataPoints || dataPoints.length === 0) return;
 
         ctx.beginPath();
-        ctx.lineWidth = isBase ? 4 : 2; // Hierarchy: Base line is thicker
+        ctx.lineWidth = isBase ? 4 : 2;
         ctx.strokeStyle = strokeColor;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -497,7 +492,6 @@ async function renderCurrencyChart() {
             let y = padding.top + graphHeight - ((point.price - globalMin) / bufferedRange) * graphHeight;
             pIndex === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
 
-            // X-Axis labels (only for first line)
             if (index === 0) {
                 let labelStep = Math.max(1, Math.floor(dataPoints.length / 5));
                 if (pIndex % labelStep === 0 || pIndex === dataPoints.length - 1) {
@@ -508,7 +502,6 @@ async function renderCurrencyChart() {
         });
         ctx.stroke();
 
-        // Currency text label at the end of the line
         const lastPoint = dataPoints[dataPoints.length - 1];
         const lastX = padding.left + graphWidth;
         const lastY = padding.top + graphHeight - ((lastPoint.price - globalMin) / bufferedRange) * graphHeight;
@@ -519,14 +512,13 @@ async function renderCurrencyChart() {
     });
 }
 
-// Update chart toggle badges (show/hide currencies)
 function updateChartToggles() {
     const togglesContainer = document.getElementById('chartToggles');
     if (!togglesContainer) return;
     const baseCurrency = document.getElementById('baseCurrency').value;
     const currentTargets = Array.from(document.querySelectorAll('.target-select')).map(select => select.value);
 
-    let html = `<div class="toggle-badge ${hiddenChartCurrencies.has('base') ? '' : 'active'}" data-cur="base">📈 ${baseCurrency} / USD (Base)</div>`;
+    let html = `<div class="toggle-badge ${hiddenChartCurrencies.has('base') ? '' : 'active'}" data-cur="base"> ${baseCurrency} / USD (Base)</div>`;
     currentTargets.forEach(cur => {
         const isActive = !hiddenChartCurrencies.has(cur);
         html += `<div class="toggle-badge ${isActive ? 'active' : ''}" data-cur="${cur}">${CurrencyToCountryFlag[cur] || '🏳️'} ${baseCurrency} / ${cur}</div>`;
@@ -547,7 +539,6 @@ function updateChartToggles() {
     });
 }
 
-// Adjust graph container height based on number of currencies
 function adjustGraphHeight() {
     const container = document.getElementById('canvasContainer');
     if (!container) return;
@@ -555,7 +546,6 @@ function adjustGraphHeight() {
     setTimeout(renderCurrencyChart, 450);
 }
 
-// Event Listeners for Time Range Buttons (1D, 1W, 1M, 1Y, etc.)
 document.getElementById('timeRangeControls')?.querySelectorAll('.time-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelector('.time-btn.active')?.classList.remove('active');
@@ -566,6 +556,7 @@ document.getElementById('timeRangeControls')?.querySelectorAll('.time-btn').forE
 });
 
 window.addEventListener('resize', renderCurrencyChart);
+
 /* --------------------------------------------------------------------------
    MODULE 6: VISUAL FX & BOOTSTRAP
    -------------------------------------------------------------------------- */
