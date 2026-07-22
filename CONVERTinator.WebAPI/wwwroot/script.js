@@ -423,8 +423,14 @@ async function renderCurrencyChart() {
     const fetchPromises = linesToDraw.map(async (curType, index) => {
         const targetCur = curType === 'base' ? 'USD' : curType;
         const dataPoints = await fetchRealHistory(baseCurrency, targetCur, currentRange);
-        const colorConfig = getCurrencyColorByIndex(index);
-        return { dataPoints, strokeColor: colorConfig.border, fillColor: colorConfig.background, targetCur, isBase: curType === 'base' };
+        const colorConfig = getCurrencyColorByIndex(index); 
+        return {
+            dataPoints,
+            strokeColor: colorConfig.border,
+            fillColor: colorConfig.background,
+            targetCur,
+            isBase: curType === 'base'
+        };
     });
 
     const results = await Promise.all(fetchPromises);
@@ -493,7 +499,7 @@ async function renderCurrencyChart() {
         // Neon glow below the line
         let gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
         gradient.addColorStop(0, fillColor);
-        gradient.addColorStop(1, fillColor.replace('20%)', '00%)').replace('33)', '00)')); 
+        gradient.addColorStop(1, fillColor.replace('20%)', '00%)').replace('33)', '00)'));
         ctx.lineTo(padding.left + graphWidth, height - padding.bottom); 
         ctx.lineTo(padding.left, height - padding.bottom); 
         ctx.closePath(); 
