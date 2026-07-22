@@ -469,30 +469,71 @@ async function renderCurrencyChart() {
     }
 
     // Render individual trend lines
-    results.forEach(({ dataPoints, strokeColor, fillColor, targetCur, isBase }, index) => {
+    // PASS 1: Draw ALL fills (gradients) FIRST - very transparent
+    results.forEach(({ dataPoints, strokeColor, targetCur, isBase }, index) => {
         if (!dataPoints || dataPoints.length === 0) return;
 
-        ctx.beginPath(); 
-        ctx.lineWidth = isBase ? 4 : 2; // Hierarchy: Base line is thicker
-        ctx.strokeStyle = strokeColor; 
-        ctx.lineJoin = 'round'; 
-        ctx.lineCap = 'round';
-        
+        ctx.beginPath();
         dataPoints.forEach((point, pIndex) => {
             let x = padding.left + (graphWidth / (dataPoints.length - 1)) * pIndex;
             let y = padding.top + graphHeight - ((point.price - globalMin) / bufferedRange) * graphHeight;
-            
+            pIndex === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+
+        // Close path for fill
+        const lastPoint = dataPoints[dataPoints.length - 1];
+        const lastX = padding.left + graphWidth;
+        const lastY = padding.top + graphHeight - ((lastPoint.price - globalMin) / bufferedRange) * graphHeight;
+        ctx.lineTo(lastX, height - padding.bottom);
+        ctx.lineTo(padding.left, height - padding.bottom);
+        ctx.closePath();
+
+        // Neon glow below the line - VERY TRANSPARENT (5% and 2%)
+        let gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+        let alpha = isBase ? '0D' : '05'; // Base: ~5% opacity, Others: ~2% opacity
+        gradient.addColorStop(0, strokeColor + alpha);
+        gradient.addColorStop(1, strokeColor + '00');
+        ctx.fillStyle = gradient;
+        ctx.fill();
+    });
+
+    // PASS 2: Draw ALL lines ON TOP of fills
+    results.forEach(({ dataPoints, strokeColor, targetCur, isBase }, index) => {
+        if (!dataPoints || dataPoints.length === 0) return;
+
+        ctx.beginPath();
+        ctx.lineWidth = isBase ? 4 : 2;
+        ctx.strokeStyle = strokeColor;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        dataPoints.forEach((point, pIndex) => {
+            let x = padding.left + (graphWidth / (dataPoints.length - 1)) * pIndex;
+            let y = padding.top + graphHeight - ((point.price - globalMin) / bufferedRange) * graphHeight;
             pIndex === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
 
-            // X-Axis labels
+            // X-Axis labels (only for first line)
             if (index === 0) {
                 let labelStep = Math.max(1, Math.floor(dataPoints.length / 5));
                 if (pIndex % labelStep === 0 || pIndex === dataPoints.length - 1) {
                     ctx.textAlign = 'center';
+                    ctx.fillStyle = chartColors.text;
+                    ctx.font = '10px Inter, sans-serif';
                     ctx.fillText(point.date, x, height - 10);
                 }
             }
         });
+        ctx.stroke();
+
+        // Currency text label at the end of the line
+        const lastPoint = dataPoints[dataPoints.length - 1];
+        const lastX = padding.left + graphWidth;
+        const lastY = padding.top + graphHeight - ((lastPoint.price - globalMin) / bufferedRange) * graphHeight;
+        ctx.fillStyle = strokeColor;
+        ctx.font = 'bold 13px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(targetCur, lastX, lastY - 8);
+    });
         
         ctx.stroke();
         
