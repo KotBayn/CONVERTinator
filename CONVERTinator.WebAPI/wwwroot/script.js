@@ -50,6 +50,10 @@ const OPTIONS_HTML = ALL_CURRENCY_CODES
     .map(code => `<option value="${code}">${CurrencyToCountryFlag[code]} ${code}</option>`)
     .join('');
 
+const currencyColors = {
+
+    };
+
 /* --------------------------------------------------------------------------
    MODULE 2: INITIALIZATION & GEO-LOCATION
    -------------------------------------------------------------------------- */
@@ -340,6 +344,34 @@ if (baseCurrencySelect) {
    -------------------------------------------------------------------------- */
 let hiddenChartCurrencies = new Set(); // Stores currencies the user has manually hidden
 let currentRange = '1M';
+function getRandomNeonColor() {
+    const hue = Math.floor(Math.random() * 360);
+    return `hsl(${hue}, 100%, 60%)`;
+}
+
+// Get color for currency based on its position (0 = base, 1 = first target, etc.)
+function getCurrencyColorByIndex(index) {
+    if (index === 0) {
+        // Base currency - always PURPLE
+        return {
+            border: '#9245e5',
+            background: 'rgba(146, 69, 229, 0.33)'
+        };
+    } else if (index === 1) {
+        // First target - always SALAD GREEN
+        return {
+            border: '#4db892',
+            background: 'rgba(77, 184, 146, 0.33)'
+        };
+    } else {
+        // All others (3rd, 4th, 5th...) - random neon
+        const neonColor = getRandomNeonColor();
+        return {
+            border: neonColor,
+            background: neonColor.replace('60%)', '20%)')
+        };
+    }
+}
 const chartColors = { 
     base: '#9245e5', 
     line: '#4db892', 
@@ -388,11 +420,11 @@ async function renderCurrencyChart() {
     // Filter out user-hidden currencies
     const linesToDraw = ['base', ...currentTargets].filter(cur => !hiddenChartCurrencies.has(cur));
     
-    const fetchPromises = linesToDraw.map(async (curType) => {
+    const fetchPromises = linesToDraw.map(async (curType, index) => {
         const targetCur = curType === 'base' ? 'USD' : curType;
         const dataPoints = await fetchRealHistory(baseCurrency, targetCur, currentRange);
-        const strokeColor = curType === 'base' ? chartColors.base : chartColors.line;
-        return { dataPoints, strokeColor, targetCur, isBase: curType === 'base' };
+        const colorConfig = getCurrencyColorByIndex(index);
+        return { dataPoints, strokeColor: colorConfig.border, fillColor: colorConfig.background, targetCur, isBase: curType === 'base' };
     });
 
     const results = await Promise.all(fetchPromises);
@@ -431,7 +463,7 @@ async function renderCurrencyChart() {
     }
 
     // Render individual trend lines
-    results.forEach(({ dataPoints, strokeColor, targetCur, isBase }, index) => {
+    results.forEach(({ dataPoints, strokeColor, fillColor, targetCur, isBase }, index) => {
         if (!dataPoints || dataPoints.length === 0) return;
 
         ctx.beginPath(); 
@@ -460,9 +492,8 @@ async function renderCurrencyChart() {
         
         // Neon glow below the line
         let gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-        let alpha = isBase ? '33' : '08'; // Base gradient is brighter
-        gradient.addColorStop(0, strokeColor + alpha); 
-        gradient.addColorStop(1, strokeColor + '00'); 
+        gradient.addColorStop(0, fillColor);
+        gradient.addColorStop(1, fillColor.replace('20%)', '00%)').replace('33)', '00)')); 
         ctx.lineTo(padding.left + graphWidth, height - padding.bottom); 
         ctx.lineTo(padding.left, height - padding.bottom); 
         ctx.closePath(); 
