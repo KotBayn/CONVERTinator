@@ -340,46 +340,41 @@ if (baseCurrencySelect) {
 }
 
 /* --------------------------------------------------------------------------
-   MODULE 5: SMART CANVAS GRAPH ENGINE (WITH BLACKLIST & HIERARCHY)
-   -------------------------------------------------------------------------- */
+MODULE 5: SMART CANVAS GRAPH ENGINE (NEON COLORS & TWO-PASS RENDERING)
+-------------------------------------------------------------------------- */
 let hiddenChartCurrencies = new Set(); // Stores currencies the user has manually hidden
 let currentRange = '1M';
-function getRandomNeonColor() {
-    const hue = Math.floor(Math.random() * 360);
-    return `hsl(${hue}, 100%, 60%)`;
-}
 
-// Get color for currency based on its position (0 = base, 1 = first target, etc.)
-function getCurrencyColorByIndex(index) {
+const chartColors = {
+    grid: 'rgba(255, 255, 255, 0.05)',
+    text: 'rgba(255, 255, 255, 0.5)'
+};
+
+// Generate neon color based on currency position (0 = base, 1 = first target, etc.)
+function getCurrencyColor(index) {
     if (index === 0) {
         // Base currency - always PURPLE
         return {
             border: '#9245e5',
-            background: 'rgba(146, 69, 229, 0.33)'
+            fill: 'rgba(146, 69, 229, 0.15)' // 15% opacity
         };
     } else if (index === 1) {
-        // First target - always SALAD GREEN
+        // First target currency - always SALAD GREEN
         return {
             border: '#4db892',
-            background: 'rgba(77, 184, 146, 0.33)'
+            fill: 'rgba(77, 184, 146, 0.10)' // 10% opacity
         };
     } else {
-        // All others (3rd, 4th, 5th...) - random neon
-        const neonColor = getRandomNeonColor();
+        // All other currencies (3rd, 4th, 5th...) - random neon color
+        const hue = Math.floor(Math.random() * 360);
         return {
-            border: neonColor,
-            background: neonColor.replace('60%)', '20%)')
+            border: `hsl(${hue}, 100%, 60%)`,
+            fill: `hsla(${hue}, 100%, 60%, 0.05)` // 5% opacity in HSLA format
         };
     }
 }
-const chartColors = { 
-    base: '#9245e5', 
-    line: '#4db892', 
-    grid: 'rgba(255, 255, 255, 0.05)',
-    text: 'rgba(255, 255, 255, 0.5)' 
-};
 
-// Fetches historical trend data
+// Fetches historical trend data from API
 async function fetchRealHistory(baseCur, targetCur, range) {
     try {
         const url = `/api/Convert/history?baseCur=${baseCur}&targetCur=${targetCur}&range=${range}`;
@@ -398,47 +393,43 @@ async function renderCurrencyChart() {
     const canvas = document.getElementById('currencyChart');
     const container = document.getElementById('canvasContainer');
     const baseCurrencySelect = document.getElementById('baseCurrency');
-    
     if (!canvas || !container || !baseCurrencySelect) return;
-    
+
     const ctx = canvas.getContext('2d');
-    
-    canvas.width = container.clientWidth; 
+    canvas.width = container.clientWidth;
     canvas.height = container.clientHeight;
-    const width = canvas.width; 
+    const width = canvas.width;
     const height = canvas.height;
-    
     const padding = { top: 20, right: 60, bottom: 30, left: 10 };
     const graphWidth = width - padding.left - padding.right;
     const graphHeight = height - padding.top - padding.bottom;
-    
+
     ctx.clearRect(0, 0, width, height);
-    
+
     const baseCurrency = baseCurrencySelect.value;
     const currentTargets = Array.from(document.querySelectorAll('.target-select')).map(s => s.value);
-    
     // Filter out user-hidden currencies
     const linesToDraw = ['base', ...currentTargets].filter(cur => !hiddenChartCurrencies.has(cur));
-    
+
+    // Fetch data + assign colors by index
     const fetchPromises = linesToDraw.map(async (curType, index) => {
         const targetCur = curType === 'base' ? 'USD' : curType;
         const dataPoints = await fetchRealHistory(baseCurrency, targetCur, currentRange);
-        const colorConfig = getCurrencyColorByIndex(index); 
+        const colors = getCurrencyColor(index); // Get border and fill colors
         return {
             dataPoints,
-            strokeColor: colorConfig.border,
-            fillColor: colorConfig.background,
+            strokeColor: colors.border,
+            fillColor: colors.fill,
             targetCur,
             isBase: curType === 'base'
         };
     });
 
     const results = await Promise.all(fetchPromises);
-    
+
+    // Calculate boundaries for the Y-Axis
     let globalMin = Infinity;
     let globalMax = -Infinity;
-    
-    // Calculate boundaries for the Y-Axis
     results.forEach(({ dataPoints }) => {
         if (!dataPoints.length) return;
         const prices = dataPoints.map(p => p.price);
@@ -451,12 +442,12 @@ async function renderCurrencyChart() {
     globalMax += priceRange * 0.05;
     const bufferedRange = globalMax - globalMin;
 
+    // Draw grid and axes
     ctx.font = '10px Inter, sans-serif';
     ctx.fillStyle = chartColors.text;
     ctx.textAlign = 'left';
     ctx.strokeStyle = chartColors.grid;
     ctx.lineWidth = 1;
-    
     const horizontalLines = 4;
     for (let i = 0; i <= horizontalLines; i++) {
         let y = padding.top + (graphHeight / horizontalLines) * i;
@@ -468,9 +459,10 @@ async function renderCurrencyChart() {
         ctx.fillText(priceLabel.toFixed(4), width - padding.right + 5, y + 4);
     }
 
-    // Render individual trend lines
-    // PASS 1: Draw ALL fills (gradients) FIRST - very transparent
-    results.forEach(({ dataPoints, strokeColor, targetCur, isBase }, index) => {
+    // TWO-PASS RENDERING: Prevent fills from overlapping lines
+
+    // PASS 1: Draw ALL fills (gradients) FIRST
+    results.forEach(({ dataPoints, fillColor, targetCur, isBase }) => {
         if (!dataPoints || dataPoints.length === 0) return;
 
         ctx.beginPath();
@@ -481,19 +473,12 @@ async function renderCurrencyChart() {
         });
 
         // Close path for fill
-        const lastPoint = dataPoints[dataPoints.length - 1];
         const lastX = padding.left + graphWidth;
-        const lastY = padding.top + graphHeight - ((lastPoint.price - globalMin) / bufferedRange) * graphHeight;
         ctx.lineTo(lastX, height - padding.bottom);
         ctx.lineTo(padding.left, height - padding.bottom);
         ctx.closePath();
 
-        // Neon glow below the line - VERY TRANSPARENT (5% and 2%)
-        let gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-        let alpha = isBase ? '0D' : '05'; // Base: ~5% opacity, Others: ~2% opacity
-        gradient.addColorStop(0, strokeColor + alpha);
-        gradient.addColorStop(1, strokeColor + '00');
-        ctx.fillStyle = gradient;
+        ctx.fillStyle = fillColor; // Use pre-calculated HSLA or RGBA
         ctx.fill();
     });
 
@@ -502,7 +487,7 @@ async function renderCurrencyChart() {
         if (!dataPoints || dataPoints.length === 0) return;
 
         ctx.beginPath();
-        ctx.lineWidth = isBase ? 4 : 2;
+        ctx.lineWidth = isBase ? 4 : 2; // Hierarchy: Base line is thicker
         ctx.strokeStyle = strokeColor;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -517,8 +502,6 @@ async function renderCurrencyChart() {
                 let labelStep = Math.max(1, Math.floor(dataPoints.length / 5));
                 if (pIndex % labelStep === 0 || pIndex === dataPoints.length - 1) {
                     ctx.textAlign = 'center';
-                    ctx.fillStyle = chartColors.text;
-                    ctx.font = '10px Inter, sans-serif';
                     ctx.fillText(point.date, x, height - 10);
                 }
             }
@@ -534,59 +517,37 @@ async function renderCurrencyChart() {
         ctx.textAlign = 'right';
         ctx.fillText(targetCur, lastX, lastY - 8);
     });
-        
-        ctx.stroke();
-        
-        // Neon glow below the line
-        let gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-        gradient.addColorStop(0, fillColor);
-        gradient.addColorStop(1, fillColor.replace('20%)', '00%)').replace('33)', '00)'));
-        ctx.lineTo(padding.left + graphWidth, height - padding.bottom); 
-        ctx.lineTo(padding.left, height - padding.bottom); 
-        ctx.closePath(); 
-        ctx.fillStyle = gradient; 
-        ctx.fill();
-
-        // Currency text label at the end of the line
-        const lastPoint = dataPoints[dataPoints.length - 1];
-        const lastX = padding.left + graphWidth;
-        const lastY = padding.top + graphHeight - ((lastPoint.price - globalMin) / bufferedRange) * graphHeight;
-        ctx.fillStyle = strokeColor;
-        ctx.font = 'bold 13px Inter, sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText(targetCur, lastX, lastY - 8);
-    });
 }
 
+// Update chart toggle badges (show/hide currencies)
 function updateChartToggles() {
     const togglesContainer = document.getElementById('chartToggles');
     if (!togglesContainer) return;
-    
     const baseCurrency = document.getElementById('baseCurrency').value;
     const currentTargets = Array.from(document.querySelectorAll('.target-select')).map(select => select.value);
-    
+
     let html = `<div class="toggle-badge ${hiddenChartCurrencies.has('base') ? '' : 'active'}" data-cur="base">📈 ${baseCurrency} / USD (Base)</div>`;
-    
     currentTargets.forEach(cur => {
         const isActive = !hiddenChartCurrencies.has(cur);
         html += `<div class="toggle-badge ${isActive ? 'active' : ''}" data-cur="${cur}">${CurrencyToCountryFlag[cur] || '🏳️'} ${baseCurrency} / ${cur}</div>`;
     });
-    
+
     togglesContainer.innerHTML = html;
     togglesContainer.querySelectorAll('.toggle-badge').forEach(badge => {
         badge.addEventListener('click', () => {
             const cur = badge.getAttribute('data-cur');
-            if (hiddenChartCurrencies.has(cur)) { 
-                hiddenChartCurrencies.delete(cur); 
-            } else { 
-                hiddenChartCurrencies.add(cur); 
+            if (hiddenChartCurrencies.has(cur)) {
+                hiddenChartCurrencies.delete(cur);
+            } else {
+                hiddenChartCurrencies.add(cur);
             }
-            updateChartToggles(); 
+            updateChartToggles();
             renderCurrencyChart();
         });
     });
 }
 
+// Adjust graph container height based on number of currencies
 function adjustGraphHeight() {
     const container = document.getElementById('canvasContainer');
     if (!container) return;
@@ -605,7 +566,6 @@ document.getElementById('timeRangeControls')?.querySelectorAll('.time-btn').forE
 });
 
 window.addEventListener('resize', renderCurrencyChart);
-
 /* --------------------------------------------------------------------------
    MODULE 6: VISUAL FX & BOOTSTRAP
    -------------------------------------------------------------------------- */
